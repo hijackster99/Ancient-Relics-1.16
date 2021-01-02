@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "facing=east":  { "model": "ancientrelics:block/peridot_relic", "x": 90, "y": 90},
+        "facing=west":  { "model": "ancientrelics:block/peridot_relic", "x": 90, "y": 270},
+        "facing=south": { "model": "ancientrelics:block/peridot_relic", "x": 270},
+        "facing=north": { "model": "ancientrelics:block/peridot_relic", "x": 90},
+        "facing=up":  { "model": "ancientrelics:block/peridot_relic"},
+        "facing=down":  { "model": "ancientrelics:block/peridot_relic", "x": 180}
+    }
+}

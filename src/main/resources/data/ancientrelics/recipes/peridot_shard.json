@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "ancientrelics:peridot_gem"
+    }
+  ],
+  "result": {
+    "item": "ancientrelics:peridot_shard",
+    "count": 4
+  }
+}

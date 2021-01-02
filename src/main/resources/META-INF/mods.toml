@@ -1,0 +1,22 @@
+modLoader="javafml"
+loaderVersion="[35,)"
+license="All rights reserved"
+[[mods]]
+modId="ancientrelics"
+version="0.0.1"
+displayName="Ancient Relics"
+description='''
+A magic style mods that add powerful relics for you to uncover!
+'''
+[[dependencies.ancientrelics]]
+    modId="forge"
+    mandatory=true
+    versionRange="[35,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.ancientrelics]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.4,1.17)"
+    ordering="NONE"
+    side="BOTH"

@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "": [
+            { "model": "ancientrelics:block/block_void_coal" }
+        ]
+    }
+}

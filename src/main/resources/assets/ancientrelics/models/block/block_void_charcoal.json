@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "ancientrelics:block/block_void_charcoal"
+    }
+}

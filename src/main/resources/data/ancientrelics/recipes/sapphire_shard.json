@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "ancientrelics:sapphire_gem"
+    }
+  ],
+  "result": {
+    "item": "ancientrelics:sapphire_shard",
+    "count": 4
+  }
+}

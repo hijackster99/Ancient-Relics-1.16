@@ -1,0 +1,26 @@
+  {
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" YZ", 
+		" WX",
+		"W  "
+	],
+	"key": {
+		"X": {
+			"item": "ancientrelics:sapphire_relic_1"
+		},
+		"Y": {
+			"item": "ancientrelics:ruby_relic_1"
+		},
+		"Z": {
+			"item": "ancientrelics:peridot_relic_1"
+		},
+		"W": {
+			"item": "minecraft:stick"
+		}
+	},
+	"result": {
+		"item": "ancientrelics:peridot_staff"
+	}
+	
+    }
