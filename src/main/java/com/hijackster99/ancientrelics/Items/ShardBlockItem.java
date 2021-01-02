@@ -13,7 +13,7 @@ public class ShardBlockItem extends ARBlockItem {
 	
 	@Override
 	protected boolean canPlace(BlockItemUseContext context, BlockState state) {
-		return context.getWorld().getBlockState(context.getPos().subtract(context.getFace().getDirectionVec())).isSolidSide(context.getWorld().getBlockReader(context.getWorld().getChunk(context.getPos()).getPos().x, context.getWorld().getChunk(context.getPos()).getPos().z), context.getPos(), context.getFace());
+		return context.getWorld().getBlockState(context.getPos().subtract(context.getFace().getDirectionVec())).isSolidSide(context.getWorld().getBlockReader(context.getPos().getX() >> 4, context.getPos().getZ() >> 4), context.getPos(), context.getFace());
 	}
 
 }

@@ -75,5 +75,5 @@ public class VoidRelayBlock extends ARBlock{
 		shape = VoxelShapes.combineAndSimplify(shape, shape11, IBooleanFunction.OR);
 		return shape;
 	}
-
+	
 }
