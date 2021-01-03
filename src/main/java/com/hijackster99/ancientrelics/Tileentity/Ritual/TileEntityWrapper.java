@@ -24,25 +24,46 @@ public class TileEntityWrapper {
 	}
 	
 	public void tick(World worldObj, BlockPos pos) {
-		if(te.isInstance(IUpdate.class)) {
-			IUpdate update = (IUpdate) te.cast(IUpdate.class);
-			update.tick(worldObj, pos);
+		if(contains(te.getInterfaces(), IUpdate.class)) {
+			IUpdate update;
+			try {
+				update = (IUpdate) te.newInstance();
+				update.tick(worldObj, pos);
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-		if(te.isInstance(IRandomUpdate.class)) {
-			IRandomUpdate update = (IRandomUpdate) te.cast(IRandomUpdate.class);
-			update.randomTick(state, worldIn, pos, random);
+		if(contains(te.getInterfaces(), IRandomUpdate.class)) {
+			IRandomUpdate update;
+			try {
+				update = (IRandomUpdate) te.newInstance();
+				update.randomTick(state, worldIn, pos, random);
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		if(te.isInstance(IInteractable.class)) {
-			IInteractable interact = (IInteractable) te.cast(IInteractable.class);
-			return interact.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+		if(contains(te.getInterfaces(), IInteractable.class)) {
+			try {
+				IInteractable interact = (IInteractable) te.newInstance();
+				interact.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
 		}
 		return ActionResultType.PASS;
+	}
+	
+	public boolean contains(Class<?>[] classes, Class<?> c){
+		for(Class<?> cl : classes) {
+			if(cl.equals(c)) return true;
+		}
+		return false;
 	}
 	
 }

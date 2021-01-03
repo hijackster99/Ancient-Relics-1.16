@@ -16,6 +16,7 @@ public class DefaultWrapper implements IInteractable {
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		if(player.getHeldItem(handIn).getItem() == ARItem.RUBY_STAFF) {
+			System.out.println("Default");
 			return ActionResultType.SUCCESS;
 		}
 		return ActionResultType.PASS;

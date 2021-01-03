@@ -321,6 +321,7 @@ public class ARBase {
 		
 		@SubscribeEvent
 		public static void registerReloadListener(AddReloadListenerEvent event) {
+			System.out.println("hello");
 			event.addListener(new RitualJsonManager());
 			event.addListener(new RitualClassManager());
 		}

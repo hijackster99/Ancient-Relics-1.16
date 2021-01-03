@@ -23,6 +23,7 @@ public class RitualJsonManager extends JsonReloadListener{
 	private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
 	
 	public static Map<ResourceLocation, Map<Block, BlockPos>> ritualBlocks;
+	public static Map<ResourceLocation, Integer> ritualTiers;
 
 	public RitualJsonManager() {
 		super(GSON, "ritual");
@@ -54,6 +55,8 @@ public class RitualJsonManager extends JsonReloadListener{
 		    					 System.err.println("Error: Block not registered! Skipping!");
 		    				 }
 			        	 }
+	        		 }else {
+	        			 ritualTiers.put(resourcelocation, e.getAsInt());
 	        		 }
 	        	 }
     			 ritualBlocks.put(resourcelocation, blocks);

@@ -22,7 +22,7 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 
 	private int tier;
 	private EnumRitualType type;
-	private Ritual ritual = Ritual.loadedRituals.get(new ResourceLocation("ancientrelics", "default"));
+	private Ritual ritual = Ritual.loadedRituals.get(new ResourceLocation("ancientrelics", "default_ritual"));
 	
 	public RitualStone() {
 		this(0, null);
@@ -57,7 +57,8 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		return ritual != null ? ritual.wrapper.onBlockActivated(state, worldIn, pos, player, handIn, hit) : ActionResultType.PASS;
+		if(ritual != null) return ritual.wrapper.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+		return ActionResultType.PASS;
 	}
 
 	@Override
