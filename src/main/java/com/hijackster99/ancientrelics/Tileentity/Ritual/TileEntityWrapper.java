@@ -1,5 +1,7 @@
 package com.hijackster99.ancientrelics.Tileentity.Ritual;
 
+import java.util.Random;
+
 import com.hijackster99.ancientrelics.core.IInteractable;
 import com.hijackster99.ancientrelics.core.IRandomUpdate;
 import com.hijackster99.ancientrelics.core.IUpdate;
@@ -11,6 +13,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 public class TileEntityWrapper {
 
@@ -27,10 +30,10 @@ public class TileEntityWrapper {
 		}
 	}
 	
-	public void randomTick(World worldObj, BlockPos pos) {
+	public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
 		if(te.isInstance(IRandomUpdate.class)) {
 			IRandomUpdate update = (IRandomUpdate) te.cast(IRandomUpdate.class);
-			update.randomTick(worldObj, pos);
+			update.randomTick(state, worldIn, pos, random);
 		}
 	}
 	

@@ -18,6 +18,9 @@ import com.hijackster99.ancientrelics.Items.PeridotStaff;
 import com.hijackster99.ancientrelics.Items.RubyStaff;
 import com.hijackster99.ancientrelics.Items.SapphireStaff;
 import com.hijackster99.ancientrelics.Items.ShardBlockItem;
+import com.hijackster99.ancientrelics.Tileentity.Ritual.RitualStone;
+import com.hijackster99.ancientrelics.core.classloader.RitualClassManager;
+import com.hijackster99.ancientrelics.core.classloader.RitualJsonManager;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -25,11 +28,14 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolType;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -301,6 +307,24 @@ public class ARBase {
 		event.getRegistry().register(voidStone);
 		Block soulHeart = new ARBlock("soul_heart", Material.ROCK, 50f, 1200f, ToolType.PICKAXE, 4, true);
 		event.getRegistry().register(soulHeart);
+	}
+	
+	@SubscribeEvent
+	public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
+		TileEntityType<RitualStone> ritualStone = TileEntityType.Builder.create(RitualStone::new, ARBlock.RITUAL_STONE_1_PERIDOT, ARBlock.RITUAL_STONE_1_RUBY, ARBlock.RITUAL_STONE_1_SAPPHIRE, ARBlock.RITUAL_STONE_2_PERIDOT, ARBlock.RITUAL_STONE_2_RUBY, ARBlock.RITUAL_STONE_2_SAPPHIRE, ARBlock.RITUAL_STONE_3_PERIDOT, ARBlock.RITUAL_STONE_3_RUBY, ARBlock.RITUAL_STONE_3_SAPPHIRE, ARBlock.RITUAL_STONE_4_PERIDOT, ARBlock.RITUAL_STONE_4_RUBY, ARBlock.RITUAL_STONE_4_SAPPHIRE, ARBlock.RITUAL_STONE_5_PERIDOT, ARBlock.RITUAL_STONE_5_RUBY, ARBlock.RITUAL_STONE_5_SAPPHIRE, ARBlock.RITUAL_STONE_6).build(null);
+		ritualStone.setRegistryName(References.MODID, "ritual_stone");
+		event.getRegistry().register(ritualStone);
+	}
+	
+	@EventBusSubscriber(modid = References.MODID, bus = EventBusSubscriber.Bus.FORGE)
+	public static class eventHandler{
+		
+		@SubscribeEvent
+		public static void registerReloadListener(AddReloadListenerEvent event) {
+			event.addListener(new RitualJsonManager());
+			event.addListener(new RitualClassManager());
+		}
+		
 	}
 	
 }
