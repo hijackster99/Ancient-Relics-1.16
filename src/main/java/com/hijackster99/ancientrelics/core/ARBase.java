@@ -18,8 +18,13 @@ import com.hijackster99.ancientrelics.Items.PeridotStaff;
 import com.hijackster99.ancientrelics.Items.RubyStaff;
 import com.hijackster99.ancientrelics.Items.SapphireStaff;
 import com.hijackster99.ancientrelics.Items.ShardBlockItem;
+import com.hijackster99.ancientrelics.Tileentity.Ritual.Ritual;
 import com.hijackster99.ancientrelics.Tileentity.Ritual.RitualStone;
-import com.hijackster99.ancientrelics.core.classloader.RitualClassManager;
+import com.hijackster99.ancientrelics.Tileentity.Ritual.Wrappers.AnvilWrapper;
+import com.hijackster99.ancientrelics.Tileentity.Ritual.Wrappers.DrillWrapper;
+import com.hijackster99.ancientrelics.Tileentity.Ritual.Wrappers.ExtractWrapper;
+import com.hijackster99.ancientrelics.Tileentity.Ritual.Wrappers.InfuseWrapper;
+import com.hijackster99.ancientrelics.Tileentity.Ritual.Wrappers.StorageWrapper;
 import com.hijackster99.ancientrelics.core.classloader.RitualJsonManager;
 
 import net.minecraft.block.Block;
@@ -29,6 +34,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.AddReloadListenerEvent;
@@ -39,6 +45,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.RegistryBuilder;
 
 @Mod(References.MODID)
 @Mod.EventBusSubscriber(modid = References.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -316,14 +323,46 @@ public class ARBase {
 		event.getRegistry().register(ritualStone);
 	}
 	
+	@SubscribeEvent
+	public static void registerRegistry(RegistryEvent.NewRegistry event) {
+		RegistryBuilder<Ritual> builder = new RegistryBuilder<Ritual>();
+		builder.setType(Ritual.class);
+		ResourceLocation key = new ResourceLocation(References.MODID, "ritual");
+		builder.setName(key);
+		builder.setDefaultKey(key);
+		builder.create();
+	}
+	
+	@SubscribeEvent
+	public static void registerRitual(RegistryEvent.Register<Ritual> event) {
+		Ritual extract = new Ritual("ancientrelics:extract_ritual", ExtractWrapper.class);
+		event.getRegistry().register(extract);
+		Ritual storage = new Ritual("ancientrelics:storage_ritual", StorageWrapper.class);
+		event.getRegistry().register(storage);
+		Ritual infuse1 = new Ritual("ancientrelics:infuse_ritual_1", InfuseWrapper.class);
+		event.getRegistry().register(infuse1);
+		Ritual infuse2 = new Ritual("ancientrelics:infuse_ritual_2", InfuseWrapper.class);
+		event.getRegistry().register(infuse2);
+		Ritual infuse3 = new Ritual("ancientrelics:infuse_ritual_3", InfuseWrapper.class);
+		event.getRegistry().register(infuse3);
+		Ritual infuse4 = new Ritual("ancientrelics:infuse_ritual_4", InfuseWrapper.class);
+		event.getRegistry().register(infuse4);
+		Ritual infuse5 = new Ritual("ancientrelics:infuse_ritual_5", InfuseWrapper.class);
+		event.getRegistry().register(infuse5);
+		Ritual infuse6 = new Ritual("ancientrelics:infuse_ritual_6", InfuseWrapper.class);
+		event.getRegistry().register(infuse6);
+		Ritual anvil = new Ritual("ancientrelics:anvil_ritual", AnvilWrapper.class);
+		event.getRegistry().register(anvil);
+		Ritual drill = new Ritual("ancientrelics:drill_ritual", DrillWrapper.class);
+		event.getRegistry().register(drill);
+	}
+	
 	@EventBusSubscriber(modid = References.MODID, bus = EventBusSubscriber.Bus.FORGE)
 	public static class eventHandler{
 		
 		@SubscribeEvent
 		public static void registerReloadListener(AddReloadListenerEvent event) {
-			System.out.println("hello");
 			event.addListener(new RitualJsonManager());
-			event.addListener(new RitualClassManager());
 		}
 		
 	}

@@ -12,7 +12,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
@@ -22,7 +21,8 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 
 	private int tier;
 	private EnumRitualType type;
-	private Ritual ritual = Ritual.loadedRituals.get(new ResourceLocation("ancientrelics", "default_ritual"));
+	private Ritual ritual = null;
+	private TileEntityWrapper wrapper = new TileEntityWrapper();
 	
 	public RitualStone() {
 		this(0, null);
@@ -50,20 +50,32 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 		this.tier = tier;
 	}
 
+	public Ritual getRitual() {
+		return ritual;
+	}
+
+	public void setRitual(Ritual ritual) {
+		this.ritual = ritual;
+		try {
+			this.wrapper = this.ritual.wrapper.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public void tick() {
-		if(ritual != null) ritual.wrapper.tick(getWorld(), pos);
+		wrapper.tick(getWorld(), pos);
 	}
 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		if(ritual != null) return ritual.wrapper.onBlockActivated(state, worldIn, pos, player, handIn, hit);
-		return ActionResultType.PASS;
+		return wrapper.onBlockActivated(state, worldIn, pos, player, handIn, hit);
 	}
 
 	@Override
 	public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-		if(ritual != null) ritual.wrapper.randomTick(state, worldIn, pos, random);
+		wrapper.randomTick(state, worldIn, pos, random);
 	}
 
 }

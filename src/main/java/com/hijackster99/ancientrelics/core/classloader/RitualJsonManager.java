@@ -1,13 +1,20 @@
 package com.hijackster99.ancientrelics.core.classloader;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.hijackster99.ancientrelics.Tileentity.Ritual.Ritual;
 
 import net.minecraft.block.Block;
@@ -21,13 +28,10 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class RitualJsonManager extends JsonReloadListener{
 	
 	private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
-	
-	public static Map<ResourceLocation, Map<Block, BlockPos>> ritualBlocks;
-	public static Map<ResourceLocation, Integer> ritualTiers;
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	public RitualJsonManager() {
 		super(GSON, "ritual");
-		ritualBlocks = new HashMap<ResourceLocation, Map<Block, BlockPos>>();
 	}
 
 	@Override
@@ -35,38 +39,47 @@ public class RitualJsonManager extends JsonReloadListener{
 		for(Entry<ResourceLocation, JsonElement> entry : objectIn.entrySet()) {
 	         ResourceLocation resourcelocation = entry.getKey();
 	         if (resourcelocation.getPath().startsWith("_")) continue; //Forge: filter anything beginning with "_" as it's used for metadata.
-	         if(entry.getValue().isJsonArray()) {
-        		 Map<Block, BlockPos> blocks = new HashMap<Block, BlockPos>();
-	        	 JsonArray array = entry.getValue().getAsJsonArray();
-	        	 for(JsonElement e : array) {
-	        		 if(e.isJsonArray()) {
-	        			 JsonArray arr = (JsonArray) e;
-			        	 if(arr.size() > 1 && (arr.size() - 1) % 3 == 0) {
-		        			 String loc = arr.get(0).getAsString();
+			 if(GameRegistry.findRegistry(Ritual.class).containsKey(resourcelocation)) {
+				 JsonElement tierElement = entry.getValue().getAsJsonObject().get("tier");
+				 GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).tier = tierElement.getAsInt();
+        		 Map<Block, List<BlockPos>> blocks = new HashMap<Block, List<BlockPos>>();
+	        	 JsonObject object = entry.getValue().getAsJsonObject().get("blocks").getAsJsonObject();
+	        	 Set<Map.Entry<String, JsonElement>> names = object.entrySet();
+	        	 for(Map.Entry<String, JsonElement> e : names) {
+	        		 if(e.getValue().isJsonArray()) {
+	        			 JsonArray arr = e.getValue().getAsJsonArray();
+			        	 if(arr.size() > 1 && arr.size() % 3 == 0) {
+		        			 String loc = e.getKey();
 		    				 Block block = GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(loc));
 		    				 if(block != null) {
-			        			 for(int i = 1; i < arr.size(); i += 3) {
+		    					 List<BlockPos> posList = new ArrayList<BlockPos>();
+			        			 for(int i = 0; i < arr.size(); i += 3) {
 			        				 int x = arr.get(i).getAsInt();
 			        				 int y = arr.get(i + 1).getAsInt();
-			        				 int z = arr.get(+ 2).getAsInt();
-			        				 blocks.put(block, new BlockPos(x, y, z));
+			        				 int z = arr.get(i + 2).getAsInt();
+			        				 if(!(x == 0 && y == 0 && z == 0))
+			        					 posList.add(new BlockPos(x, y, z));
+			        				 else
+			        					 LOGGER.error("Error: Block specified at ritual center! Skipping!");
 			        			 }
+			        			 blocks.put(block, posList);
 		    				 }else {
-		    					 System.err.println("Error: Block not registered! Skipping!");
+		    					 LOGGER.error("Error: Block: {} not registered! Skipping!", loc);
 		    				 }
 			        	 }
-	        		 }else {
-	        			 ritualTiers.put(resourcelocation, e.getAsInt());
 	        		 }
-	        	 }
-    			 ritualBlocks.put(resourcelocation, blocks);
-	         }
+		         }
+    			 GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).ritualBlocks = blocks;
+			 }else {
+				 LOGGER.error("Error: Ritual: {} not registered! Skipping!", resourcelocation);
+			 }
 		}
-		Ritual.jsonLoad = true;
-		if(Ritual.jsonLoad && Ritual.classLoad) {
-			Ritual.CompileRituals();
-			Ritual.jsonLoad = false;
-			Ritual.classLoad = false;
+		printInvalidRituals();
+	}
+	
+	private void printInvalidRituals() {
+		for(Ritual r : GameRegistry.findRegistry(Ritual.class).getValues()) {
+			if(!r.isValid()) LOGGER.error("Warning! Ritual: {} Had a problem loading and will be ignored! Be sure to check the json format!", r.getRegistryName());
 		}
 	}
 
