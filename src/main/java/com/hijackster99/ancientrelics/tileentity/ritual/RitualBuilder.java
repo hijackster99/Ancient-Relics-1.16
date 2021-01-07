@@ -10,8 +10,10 @@ import java.util.Map.Entry;
 import com.hijackster99.ancientrelics.blocks.ARBlock;
 import com.hijackster99.ancientrelics.blocks.RitualBlock;
 import com.hijackster99.ancientrelics.core.References;
+import com.hijackster99.ancientrelics.core.classloader.RitualJsonManager.Option;
 
 import net.minecraft.block.Block;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,6 +27,7 @@ public class RitualBuilder {
 	public static List<Checker> ritualCheckers = new ArrayList<Checker>();
 	public static List<Ritual> rituals = null;
 	
+	@SuppressWarnings("unchecked")
 	@SubscribeEvent
 	public static void worldTick(WorldTickEvent event) {
 		if(rituals == null) getRituals();
@@ -36,17 +39,21 @@ public class RitualBuilder {
 					if(check.valid) {
 						if(!((RitualBlock) event.world.getBlockState(check.pos).getBlock()).isActive()) {
 							activeRituals.put(check.pos, rituals.get(check.counter));
-							System.out.println(!((RitualBlock) event.world.getBlockState(check.pos).getBlock()).isActive());
 							event.world.setBlockState(check.pos, getActiveBlock(event.world.getBlockState(check.pos).getBlock()).getDefaultState());
 							c.remove();
 						}
 					}
+					check.valid = true;
 					getNextIter(check, event);
 				}else if(check.iter != null){
 					for(int i = 0; i < Ritual.blocksChecked; i++) {
 						if(check.iter.hasNext()) {
-							Entry<BlockPos, Block> entry = check.iter.next();
-							if(event.world.getBlockState(check.pos.add(entry.getKey())).getBlock() != entry.getValue()) check.valid = false;
+							Entry<BlockPos, Option> entry = check.iter.next();
+							if(entry.getValue().getType().equals(Block.class)) {
+								if(event.world.getBlockState(check.pos.add(entry.getKey())).getBlock() != (Block) entry.getValue().get()) check.valid = false;
+							}else if(entry.getValue().getType().equals(Tag.class)) {
+								if(!((Tag<Block>) entry.getValue().get()).contains(event.world.getBlockState(check.pos.add(entry.getKey())).getBlock())) check.valid = false;
+							}
 						}
 					}
 				}else {
@@ -108,7 +115,7 @@ public class RitualBuilder {
 		String dimension;
 		int counter = -1;
 		boolean valid = true;
-		Iterator<Entry<BlockPos, Block>> iter;
+		Iterator<Entry<BlockPos, Option>> iter;
 		
 	}
 	

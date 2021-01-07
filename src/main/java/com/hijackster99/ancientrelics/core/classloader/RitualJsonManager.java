@@ -22,6 +22,9 @@ import net.minecraft.block.Block;
 import net.minecraft.client.resources.JsonReloadListener;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITagCollection;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -43,16 +46,30 @@ public class RitualJsonManager extends JsonReloadListener{
 			 if(GameRegistry.findRegistry(Ritual.class).containsKey(resourcelocation)) {
 				 JsonElement tierElement = entry.getValue().getAsJsonObject().get("tier");
 				 GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).setTier(tierElement.getAsInt());
-        		 Map<Block, List<BlockPos>> blocks = new HashMap<Block, List<BlockPos>>();
+        		 Map<Option, List<BlockPos>> blocks = new HashMap<Option, List<BlockPos>>();
 	        	 JsonObject object = entry.getValue().getAsJsonObject().get("blocks").getAsJsonObject();
 	        	 Set<Map.Entry<String, JsonElement>> names = object.entrySet();
 	        	 for(Map.Entry<String, JsonElement> e : names) {
 	        		 if(e.getValue().isJsonArray()) {
 	        			 JsonArray arr = e.getValue().getAsJsonArray();
 			        	 if(arr.size() > 1 && arr.size() % 3 == 0) {
-		        			 String loc = e.getKey();
-		    				 Block block = GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(loc));
-		    				 if(block != null) {
+		        			 String name = e.getKey();
+		        			 Option opt = new Option();
+		        			 if(name.startsWith("tag/")) {
+		        				 String tag = name.substring(name.indexOf('/'));
+		        				 ITagCollection<Block> col = BlockTags.getCollection();
+		        				 Tag<Block> itag = (Tag<Block>) col.get(new ResourceLocation(tag));
+		        				 if(itag != null) opt.set(itag);
+		        			 }else {
+		        				 String block;
+		        				 if(name.startsWith("block/")) {
+			        				 block = name.substring(name.indexOf('/'));
+		        				 }else {
+		        					 block = name;
+		        				 }
+		        				 if(GameRegistry.findRegistry(Block.class).containsKey(new ResourceLocation(block))) opt.set(GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(block)));
+		        			 }
+		    				 if(opt.getType() != null) {
 		    					 List<BlockPos> posList = new ArrayList<BlockPos>();
 			        			 for(int i = 0; i < arr.size(); i += 3) {
 			        				 int x = arr.get(i).getAsInt();
@@ -63,9 +80,9 @@ public class RitualJsonManager extends JsonReloadListener{
 			        				 else
 			        					 LOGGER.error("Error: Block specified at ritual center! Skipping!");
 			        			 }
-			        			 blocks.put(block, posList);
+			        			 blocks.put(opt, posList);
 		    				 }else {
-		    					 LOGGER.error("Error: Block: {} not registered! Skipping!", loc);
+		    					 LOGGER.error("Error: Block/Tag: {} not registered! Skipping!", name);
 		    				 }
 			        	 }
 	        		 }
@@ -83,6 +100,55 @@ public class RitualJsonManager extends JsonReloadListener{
 		for(Ritual r : GameRegistry.findRegistry(Ritual.class).getValues()) {
 			if(!r.isValid()) LOGGER.error("Warning! Ritual: {} Had a problem loading and will be ignored! Be sure to check the json format!", r.getRegistryName());
 		}
+	}
+	
+	public static class Option {
+		
+		private Block block;
+		private Tag<Block> tag;
+		
+		public Option() {
+			block = null;
+			tag = null;
+		}
+		
+		public Option(Block block) {
+			this.block = block;
+		}
+		
+		public Option(Tag<Block> tag) {
+			this.tag = tag;
+		}
+		
+		public boolean set(Block block) {
+			if(tag == null) {
+				this.block = block;
+				return true;
+			}
+			return false;
+		}
+		
+		public boolean set(Tag<Block> tag) {
+			if(block == null) {
+				this.tag = tag;
+				return true;
+			}
+			return false;
+		}
+		
+		public Class<?> getType(){
+			if(block != null) {
+				return Block.class;
+			}else if(tag != null) {
+				return Tag.class;
+			}
+			return null;
+		}
+		
+		public Object get() {
+			return block != null ? block : tag != null ? tag : null;
+		}
+		
 	}
 
 }

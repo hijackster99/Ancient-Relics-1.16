@@ -8,11 +8,13 @@ import com.hijackster99.ancientrelics.blocks.ARBlock;
 import com.hijackster99.ancientrelics.core.EnumRitualType;
 import com.hijackster99.ancientrelics.core.IInteractable;
 import com.hijackster99.ancientrelics.core.IRandomUpdate;
+import com.hijackster99.ancientrelics.core.classloader.RitualJsonManager.Option;
 import com.hijackster99.ancientrelics.tileentity.ARTileEntity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.tags.Tag;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -26,7 +28,7 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 	private int tier;
 	private EnumRitualType type;
 	private Ritual ritual = null;
-	private Iterator<Entry<BlockPos, Block>> iter;
+	private Iterator<Entry<BlockPos, Option>> iter;
 	private TileEntityWrapper wrapper = new TileEntityWrapper();
 	
 	public RitualStone() {
@@ -73,12 +75,15 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 
 	@Override
 	public void tick() {
-		if(ritual == null) {
-			setRitual(RitualBuilder.activeRituals.getOrDefault(pos, null));
-			RitualBuilder.activeRituals.remove(pos);
-		}
-		if(ritual == null || !checkRitual()) {
-			getWorld().setBlockState(pos, getInactiveBlock().getDefaultState());
+		if(!world.isRemote()) {
+			if(ritual == null) {
+				setRitual(RitualBuilder.activeRituals.get(pos));
+				RitualBuilder.activeRituals.remove(pos);
+			}
+			if(ritual == null || !checkRitual()) {
+				getWorld().removeBlock(pos, false);
+				getWorld().setBlockState(pos, getInactiveBlock().getDefaultState());
+			}
 		}
 		wrapper.tick(getWorld(), pos);
 	}
@@ -93,13 +98,20 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 		wrapper.randomTick(state, worldIn, pos, random);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private boolean checkRitual() {
 		if(ritual.getTier() != tier) return false;
 		for(int i = 0; i < Ritual.blocksChecked; i++) {
 			if(iter.hasNext()) {
-				Entry<BlockPos, Block> e = iter.next();
-				if(getWorld().getBlockState(e.getKey().add(pos)).getBlock() != e.getValue()) {
-					return false;
+				Entry<BlockPos, Option> e = iter.next();
+				if(e.getValue().getType().equals(Block.class)) {
+					if(getWorld().getBlockState(e.getKey().add(pos)).getBlock() != (Block) e.getValue().get()) {
+						return false;
+					}
+				}else if(e.getValue().getType().equals(Tag.class)) {
+					if(!((Tag<Block>) e.getValue().get()).contains(getWorld().getBlockState(e.getKey().add(pos)).getBlock())) {
+						return false;
+					}
 				}
 			}else {
 				iter = ritual.getRitualBlocksIter().entrySet().iterator();
