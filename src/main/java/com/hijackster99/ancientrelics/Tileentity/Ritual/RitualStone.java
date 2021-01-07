@@ -1,12 +1,16 @@
-package com.hijackster99.ancientrelics.Tileentity.Ritual;
+package com.hijackster99.ancientrelics.tileentity.ritual;
 
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Random;
 
-import com.hijackster99.ancientrelics.Tileentity.ARTileEntity;
+import com.hijackster99.ancientrelics.blocks.ARBlock;
 import com.hijackster99.ancientrelics.core.EnumRitualType;
 import com.hijackster99.ancientrelics.core.IInteractable;
 import com.hijackster99.ancientrelics.core.IRandomUpdate;
+import com.hijackster99.ancientrelics.tileentity.ARTileEntity;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -22,10 +26,11 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 	private int tier;
 	private EnumRitualType type;
 	private Ritual ritual = null;
+	private Iterator<Entry<BlockPos, Block>> iter;
 	private TileEntityWrapper wrapper = new TileEntityWrapper();
 	
 	public RitualStone() {
-		this(0, null);
+		this(0, EnumRitualType.RUBY);
 	}
 	
 	public RitualStone(int tier, EnumRitualType type) {
@@ -55,16 +60,26 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 	}
 
 	public void setRitual(Ritual ritual) {
-		this.ritual = ritual;
-		try {
-			this.wrapper = this.ritual.wrapper.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			e.printStackTrace();
+		if(ritual != null) {
+			this.ritual = ritual;
+			try {
+				this.wrapper = this.ritual.wrapper.newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			iter =  ritual.getRitualBlocksIter().entrySet().iterator();
 		}
 	}
 
 	@Override
 	public void tick() {
+		if(ritual == null) {
+			setRitual(RitualBuilder.activeRituals.getOrDefault(pos, null));
+			RitualBuilder.activeRituals.remove(pos);
+		}
+		if(ritual == null || !checkRitual()) {
+			getWorld().setBlockState(pos, getInactiveBlock().getDefaultState());
+		}
 		wrapper.tick(getWorld(), pos);
 	}
 
@@ -76,6 +91,75 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 	@Override
 	public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
 		wrapper.randomTick(state, worldIn, pos, random);
+	}
+	
+	private boolean checkRitual() {
+		if(ritual.getTier() != tier) return false;
+		for(int i = 0; i < Ritual.blocksChecked; i++) {
+			if(iter.hasNext()) {
+				Entry<BlockPos, Block> e = iter.next();
+				if(getWorld().getBlockState(e.getKey().add(pos)).getBlock() != e.getValue()) {
+					return false;
+				}
+			}else {
+				iter = ritual.getRitualBlocksIter().entrySet().iterator();
+			}
+		}
+		return true;
+	}
+	
+	private Block getInactiveBlock() {
+		switch(type.ordinal()) {
+		case 0:
+			switch(tier) {
+			case 1:
+				return ARBlock.RITUAL_STONE_1_RUBY;
+			case 2:
+				return ARBlock.RITUAL_STONE_2_RUBY;
+			case 3:
+				return ARBlock.RITUAL_STONE_3_RUBY;
+			case 4:
+				return ARBlock.RITUAL_STONE_4_RUBY;
+			case 5:
+				return ARBlock.RITUAL_STONE_5_RUBY;
+			}
+			break;
+		case 1:
+			switch(tier) {
+			case 1:
+				return ARBlock.RITUAL_STONE_1_PERIDOT;
+			case 2:
+				return ARBlock.RITUAL_STONE_2_PERIDOT;
+			case 3:
+				return ARBlock.RITUAL_STONE_3_PERIDOT;
+			case 4:
+				return ARBlock.RITUAL_STONE_4_PERIDOT;
+			case 5:
+				return ARBlock.RITUAL_STONE_5_PERIDOT;
+			}
+			break;
+		case 2:
+			switch(tier) {
+			case 1:
+				return ARBlock.RITUAL_STONE_1_SAPPHIRE;
+			case 2:
+				return ARBlock.RITUAL_STONE_2_SAPPHIRE;
+			case 3:
+				return ARBlock.RITUAL_STONE_3_SAPPHIRE;
+			case 4:
+				return ARBlock.RITUAL_STONE_4_SAPPHIRE;
+			case 5:
+				return ARBlock.RITUAL_STONE_5_SAPPHIRE;
+			}
+			break;
+		case 3:
+			switch(tier) {
+			case 6:
+				return ARBlock.RITUAL_STONE_6;
+			}
+			break;
+		}
+		return ARBlock.RITUAL_STONE_1_RUBY;
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.hijackster99.ancientrelics.Blocks;
+package com.hijackster99.ancientrelics.blocks;
 
 import com.hijackster99.ancientrelics.core.Util;
 

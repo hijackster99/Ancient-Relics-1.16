@@ -1,4 +1,4 @@
-package com.hijackster99.ancientrelics.Items;
+package com.hijackster99.ancientrelics.items;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemGroup;

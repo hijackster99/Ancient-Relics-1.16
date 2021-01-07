@@ -1,6 +1,6 @@
-package com.hijackster99.ancientrelics.Items;
+package com.hijackster99.ancientrelics.items;
 
-import com.hijackster99.ancientrelics.Blocks.ARBlock;
+import com.hijackster99.ancientrelics.blocks.ARBlock;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

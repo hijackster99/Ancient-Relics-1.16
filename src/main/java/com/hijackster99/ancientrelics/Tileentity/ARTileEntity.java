@@ -1,7 +1,7 @@
-package com.hijackster99.ancientrelics.Tileentity;
+package com.hijackster99.ancientrelics.tileentity;
 
-import com.hijackster99.ancientrelics.Tileentity.Ritual.RitualStone;
 import com.hijackster99.ancientrelics.core.References;
+import com.hijackster99.ancientrelics.tileentity.ritual.RitualStone;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;

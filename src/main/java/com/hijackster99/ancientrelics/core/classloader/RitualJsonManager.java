@@ -15,7 +15,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.hijackster99.ancientrelics.Tileentity.Ritual.Ritual;
+import com.hijackster99.ancientrelics.tileentity.ritual.Ritual;
+import com.hijackster99.ancientrelics.tileentity.ritual.RitualBuilder;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.JsonReloadListener;
@@ -41,7 +42,7 @@ public class RitualJsonManager extends JsonReloadListener{
 	         if (resourcelocation.getPath().startsWith("_")) continue; //Forge: filter anything beginning with "_" as it's used for metadata.
 			 if(GameRegistry.findRegistry(Ritual.class).containsKey(resourcelocation)) {
 				 JsonElement tierElement = entry.getValue().getAsJsonObject().get("tier");
-				 GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).tier = tierElement.getAsInt();
+				 GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).setTier(tierElement.getAsInt());
         		 Map<Block, List<BlockPos>> blocks = new HashMap<Block, List<BlockPos>>();
 	        	 JsonObject object = entry.getValue().getAsJsonObject().get("blocks").getAsJsonObject();
 	        	 Set<Map.Entry<String, JsonElement>> names = object.entrySet();
@@ -69,11 +70,12 @@ public class RitualJsonManager extends JsonReloadListener{
 			        	 }
 	        		 }
 		         }
-    			 GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).ritualBlocks = blocks;
+    			 GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).setRitualBlocks(blocks);
 			 }else {
 				 LOGGER.error("Error: Ritual: {} not registered! Skipping!", resourcelocation);
 			 }
 		}
+		RitualBuilder.rituals = null;
 		printInvalidRituals();
 	}
 	

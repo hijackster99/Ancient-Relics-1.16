@@ -1,4 +1,4 @@
-package com.hijackster99.ancientrelics.Blocks;
+package com.hijackster99.ancientrelics.blocks;
 
 import com.hijackster99.ancientrelics.core.References;
 
@@ -102,6 +102,54 @@ public class ARBlock extends Block{
 	
 	@ObjectHolder(References.MODID + ":ritual_stone_6")
 	public static ARBlock RITUAL_STONE_6;
+
+	@ObjectHolder(References.MODID + ":ritual_stone_1_ruby_active")
+	public static ARBlock RITUAL_STONE_1_RUBY_ACTIVE;
+	
+	@ObjectHolder(References.MODID + ":ritual_stone_2_ruby_active")
+	public static ARBlock RITUAL_STONE_2_RUBY_ACTIVE;
+	
+	@ObjectHolder(References.MODID + ":ritual_stone_3_ruby_active")
+	public static ARBlock RITUAL_STONE_3_RUBY_ACTIVE;
+	
+	@ObjectHolder(References.MODID + ":ritual_stone_4_ruby_active")
+	public static ARBlock RITUAL_STONE_4_RUBY_ACTIVE;
+	
+	@ObjectHolder(References.MODID + ":ritual_stone_5_ruby_active")
+	public static ARBlock RITUAL_STONE_5_RUBY_ACTIVE;
+	
+	@ObjectHolder(References.MODID + ":ritual_stone_1_peridot_active")
+	public static ARBlock RITUAL_STONE_1_PERIDOT_ACTIVE;
+	
+	@ObjectHolder(References.MODID + ":ritual_stone_2_peridot_active")
+	public static ARBlock RITUAL_STONE_2_PERIDOT_ACTIVE;
+	
+	@ObjectHolder(References.MODID + ":ritual_stone_3_peridot_active")
+	public static ARBlock RITUAL_STONE_3_PERIDOT_ACTIVE;
+	
+	@ObjectHolder(References.MODID + ":ritual_stone_4_peridot_active")
+	public static ARBlock RITUAL_STONE_4_PERIDOT_ACTIVE;
+	
+	@ObjectHolder(References.MODID + ":ritual_stone_5_peridot_active")
+	public static ARBlock RITUAL_STONE_5_PERIDOT_ACTIVE;
+	
+	@ObjectHolder(References.MODID + ":ritual_stone_1_sapphire_active")
+	public static ARBlock RITUAL_STONE_1_SAPPHIRE_ACTIVE;
+	
+	@ObjectHolder(References.MODID + ":ritual_stone_2_sapphire_active")
+	public static ARBlock RITUAL_STONE_2_SAPPHIRE_ACTIVE;
+	
+	@ObjectHolder(References.MODID + ":ritual_stone_3_sapphire_active")
+	public static ARBlock RITUAL_STONE_3_SAPPHIRE_ACTIVE;
+	
+	@ObjectHolder(References.MODID + ":ritual_stone_4_sapphire_active")
+	public static ARBlock RITUAL_STONE_4_SAPPHIRE_ACTIVE;
+	
+	@ObjectHolder(References.MODID + ":ritual_stone_5_sapphire_active")
+	public static ARBlock RITUAL_STONE_5_SAPPHIRE_ACTIVE;
+	
+	@ObjectHolder(References.MODID + ":ritual_stone_6_active")
+	public static ARBlock RITUAL_STONE_6_ACTIVE;
 
 	@ObjectHolder(References.MODID + ":pedestal")
 	public static ARBlock PEDESTAL;

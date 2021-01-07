@@ -1,4 +1,4 @@
-package com.hijackster99.ancientrelics.Tileentity.Ritual;
+package com.hijackster99.ancientrelics.tileentity.ritual;
 
 import com.hijackster99.ancientrelics.core.References;
 
