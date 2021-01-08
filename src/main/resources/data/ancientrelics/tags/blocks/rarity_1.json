@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:storage_blocks/iron",
+    "#forge:storage_blocks/tin",
+    "#forge:storage_blocks/copper",
+    "#forge:storage_blocks/zinc",
+    "#forge:storage_blocks/bronze",
+    "#forge:storage_blocks/brass"
+  ]
+}

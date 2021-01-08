@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:storage_blocks/netherite",
+	"#forge:storage_blocks/iridium"
+  ]
+}

@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 
 import com.hijackster99.ancientrelics.core.classloader.RitualJsonManager.Option;
 
+import net.minecraft.block.Block;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -15,11 +17,11 @@ public class Ritual extends ForgeRegistryEntry<Ritual>{
 	public Class<? extends TileEntityWrapper> wrapper;
 	private Map<Option, List<BlockPos>> ritualBlocks;
 	private Map<BlockPos, Option> ritualBlocksIter;
-	private int tier;
+	private Tag<Block> tier;
 	
 	public static int blocksChecked = 4;
 	
-	public Ritual(String name, Class<? extends TileEntityWrapper> wrapper, Map<Option, List<BlockPos>> ritualBlocks, int tier) {
+	public Ritual(String name, Class<? extends TileEntityWrapper> wrapper, Map<Option, List<BlockPos>> ritualBlocks, Tag<Block> tier) {
 		this.wrapper = wrapper;
 		this.ritualBlocks = ritualBlocks;
 		this.tier = tier;
@@ -27,11 +29,11 @@ public class Ritual extends ForgeRegistryEntry<Ritual>{
 	}
 	
 	public Ritual(String name, Class<? extends TileEntityWrapper> wrapper) {
-		this(name, wrapper, null, 0);
+		this(name, wrapper, null, null);
 	}
 	
 	public boolean isValid() {
-		return tier > 0 && tier < 7 && !ritualBlocks.isEmpty();
+		return tier != null && !ritualBlocks.isEmpty();
 	}
 	
 	public Map<Option, List<BlockPos>> getRitualBlocks() {
@@ -53,11 +55,11 @@ public class Ritual extends ForgeRegistryEntry<Ritual>{
 		return ritualBlocksIter;
 	}
 
-	public int getTier() {
+	public Tag<Block> getTier() {
 		return tier;
 	}
 
-	public void setTier(int tier) {
+	public void setTier(Tag<Block> tier) {
 		this.tier = tier;
 	}
 	

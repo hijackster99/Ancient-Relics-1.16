@@ -2,6 +2,7 @@
 	"tier": 1,
 	"blocks": {
 		"ancientrelics:arcane_stone_1": [ 1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1 ],
+		"minecraft:air": [ 1, 1, 0, 0, 1, 1, -1, 1, 0, 0, 1, -1 ],
 		"ancientrelics:pedestal": [ 0, 1, 0 ]
 	}
 }

@@ -8,15 +8,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.hijackster99.ancientrelics.blocks.ARBlock;
-import com.hijackster99.ancientrelics.blocks.RitualBlock;
 import com.hijackster99.ancientrelics.core.References;
 import com.hijackster99.ancientrelics.core.classloader.RitualJsonManager.Option;
 
 import net.minecraft.block.Block;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -30,34 +32,40 @@ public class RitualBuilder {
 	@SuppressWarnings("unchecked")
 	@SubscribeEvent
 	public static void worldTick(WorldTickEvent event) {
-		if(rituals == null) getRituals();
-		for(Iterator<Checker> c = ritualCheckers.iterator(); c.hasNext(); ) {
-			Checker check = c.next();
-			if(check.dimension.equals(event.world.getDimensionKey().getLocation().toString())) {
-				if(check.iter == null) getNextIter(check, event);
-				if(check.iter != null && !check.iter.hasNext()) {
-					if(check.valid) {
-						if(!((RitualBlock) event.world.getBlockState(check.pos).getBlock()).isActive()) {
-							activeRituals.put(check.pos, rituals.get(check.counter));
-							event.world.setBlockState(check.pos, getActiveBlock(event.world.getBlockState(check.pos).getBlock()).getDefaultState());
-							c.remove();
-						}
-					}
-					check.valid = true;
-					getNextIter(check, event);
-				}else if(check.iter != null){
-					for(int i = 0; i < Ritual.blocksChecked; i++) {
-						if(check.iter.hasNext()) {
-							Entry<BlockPos, Option> entry = check.iter.next();
-							if(entry.getValue().getType().equals(Block.class)) {
-								if(event.world.getBlockState(check.pos.add(entry.getKey())).getBlock() != (Block) entry.getValue().get()) check.valid = false;
-							}else if(entry.getValue().getType().equals(Tag.class)) {
-								if(!((Tag<Block>) entry.getValue().get()).contains(event.world.getBlockState(check.pos.add(entry.getKey())).getBlock())) check.valid = false;
+		if(event.side == LogicalSide.SERVER) {
+			if(rituals == null) getRituals();
+			for(Iterator<Checker> c = ritualCheckers.iterator(); c.hasNext(); ) {
+				Checker check = c.next();
+				if(check.dimension.equals(event.world.getDimensionKey().getLocation().toString())) {
+					if(check.iter == null) getNextIter(check, event);
+					if(check.iter != null && !check.iter.hasNext()) {
+						if(check.valid) {
+							if(BlockTags.getCollection().get(new ResourceLocation("ancientrelics:ritual_type_inactive")) != null && BlockTags.getCollection().get(new ResourceLocation("ancientrelics:ritual_type_inactive")).contains(event.world.getBlockState(check.pos).getBlock())) {
+								activeRituals.put(check.pos, rituals.get(check.counter));
+								event.world.setBlockState(check.pos, getActiveBlock(event.world.getBlockState(check.pos).getBlock()).getDefaultState());
+								c.remove();
 							}
 						}
+						check.valid = true;
+						getNextIter(check, event);
+					}else if(check.iter != null){
+						for(int i = 0; i < Ritual.blocksChecked; i++) {
+							if(check.iter.hasNext()) {
+								Entry<BlockPos, Option> entry = check.iter.next();
+								if(entry.getValue().getType().equals(Block.class)) {
+									System.out.println(event.world.getBlockState(check.pos.add(entry.getKey())).getBlock() + " = " + entry.getValue().get());
+									if(event.world.getBlockState(check.pos.add(entry.getKey())).getBlock() != (Block) entry.getValue().get()) check.valid = false;
+									System.out.println(check.valid);
+								}else if(entry.getValue().getType().equals(Tag.class)) {
+									System.out.println(((Tag<Block>) entry.getValue().get()).getAllElements() + " = " + event.world.getBlockState(check.pos.add(entry.getKey())).getBlock());
+									if(!((Tag<Block>) entry.getValue().get()).contains(event.world.getBlockState(check.pos.add(entry.getKey())).getBlock())) check.valid = false;
+									System.out.println(check.valid);
+								}
+							}
+						}
+					}else {
+						c.remove();
 					}
-				}else {
-					c.remove();
 				}
 			}
 		}
@@ -68,7 +76,7 @@ public class RitualBuilder {
 		check.counter++;
 		for( ;check.counter < rituals.size(); check.counter++){
 			Ritual rit = rituals.get(check.counter);
-			if(rit.getTier() == ((RitualBlock) event.world.getBlockState(check.pos).getBlock()).getTier()) {
+			if(rit.getTier().contains(event.world.getBlockState(check.pos).getBlock())) {
 				check.iter = rituals.get(check.counter).getRitualBlocksIter().entrySet().iterator();
 				break;
 			}

@@ -22,9 +22,8 @@ import net.minecraft.block.Block;
 import net.minecraft.client.resources.JsonReloadListener;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IResourceManager;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITagCollection;
 import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagCollectionManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -45,7 +44,7 @@ public class RitualJsonManager extends JsonReloadListener{
 	         if (resourcelocation.getPath().startsWith("_")) continue; //Forge: filter anything beginning with "_" as it's used for metadata.
 			 if(GameRegistry.findRegistry(Ritual.class).containsKey(resourcelocation)) {
 				 JsonElement tierElement = entry.getValue().getAsJsonObject().get("tier");
-				 GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).setTier(tierElement.getAsInt());
+				 if(TagCollectionManager.getManager().getBlockTags().get(new ResourceLocation("ancientrelics:ritual_tier_" + tierElement.getAsInt())) != null) GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).setTier((Tag<Block>) TagCollectionManager.getManager().getBlockTags().get(new ResourceLocation("ancientrelics:ritual_tier_" + tierElement.getAsInt())));
         		 Map<Option, List<BlockPos>> blocks = new HashMap<Option, List<BlockPos>>();
 	        	 JsonObject object = entry.getValue().getAsJsonObject().get("blocks").getAsJsonObject();
 	        	 Set<Map.Entry<String, JsonElement>> names = object.entrySet();
@@ -55,19 +54,12 @@ public class RitualJsonManager extends JsonReloadListener{
 			        	 if(arr.size() > 1 && arr.size() % 3 == 0) {
 		        			 String name = e.getKey();
 		        			 Option opt = new Option();
-		        			 if(name.startsWith("tag/")) {
-		        				 String tag = name.substring(name.indexOf('/'));
-		        				 ITagCollection<Block> col = BlockTags.getCollection();
-		        				 Tag<Block> itag = (Tag<Block>) col.get(new ResourceLocation(tag));
-		        				 if(itag != null) opt.set(itag);
+		        			 if(name.startsWith("#")) {
+		        				 name = name.substring(1);
+		        				 Tag<Block> tag = (Tag<Block>) TagCollectionManager.getManager().getBlockTags().get(new ResourceLocation(name));
+		        				 if(tag != null) opt.set(tag);
 		        			 }else {
-		        				 String block;
-		        				 if(name.startsWith("block/")) {
-			        				 block = name.substring(name.indexOf('/'));
-		        				 }else {
-		        					 block = name;
-		        				 }
-		        				 if(GameRegistry.findRegistry(Block.class).containsKey(new ResourceLocation(block))) opt.set(GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(block)));
+		        				 if(GameRegistry.findRegistry(Block.class).containsKey(new ResourceLocation(name))) opt.set(GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(name)));
 		        			 }
 		    				 if(opt.getType() != null) {
 		    					 List<BlockPos> posList = new ArrayList<BlockPos>();

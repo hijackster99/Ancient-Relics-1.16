@@ -5,7 +5,6 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import com.hijackster99.ancientrelics.blocks.ARBlock;
-import com.hijackster99.ancientrelics.core.EnumRitualType;
 import com.hijackster99.ancientrelics.core.IInteractable;
 import com.hijackster99.ancientrelics.core.IRandomUpdate;
 import com.hijackster99.ancientrelics.core.classloader.RitualJsonManager.Option;
@@ -25,35 +24,35 @@ import net.minecraft.world.server.ServerWorld;
 
 public class RitualStone extends ARTileEntity implements ITickableTileEntity, IInteractable, IRandomUpdate {
 
-	private int tier;
-	private EnumRitualType type;
+	private Tag<Block> tier;
+	private Tag<Block> type;
 	private Ritual ritual = null;
 	private Iterator<Entry<BlockPos, Option>> iter;
 	private TileEntityWrapper wrapper = new TileEntityWrapper();
 	
 	public RitualStone() {
-		this(0, EnumRitualType.RUBY);
+		this(null, null);
 	}
 	
-	public RitualStone(int tier, EnumRitualType type) {
+	public RitualStone(Tag<Block> tier, Tag<Block> type) {
 		super(ARTileEntity.RITUAL_STONE);
 		this.tier = tier;
 		this.type = type;
 	}
 
-	public EnumRitualType getRitualType() {
+	public Tag<Block> getRitualType() {
 		return type;
 	}
 
-	public void setRitualType(EnumRitualType type) {
+	public void setRitualType(Tag<Block> type) {
 		this.type = type;
 	}
 
-	public int getTier() {
+	public Tag<Block> getTier() {
 		return tier;
 	}
 
-	public void setTier(int tier) {
+	public void setTier(Tag<Block> tier) {
 		this.tier = tier;
 	}
 
@@ -121,57 +120,7 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 	}
 	
 	private Block getInactiveBlock() {
-		switch(type.ordinal()) {
-		case 0:
-			switch(tier) {
-			case 1:
-				return ARBlock.RITUAL_STONE_1_RUBY;
-			case 2:
-				return ARBlock.RITUAL_STONE_2_RUBY;
-			case 3:
-				return ARBlock.RITUAL_STONE_3_RUBY;
-			case 4:
-				return ARBlock.RITUAL_STONE_4_RUBY;
-			case 5:
-				return ARBlock.RITUAL_STONE_5_RUBY;
-			}
-			break;
-		case 1:
-			switch(tier) {
-			case 1:
-				return ARBlock.RITUAL_STONE_1_PERIDOT;
-			case 2:
-				return ARBlock.RITUAL_STONE_2_PERIDOT;
-			case 3:
-				return ARBlock.RITUAL_STONE_3_PERIDOT;
-			case 4:
-				return ARBlock.RITUAL_STONE_4_PERIDOT;
-			case 5:
-				return ARBlock.RITUAL_STONE_5_PERIDOT;
-			}
-			break;
-		case 2:
-			switch(tier) {
-			case 1:
-				return ARBlock.RITUAL_STONE_1_SAPPHIRE;
-			case 2:
-				return ARBlock.RITUAL_STONE_2_SAPPHIRE;
-			case 3:
-				return ARBlock.RITUAL_STONE_3_SAPPHIRE;
-			case 4:
-				return ARBlock.RITUAL_STONE_4_SAPPHIRE;
-			case 5:
-				return ARBlock.RITUAL_STONE_5_SAPPHIRE;
-			}
-			break;
-		case 3:
-			switch(tier) {
-			case 6:
-				return ARBlock.RITUAL_STONE_6;
-			}
-			break;
-		}
-		return ARBlock.RITUAL_STONE_1_RUBY;
+		return tier != null && type != null ? tier.contains(ARBlock.RITUAL_STONE_1_RUBY) && type.contains(ARBlock.RITUAL_STONE_1_RUBY) ? ARBlock.RITUAL_STONE_1_RUBY : tier.contains(ARBlock.RITUAL_STONE_2_RUBY) && type.contains(ARBlock.RITUAL_STONE_2_RUBY) ? ARBlock.RITUAL_STONE_2_RUBY : tier.contains(ARBlock.RITUAL_STONE_3_RUBY) && type.contains(ARBlock.RITUAL_STONE_3_RUBY) ? ARBlock.RITUAL_STONE_3_RUBY : tier.contains(ARBlock.RITUAL_STONE_4_RUBY) && type.contains(ARBlock.RITUAL_STONE_4_RUBY) ? ARBlock.RITUAL_STONE_4_RUBY : tier.contains(ARBlock.RITUAL_STONE_5_RUBY) && type.contains(ARBlock.RITUAL_STONE_5_RUBY) ? ARBlock.RITUAL_STONE_5_RUBY : tier.contains(ARBlock.RITUAL_STONE_1_PERIDOT) && type.contains(ARBlock.RITUAL_STONE_1_PERIDOT) ? ARBlock.RITUAL_STONE_1_PERIDOT : tier.contains(ARBlock.RITUAL_STONE_2_PERIDOT) && type.contains(ARBlock.RITUAL_STONE_2_PERIDOT) ? ARBlock.RITUAL_STONE_2_PERIDOT : tier.contains(ARBlock.RITUAL_STONE_3_PERIDOT) && type.contains(ARBlock.RITUAL_STONE_3_PERIDOT) ? ARBlock.RITUAL_STONE_3_PERIDOT : tier.contains(ARBlock.RITUAL_STONE_4_PERIDOT) && type.contains(ARBlock.RITUAL_STONE_4_PERIDOT) ? ARBlock.RITUAL_STONE_4_PERIDOT : tier.contains(ARBlock.RITUAL_STONE_5_PERIDOT) && type.contains(ARBlock.RITUAL_STONE_5_PERIDOT) ? ARBlock.RITUAL_STONE_5_PERIDOT : tier.contains(ARBlock.RITUAL_STONE_1_SAPPHIRE) && type.contains(ARBlock.RITUAL_STONE_1_SAPPHIRE) ? ARBlock.RITUAL_STONE_1_SAPPHIRE : tier.contains(ARBlock.RITUAL_STONE_2_SAPPHIRE) && type.contains(ARBlock.RITUAL_STONE_2_SAPPHIRE) ? ARBlock.RITUAL_STONE_2_SAPPHIRE : tier.contains(ARBlock.RITUAL_STONE_3_SAPPHIRE) && type.contains(ARBlock.RITUAL_STONE_3_SAPPHIRE) ? ARBlock.RITUAL_STONE_3_SAPPHIRE : tier.contains(ARBlock.RITUAL_STONE_4_SAPPHIRE) && type.contains(ARBlock.RITUAL_STONE_4_SAPPHIRE) ? ARBlock.RITUAL_STONE_4_SAPPHIRE : tier.contains(ARBlock.RITUAL_STONE_5_SAPPHIRE) && type.contains(ARBlock.RITUAL_STONE_5_SAPPHIRE) ? ARBlock.RITUAL_STONE_5_SAPPHIRE : tier.contains(ARBlock.RITUAL_STONE_6) && type.contains(ARBlock.RITUAL_STONE_6) ? ARBlock.RITUAL_STONE_6 : ARBlock.RITUAL_STONE_1_RUBY : ARBlock.RITUAL_STONE_1_RUBY;
 	}
 
 }
