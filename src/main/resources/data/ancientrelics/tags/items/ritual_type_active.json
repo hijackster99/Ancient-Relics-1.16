@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "ancientrelics:ritual_stone_1_ruby_active",
+	"ancientrelics:ritual_stone_1_peridot_active",
+	"ancientrelics:ritual_stone_1_sapphire_active",
+    "ancientrelics:ritual_stone_2_ruby_active",
+	"ancientrelics:ritual_stone_2_peridot_active",
+	"ancientrelics:ritual_stone_2_sapphire_active",
+    "ancientrelics:ritual_stone_3_ruby_active",
+	"ancientrelics:ritual_stone_3_peridot_active",
+	"ancientrelics:ritual_stone_3_sapphire_active",
+    "ancientrelics:ritual_stone_4_ruby_active",
+	"ancientrelics:ritual_stone_4_peridot_active",
+	"ancientrelics:ritual_stone_4_sapphire_active",
+    "ancientrelics:ritual_stone_5_ruby_active",
+	"ancientrelics:ritual_stone_5_peridot_active",
+	"ancientrelics:ritual_stone_5_sapphire_active",
+	"ancientrelics:ritual_stone_6_active"
+  ]
+}

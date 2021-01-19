@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "ancientrelics:ritual_stone_4_ruby",
+	"ancientrelics:ritual_stone_4_peridot",
+	"ancientrelics:ritual_stone_4_sapphire",
+	"ancientrelics:ritual_stone_4_ruby_active",
+	"ancientrelics:ritual_stone_4_peridot_active",
+	"ancientrelics:ritual_stone_4_sapphire_active"
+  ]
+}

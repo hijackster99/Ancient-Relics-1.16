@@ -141,6 +141,18 @@ public class RitualJsonManager extends JsonReloadListener{
 			return block != null ? block : tag != null ? tag : null;
 		}
 		
+		@SuppressWarnings("unchecked")
+		@Override
+		public String toString() {
+			List<Block> blocks = new ArrayList<Block>();
+			if(getType().equals(Block.class)) {
+				blocks.add((Block) get());
+			}else {
+				blocks.addAll(((Tag<Block>) get()).getAllElements());
+			}
+			return "Option: " + blocks.toString();
+		}
+		
 	}
 
 }

@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "ancientrelics:ritual_stone_1_peridot",
+	"ancientrelics:ritual_stone_2_peridot",
+	"ancientrelics:ritual_stone_3_peridot",
+	"ancientrelics:ritual_stone_4_peridot",
+	"ancientrelics:ritual_stone_5_peridot",
+	"ancientrelics:ritual_stone_1_peridot_active",
+	"ancientrelics:ritual_stone_2_peridot_active",
+	"ancientrelics:ritual_stone_3_peridot_active",
+	"ancientrelics:ritual_stone_4_peridot_active",
+	"ancientrelics:ritual_stone_5_peridot_active"
+  ]
+}

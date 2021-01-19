@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "ancientrelics:ritual_stone_1_sapphire",
+	"ancientrelics:ritual_stone_2_sapphire",
+	"ancientrelics:ritual_stone_3_sapphire",
+	"ancientrelics:ritual_stone_4_sapphire",
+	"ancientrelics:ritual_stone_5_sapphire",
+	"ancientrelics:ritual_stone_1_sapphire_active",
+	"ancientrelics:ritual_stone_2_sapphire_active",
+	"ancientrelics:ritual_stone_3_sapphire_active",
+	"ancientrelics:ritual_stone_4_sapphire_active",
+	"ancientrelics:ritual_stone_5_sapphire_active"
+  ]
+}

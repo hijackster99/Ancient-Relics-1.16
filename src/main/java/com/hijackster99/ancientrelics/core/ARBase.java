@@ -16,6 +16,7 @@ import com.hijackster99.ancientrelics.items.BurnableBlock;
 import com.hijackster99.ancientrelics.items.ChargerBlockItem;
 import com.hijackster99.ancientrelics.items.Filter;
 import com.hijackster99.ancientrelics.items.PeridotStaff;
+import com.hijackster99.ancientrelics.items.RitualBuilder;
 import com.hijackster99.ancientrelics.items.RitualMaker;
 import com.hijackster99.ancientrelics.items.RubyStaff;
 import com.hijackster99.ancientrelics.items.SapphireStaff;
@@ -101,6 +102,8 @@ public class ARBase {
 		event.getRegistry().register(filter);
 		Item ritualMaker = new RitualMaker("ritual_maker", 1, ARGroup);
 		event.getRegistry().register(ritualMaker);
+		Item ritualBuilder = new RitualBuilder("ritual_builder", 1, ARGroup);
+		event.getRegistry().register(ritualBuilder);
 		//BlockItems
 		BlockItem arcaneStone1 = new ARBlockItem(ARBlock.ARCANE_STONE_1, 64, ARGroup);
 		event.getRegistry().register(arcaneStone1);

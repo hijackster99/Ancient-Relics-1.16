@@ -39,6 +39,12 @@ public class ARItem extends Item{
 	
 	@ObjectHolder(References.MODID + ":filter")
 	public static ARItem FILTER;
+	
+	@ObjectHolder(References.MODID + ":ritual_builder")
+	public static ARItem RITUAL_BUILDER;
+	
+	@ObjectHolder(References.MODID + ":ritual_maker")
+	public static ARItem RITUAL_MAKER;
 
 	//BlockItems
 	@ObjectHolder(References.MODID + ":arcane_stone_1")
