@@ -13,14 +13,18 @@ import com.hijackster99.ancientrelics.tileentity.ARTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class RitualStone extends ARTileEntity implements ITickableTileEntity, IInteractable, IRandomUpdate {
 
@@ -68,8 +72,37 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 			} catch (InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
-			iter =  ritual.getRitualBlocksIter().entrySet().iterator();
+			iter = ritual.getRitualBlocksIter().entrySet().iterator();
 		}
+	}
+	
+	@Override
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
+		String ritual = nbt.getString("ritual");
+		String tier = nbt.getString("tier");
+		String type = nbt.getString("type");
+		setRitual(!ritual.equals("null") ? GameRegistry.findRegistry(Ritual.class).getValue(new ResourceLocation(ritual)) : null);
+		this.type = (Tag<Block>) BlockTags.getCollection().get(new ResourceLocation(type));
+		this.tier = (Tag<Block>) BlockTags.getCollection().get(new ResourceLocation(tier));
+		wrapper.read(state, nbt);
+	}
+	
+	@Override
+	public CompoundNBT write(CompoundNBT compound) {
+		compound = wrapper.write(compound);
+		String tier = "";
+		String type = "";
+		for(ResourceLocation loc : this.getBlockState().getBlock().getTags()) {
+			String name = loc.toString();
+			if(name.endsWith("active"));
+			else if(name.startsWith(":ritual_type_", name.indexOf(':'))) type = name;
+			else if(name.startsWith(":ritual_tier_", name.indexOf(':'))) tier = name;
+		}
+		compound.putString("ritual", ritual != null ? ritual.getRegistryName().toString() : "null");
+		compound.putString("tier", tier);
+		compound.putString("type", type);
+		return super.write(compound);
 	}
 
 	@Override
@@ -120,7 +153,16 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 	}
 	
 	private Block getInactiveBlock() {
-		return tier != null && type != null ? tier.contains(ARBlock.RITUAL_STONE_1_RUBY) && type.contains(ARBlock.RITUAL_STONE_1_RUBY) ? ARBlock.RITUAL_STONE_1_RUBY : tier.contains(ARBlock.RITUAL_STONE_2_RUBY) && type.contains(ARBlock.RITUAL_STONE_2_RUBY) ? ARBlock.RITUAL_STONE_2_RUBY : tier.contains(ARBlock.RITUAL_STONE_3_RUBY) && type.contains(ARBlock.RITUAL_STONE_3_RUBY) ? ARBlock.RITUAL_STONE_3_RUBY : tier.contains(ARBlock.RITUAL_STONE_4_RUBY) && type.contains(ARBlock.RITUAL_STONE_4_RUBY) ? ARBlock.RITUAL_STONE_4_RUBY : tier.contains(ARBlock.RITUAL_STONE_5_RUBY) && type.contains(ARBlock.RITUAL_STONE_5_RUBY) ? ARBlock.RITUAL_STONE_5_RUBY : tier.contains(ARBlock.RITUAL_STONE_1_PERIDOT) && type.contains(ARBlock.RITUAL_STONE_1_PERIDOT) ? ARBlock.RITUAL_STONE_1_PERIDOT : tier.contains(ARBlock.RITUAL_STONE_2_PERIDOT) && type.contains(ARBlock.RITUAL_STONE_2_PERIDOT) ? ARBlock.RITUAL_STONE_2_PERIDOT : tier.contains(ARBlock.RITUAL_STONE_3_PERIDOT) && type.contains(ARBlock.RITUAL_STONE_3_PERIDOT) ? ARBlock.RITUAL_STONE_3_PERIDOT : tier.contains(ARBlock.RITUAL_STONE_4_PERIDOT) && type.contains(ARBlock.RITUAL_STONE_4_PERIDOT) ? ARBlock.RITUAL_STONE_4_PERIDOT : tier.contains(ARBlock.RITUAL_STONE_5_PERIDOT) && type.contains(ARBlock.RITUAL_STONE_5_PERIDOT) ? ARBlock.RITUAL_STONE_5_PERIDOT : tier.contains(ARBlock.RITUAL_STONE_1_SAPPHIRE) && type.contains(ARBlock.RITUAL_STONE_1_SAPPHIRE) ? ARBlock.RITUAL_STONE_1_SAPPHIRE : tier.contains(ARBlock.RITUAL_STONE_2_SAPPHIRE) && type.contains(ARBlock.RITUAL_STONE_2_SAPPHIRE) ? ARBlock.RITUAL_STONE_2_SAPPHIRE : tier.contains(ARBlock.RITUAL_STONE_3_SAPPHIRE) && type.contains(ARBlock.RITUAL_STONE_3_SAPPHIRE) ? ARBlock.RITUAL_STONE_3_SAPPHIRE : tier.contains(ARBlock.RITUAL_STONE_4_SAPPHIRE) && type.contains(ARBlock.RITUAL_STONE_4_SAPPHIRE) ? ARBlock.RITUAL_STONE_4_SAPPHIRE : tier.contains(ARBlock.RITUAL_STONE_5_SAPPHIRE) && type.contains(ARBlock.RITUAL_STONE_5_SAPPHIRE) ? ARBlock.RITUAL_STONE_5_SAPPHIRE : tier.contains(ARBlock.RITUAL_STONE_6) && type.contains(ARBlock.RITUAL_STONE_6) ? ARBlock.RITUAL_STONE_6 : ARBlock.RITUAL_STONE_1_RUBY : ARBlock.RITUAL_STONE_1_RUBY;
+		if(tier != null && type != null) {
+			Tag<Block> inactive = (Tag<Block>) BlockTags.getCollection().get(new ResourceLocation("ancientrelics:ritual_type_inactive"));
+			for(Block b : inactive.getAllElements()) {
+				System.out.println(type.getAllElements());
+				if(tier.contains(b) && type.contains(b)) {
+					return b;
+				}
+			}
+		}
+		return ARBlock.RITUAL_STONE_1_RUBY;
 	}
 
 }

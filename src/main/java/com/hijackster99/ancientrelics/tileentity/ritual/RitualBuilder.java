@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.hijackster99.ancientrelics.blocks.ARBlock;
 import com.hijackster99.ancientrelics.core.References;
@@ -106,22 +107,26 @@ public class RitualBuilder {
 	}
 	
 	public static Block getActiveBlock(Block block) {
-		if(block == ARBlock.RITUAL_STONE_1_RUBY) return ARBlock.RITUAL_STONE_1_RUBY_ACTIVE;
-		if(block == ARBlock.RITUAL_STONE_2_RUBY) return ARBlock.RITUAL_STONE_2_RUBY_ACTIVE;
-		if(block == ARBlock.RITUAL_STONE_3_RUBY) return ARBlock.RITUAL_STONE_3_RUBY_ACTIVE;
-		if(block == ARBlock.RITUAL_STONE_4_RUBY) return ARBlock.RITUAL_STONE_4_RUBY_ACTIVE;
-		if(block == ARBlock.RITUAL_STONE_5_RUBY) return ARBlock.RITUAL_STONE_5_RUBY_ACTIVE;
-		if(block == ARBlock.RITUAL_STONE_1_PERIDOT) return ARBlock.RITUAL_STONE_1_PERIDOT_ACTIVE;
-		if(block == ARBlock.RITUAL_STONE_2_PERIDOT) return ARBlock.RITUAL_STONE_2_PERIDOT_ACTIVE;
-		if(block == ARBlock.RITUAL_STONE_3_PERIDOT) return ARBlock.RITUAL_STONE_3_PERIDOT_ACTIVE;
-		if(block == ARBlock.RITUAL_STONE_4_PERIDOT) return ARBlock.RITUAL_STONE_4_PERIDOT_ACTIVE;
-		if(block == ARBlock.RITUAL_STONE_5_PERIDOT) return ARBlock.RITUAL_STONE_5_PERIDOT_ACTIVE;
-		if(block == ARBlock.RITUAL_STONE_1_SAPPHIRE) return ARBlock.RITUAL_STONE_1_SAPPHIRE_ACTIVE;
-		if(block == ARBlock.RITUAL_STONE_2_SAPPHIRE) return ARBlock.RITUAL_STONE_2_SAPPHIRE_ACTIVE;
-		if(block == ARBlock.RITUAL_STONE_3_SAPPHIRE) return ARBlock.RITUAL_STONE_3_SAPPHIRE_ACTIVE;
-		if(block == ARBlock.RITUAL_STONE_4_SAPPHIRE) return ARBlock.RITUAL_STONE_4_SAPPHIRE_ACTIVE;
-		if(block == ARBlock.RITUAL_STONE_5_SAPPHIRE) return ARBlock.RITUAL_STONE_5_SAPPHIRE_ACTIVE;
-		else return ARBlock.RITUAL_STONE_6_ACTIVE;
+		Set<ResourceLocation> tags = block.getTags();
+		Tag<Block> tier = null;
+		Tag<Block> type = null;
+		Tag<Block> active = (Tag<Block>) BlockTags.getCollection().get(new ResourceLocation("ancientrelics:ritual_type_active"));
+		for(ResourceLocation loc : tags) {
+			if(loc.getPath().endsWith("active"));
+			else if(loc.getPath().startsWith("ritual_type_")) {
+				type = (Tag<Block>) BlockTags.getCollection().get(loc);
+			}else if(loc.getPath().startsWith("ritual_tier_")) {
+				tier = (Tag<Block>) BlockTags.getCollection().get(loc);
+			}
+		}
+		if(tier != null && type != null) {
+			for(Block b : active.getAllElements()) {
+				if(tier.contains(b) && type.contains(b)) {
+					return b;
+				}
+			}
+		}
+		return ARBlock.RITUAL_STONE_1_RUBY_ACTIVE;
 	}
 	
 	public static class Checker {

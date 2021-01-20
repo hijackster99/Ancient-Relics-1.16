@@ -46,12 +46,14 @@ public class RitualBlock extends ARBlock{
 	
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		RitualStone rs = new RitualStone();
+		Tag<Block> tier = null;
+		Tag<Block> type = null;
 		for(ResourceLocation rl : this.getTags()) {
-			if(rl.getPath().startsWith("ritual_tier")) rs.setTier((Tag<Block>) BlockTags.getCollection().get(rl));
-			else if(rl.getPath().startsWith("ritual_type")) rs.setRitualType((Tag<Block>) BlockTags.getCollection().get(rl));
+			if(rl.getPath().startsWith("ritual_tier")) tier = (Tag<Block>) BlockTags.getCollection().get(rl);
+			else if(rl.getPath().endsWith("active"));
+			else if(rl.getPath().startsWith("ritual_type")) type = (Tag<Block>) BlockTags.getCollection().get(rl);
 		}
-		return rs;
+		return new RitualStone(tier, type);
 	}
 	
 	@Override

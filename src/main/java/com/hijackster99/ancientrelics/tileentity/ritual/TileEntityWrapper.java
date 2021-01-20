@@ -4,6 +4,7 @@ import java.util.Random;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -23,6 +24,14 @@ public class TileEntityWrapper {
 	
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		return ActionResultType.PASS;
+	}
+	
+	public void read(BlockState state, CompoundNBT nbt) {
+		
+	}
+	
+	public CompoundNBT write(CompoundNBT compound) {
+		return compound;
 	}
 	
 }
