@@ -18,15 +18,19 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class RitualStone extends ARTileEntity implements ITickableTileEntity, IInteractable, IRandomUpdate {
+public class RitualStone extends ARTileEntity implements ITickableTileEntity, IInteractable, IRandomUpdate, ICapabilityProvider {
 
 	private Tag<Block> tier;
 	private Tag<Block> type;
@@ -74,6 +78,11 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 			}
 			iter = ritual.getRitualBlocksIter().entrySet().iterator();
 		}
+	}
+	
+	@Override
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		return wrapper.getCapability(cap, side);
 	}
 	
 	@Override

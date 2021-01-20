@@ -1,5 +1,7 @@
 package com.hijackster99.ancientrelics.core;
 
+import java.util.function.Supplier;
+
 import com.hijackster99.ancientrelics.blocks.ARBlock;
 import com.hijackster99.ancientrelics.blocks.ChargerBlock;
 import com.hijackster99.ancientrelics.blocks.PedestalBlock;
@@ -7,6 +9,7 @@ import com.hijackster99.ancientrelics.blocks.RelicAnvilBlock;
 import com.hijackster99.ancientrelics.blocks.RelicBlock;
 import com.hijackster99.ancientrelics.blocks.RitualBlock;
 import com.hijackster99.ancientrelics.blocks.ShardBlock;
+import com.hijackster99.ancientrelics.blocks.VoidGas;
 import com.hijackster99.ancientrelics.blocks.VoidRelayBlock;
 import com.hijackster99.ancientrelics.core.classloader.RitualJsonManager;
 import com.hijackster99.ancientrelics.items.ARBlockItem;
@@ -31,6 +34,7 @@ import com.hijackster99.ancientrelics.tileentity.ritual.wrappers.StorageWrapper;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -43,6 +47,8 @@ import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -429,6 +435,12 @@ public class ARBase {
 		event.getRegistry().register(anvil2);
 		Ritual drill = new Ritual("ancientrelics:drill_ritual", DrillWrapper.class);
 		event.getRegistry().register(drill);
+	}
+	
+	@SubscribeEvent
+	public static void registerFluids(RegistryEvent.Register<Fluid> event) {
+		Fluid voidGas = new VoidGas();
+		event.getRegistry().register(voidGas);
 	}
 	
 	@EventBusSubscriber(modid = References.MODID, bus = EventBusSubscriber.Bus.FORGE)
