@@ -225,5 +225,8 @@ public class ARBlock extends Block{
 	
 	@ObjectHolder(References.MODID + ":soul_heart")
 	public static ARBlock SOUL_HEART;
+	
+	@ObjectHolder(References.MODID + ":void_gas_block")
+	public static VoidGasBlock VOID_GAS_BLOCK;
 
 }

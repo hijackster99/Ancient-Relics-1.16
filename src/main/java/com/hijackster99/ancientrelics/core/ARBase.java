@@ -1,7 +1,5 @@
 package com.hijackster99.ancientrelics.core;
 
-import java.util.function.Supplier;
-
 import com.hijackster99.ancientrelics.blocks.ARBlock;
 import com.hijackster99.ancientrelics.blocks.ChargerBlock;
 import com.hijackster99.ancientrelics.blocks.PedestalBlock;
@@ -10,6 +8,7 @@ import com.hijackster99.ancientrelics.blocks.RelicBlock;
 import com.hijackster99.ancientrelics.blocks.RitualBlock;
 import com.hijackster99.ancientrelics.blocks.ShardBlock;
 import com.hijackster99.ancientrelics.blocks.VoidGas;
+import com.hijackster99.ancientrelics.blocks.VoidGasBlock;
 import com.hijackster99.ancientrelics.blocks.VoidRelayBlock;
 import com.hijackster99.ancientrelics.core.classloader.RitualJsonManager;
 import com.hijackster99.ancientrelics.items.ARBlockItem;
@@ -24,6 +23,7 @@ import com.hijackster99.ancientrelics.items.RitualMaker;
 import com.hijackster99.ancientrelics.items.RubyStaff;
 import com.hijackster99.ancientrelics.items.SapphireStaff;
 import com.hijackster99.ancientrelics.items.ShardBlockItem;
+import com.hijackster99.ancientrelics.items.VoidGasBucket;
 import com.hijackster99.ancientrelics.tileentity.ritual.Ritual;
 import com.hijackster99.ancientrelics.tileentity.ritual.RitualStone;
 import com.hijackster99.ancientrelics.tileentity.ritual.wrappers.AnvilWrapper;
@@ -47,8 +47,6 @@ import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fluids.FluidAttributes;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -110,6 +108,8 @@ public class ARBase {
 		event.getRegistry().register(ritualMaker);
 		Item ritualBuilder = new RitualBuilder("ritual_builder", 1, ARGroup);
 		event.getRegistry().register(ritualBuilder);
+		Item voidGasBucket = new VoidGasBucket(VoidGas.VoidGasStill::new);
+		event.getRegistry().register(voidGasBucket);
 		//BlockItems
 		BlockItem arcaneStone1 = new ARBlockItem(ARBlock.ARCANE_STONE_1, 64, ARGroup);
 		event.getRegistry().register(arcaneStone1);
@@ -392,6 +392,8 @@ public class ARBase {
 		event.getRegistry().register(voidStone);
 		Block soulHeart = new ARBlock("soul_heart", Material.ROCK, 50f, 1200f, ToolType.PICKAXE, 4, true);
 		event.getRegistry().register(soulHeart);
+		Block voidGasBlock = new VoidGasBlock(VoidGas.VoidGasStill::new, "void_gas_block", Material.WATER, 100f, 100f);
+		event.getRegistry().register(voidGasBlock);
 	}
 	
 	@SubscribeEvent
@@ -439,8 +441,10 @@ public class ARBase {
 	
 	@SubscribeEvent
 	public static void registerFluids(RegistryEvent.Register<Fluid> event) {
-		Fluid voidGas = new VoidGas();
-		event.getRegistry().register(voidGas);
+		Fluid voidGasFlowing = new VoidGas.VoidGasFlowing();
+		event.getRegistry().register(voidGasFlowing);
+		Fluid voidGasStill = new VoidGas.VoidGasStill();
+		event.getRegistry().register(voidGasStill);
 	}
 	
 	@EventBusSubscriber(modid = References.MODID, bus = EventBusSubscriber.Bus.FORGE)

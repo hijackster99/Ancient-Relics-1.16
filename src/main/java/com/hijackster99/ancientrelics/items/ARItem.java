@@ -2,6 +2,7 @@ package com.hijackster99.ancientrelics.items;
 
 import com.hijackster99.ancientrelics.core.References;
 
+import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.registries.ObjectHolder;
@@ -45,6 +46,9 @@ public class ARItem extends Item{
 	
 	@ObjectHolder(References.MODID + ":ritual_maker")
 	public static ARItem RITUAL_MAKER;
+	
+	@ObjectHolder(References.MODID + ":void_gas_bucket")
+	public static BucketItem VOID_GAS_BUCKET;
 
 	//BlockItems
 	@ObjectHolder(References.MODID + ":arcane_stone_1")
