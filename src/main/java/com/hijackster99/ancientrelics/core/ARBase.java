@@ -24,6 +24,7 @@ import com.hijackster99.ancientrelics.items.RubyStaff;
 import com.hijackster99.ancientrelics.items.SapphireStaff;
 import com.hijackster99.ancientrelics.items.ShardBlockItem;
 import com.hijackster99.ancientrelics.items.VoidGasBucket;
+import com.hijackster99.ancientrelics.tileentity.VoidRelay;
 import com.hijackster99.ancientrelics.tileentity.ritual.Ritual;
 import com.hijackster99.ancientrelics.tileentity.ritual.RitualStone;
 import com.hijackster99.ancientrelics.tileentity.ritual.wrappers.AnvilWrapper;
@@ -401,6 +402,9 @@ public class ARBase {
 		TileEntityType<RitualStone> ritualStone = TileEntityType.Builder.create(RitualStone::new, ARBlock.RITUAL_STONE_1_PERIDOT_ACTIVE, ARBlock.RITUAL_STONE_1_RUBY_ACTIVE, ARBlock.RITUAL_STONE_1_SAPPHIRE_ACTIVE, ARBlock.RITUAL_STONE_2_PERIDOT_ACTIVE, ARBlock.RITUAL_STONE_2_RUBY_ACTIVE, ARBlock.RITUAL_STONE_2_SAPPHIRE_ACTIVE, ARBlock.RITUAL_STONE_3_PERIDOT_ACTIVE, ARBlock.RITUAL_STONE_3_RUBY_ACTIVE, ARBlock.RITUAL_STONE_3_SAPPHIRE_ACTIVE, ARBlock.RITUAL_STONE_4_PERIDOT_ACTIVE, ARBlock.RITUAL_STONE_4_RUBY_ACTIVE, ARBlock.RITUAL_STONE_4_SAPPHIRE_ACTIVE, ARBlock.RITUAL_STONE_5_PERIDOT_ACTIVE, ARBlock.RITUAL_STONE_5_RUBY_ACTIVE, ARBlock.RITUAL_STONE_5_SAPPHIRE_ACTIVE, ARBlock.RITUAL_STONE_6_ACTIVE).build(null);
 		ritualStone.setRegistryName(References.MODID, "ritual_stone");
 		event.getRegistry().register(ritualStone);
+		TileEntityType<VoidRelay> voidRelay = TileEntityType.Builder.create(VoidRelay::new, ARBlock.VOID_RELAY).build(null);
+		voidRelay.setRegistryName(References.MODID, "void_relay");
+		event.getRegistry().register(voidRelay);
 	}
 	
 	@SubscribeEvent

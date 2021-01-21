@@ -1,6 +1,7 @@
 package com.hijackster99.ancientrelics.blocks;
 
 import com.hijackster99.ancientrelics.core.Util;
+import com.hijackster99.ancientrelics.tileentity.VoidRelay;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -8,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer.Builder;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.IBooleanFunction;
@@ -23,6 +25,16 @@ public class VoidRelayBlock extends ARBlock{
 	
 	public VoidRelayBlock(String registryName, Material materialIn, float hardnessIn, float resistanceIn, ToolType harvestTool, int miningLevel, boolean requiresTool) {
 		super(registryName, materialIn, hardnessIn, resistanceIn, harvestTool, miningLevel, requiresTool);
+	}
+	
+	@Override
+	public boolean hasTileEntity(BlockState state) {
+		return true;
+	}
+	
+	@Override
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+		return new VoidRelay();
 	}
 	
 	@Override

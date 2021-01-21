@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "ancientrelics:void_coal",
+	"ancientrelics:block_void_coal",
+    "ancientrelics:void_charcoal",
+	"ancientrelics:block_void_charcoal"
+  ]
+}

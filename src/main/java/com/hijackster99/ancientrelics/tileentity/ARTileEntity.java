@@ -15,5 +15,8 @@ public class ARTileEntity extends TileEntity {
 	
 	@ObjectHolder(References.MODID + ":ritual_stone")
 	public static TileEntityType<RitualStone> RITUAL_STONE;
+	
+	@ObjectHolder(References.MODID + ":void_relay")
+	public static TileEntityType<RitualStone> VOID_RELAY;
 
 }
