@@ -1,22 +1,28 @@
 package com.hijackster99.ancientrelics.blocks;
 
+import com.hijackster99.ancientrelics.core.IInteractable;
 import com.hijackster99.ancientrelics.core.Util;
 import com.hijackster99.ancientrelics.tileentity.VoidRelay;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 
 public class VoidRelayBlock extends ARBlock{
@@ -50,6 +56,15 @@ public class VoidRelayBlock extends ARBlock{
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		return getDefaultState().with(property, context.getFace());
+	}
+	
+	@Override
+	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+		TileEntity te = worldIn.getTileEntity(pos);
+		if(te instanceof IInteractable) {
+			return ((IInteractable) te).onBlockActivated(state, worldIn, pos, player, handIn, hit);
+		}
+		return ActionResultType.PASS;
 	}
 	
 	@Override

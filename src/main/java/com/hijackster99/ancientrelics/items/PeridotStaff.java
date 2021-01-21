@@ -3,7 +3,9 @@ package com.hijackster99.ancientrelics.items;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
@@ -23,6 +25,12 @@ public class PeridotStaff extends ARItem{
 			}
 		}
 		return super.onItemRightClick(worldIn, playerIn, handIn);
+	}
+	
+	@Override
+	public ActionResultType onItemUse(ItemUseContext context) {
+		
+		return super.onItemUse(context);
 	}
 
 }
