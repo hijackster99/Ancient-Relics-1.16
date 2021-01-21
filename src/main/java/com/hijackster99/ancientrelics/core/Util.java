@@ -1,5 +1,7 @@
 package com.hijackster99.ancientrelics.core;
 
+import java.util.List;
+
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -47,5 +49,11 @@ public class Util {
 		return VoxelShapes.create(aabbnew);
 	}
 	
+	public static <T> boolean containsAny(List<T> l1, List<T> l2) {
+		for(T item : l2) {
+			if(l1.contains(item)) return true;
+		}
+		return false;
+	}
 	
 }
