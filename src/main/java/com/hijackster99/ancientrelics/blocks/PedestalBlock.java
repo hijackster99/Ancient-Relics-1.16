@@ -21,13 +21,13 @@ public class PedestalBlock extends ARBlock{
 	
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		VoxelShape shape1 = VoxelShapes.create(0.3125, 0, 0.3125, 0.6875, 0.0625, 0.6875);
-		VoxelShape shape2 = VoxelShapes.create(0.375, 0.0625, 0.375, 0.625, 0.125, 0.625);
-		VoxelShape shape3 = VoxelShapes.create(0.4375, 0.125, 0.4375, 0.5625, 0.625, 0.5625);
-		VoxelShape shape4 = VoxelShapes.create(0.125, 0.625, 0.125, 0.875, 0.6875, 0.875);
-		VoxelShape shape5 = VoxelShapes.create(0.125, 0.6875, 0.125, 0.1875, 0.8125, 0.1875);
-		VoxelShape shape6 = VoxelShapes.create(0.1875, 0.6875, 0.125, 0.25, 0.75, 0.1875);
-		VoxelShape shape7 = VoxelShapes.create(0.125, 0.6875, 0.1875, 0.1875, 0.75, 0.25);
+		VoxelShape shape1 = VoxelShapes.box(0.3125, 0, 0.3125, 0.6875, 0.0625, 0.6875);
+		VoxelShape shape2 = VoxelShapes.box(0.375, 0.0625, 0.375, 0.625, 0.125, 0.625);
+		VoxelShape shape3 = VoxelShapes.box(0.4375, 0.125, 0.4375, 0.5625, 0.625, 0.5625);
+		VoxelShape shape4 = VoxelShapes.box(0.125, 0.625, 0.125, 0.875, 0.6875, 0.875);
+		VoxelShape shape5 = VoxelShapes.box(0.125, 0.6875, 0.125, 0.1875, 0.8125, 0.1875);
+		VoxelShape shape6 = VoxelShapes.box(0.1875, 0.6875, 0.125, 0.25, 0.75, 0.1875);
+		VoxelShape shape7 = VoxelShapes.box(0.125, 0.6875, 0.1875, 0.1875, 0.75, 0.25);
 		VoxelShape shape8 = Util.rotateShape(Direction.NORTH, Direction.EAST, shape5);
 		VoxelShape shape9 = Util.rotateShape(Direction.NORTH, Direction.EAST, shape6);
 		VoxelShape shape10 = Util.rotateShape(Direction.NORTH, Direction.EAST, shape7);
@@ -37,21 +37,21 @@ public class PedestalBlock extends ARBlock{
 		VoxelShape shape14 = Util.rotateShape(Direction.NORTH, Direction.WEST, shape5);
 		VoxelShape shape15 = Util.rotateShape(Direction.NORTH, Direction.WEST, shape6);
 		VoxelShape shape16 = Util.rotateShape(Direction.NORTH, Direction.WEST, shape7);
-		VoxelShape shape = VoxelShapes.combineAndSimplify(shape1, shape2, IBooleanFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, shape3, IBooleanFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, shape4, IBooleanFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, shape5, IBooleanFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, shape6, IBooleanFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, shape7, IBooleanFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, shape8, IBooleanFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, shape9, IBooleanFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, shape10, IBooleanFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, shape11, IBooleanFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, shape12, IBooleanFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, shape13, IBooleanFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, shape14, IBooleanFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, shape15, IBooleanFunction.OR);
-		shape = VoxelShapes.combineAndSimplify(shape, shape16, IBooleanFunction.OR);
+		VoxelShape shape = VoxelShapes.join(shape1, shape2, IBooleanFunction.OR);
+		shape = VoxelShapes.join(shape, shape3, IBooleanFunction.OR);
+		shape = VoxelShapes.join(shape, shape4, IBooleanFunction.OR);
+		shape = VoxelShapes.join(shape, shape5, IBooleanFunction.OR);
+		shape = VoxelShapes.join(shape, shape6, IBooleanFunction.OR);
+		shape = VoxelShapes.join(shape, shape7, IBooleanFunction.OR);
+		shape = VoxelShapes.join(shape, shape8, IBooleanFunction.OR);
+		shape = VoxelShapes.join(shape, shape9, IBooleanFunction.OR);
+		shape = VoxelShapes.join(shape, shape10, IBooleanFunction.OR);
+		shape = VoxelShapes.join(shape, shape11, IBooleanFunction.OR);
+		shape = VoxelShapes.join(shape, shape12, IBooleanFunction.OR);
+		shape = VoxelShapes.join(shape, shape13, IBooleanFunction.OR);
+		shape = VoxelShapes.join(shape, shape14, IBooleanFunction.OR);
+		shape = VoxelShapes.join(shape, shape15, IBooleanFunction.OR);
+		shape = VoxelShapes.join(shape, shape16, IBooleanFunction.OR);
 		return shape;
 	}
 

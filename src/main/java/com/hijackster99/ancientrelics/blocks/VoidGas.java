@@ -21,13 +21,13 @@ public abstract class VoidGas extends ForgeFlowingFluid {
 		public VoidGasFlowing() {
 			super();
 			setRegistryName("void_gas_flowing");
-			setDefaultState(stateContainer.getBaseState().with(LEVEL_1_8, 7));
+			setDefaultState(getStateDefinition()..with(LEVEL_1_8, 7));
 		}
 		
 		@Override
-		protected void fillStateContainer(Builder<Fluid, FluidState> builder) {
-			super.fillStateContainer(builder);
-			builder.add(LEVEL_1_8);
+		protected void createFluidStateDefinition(Builder<Fluid, FluidState> builder) {
+			super.createFluidStateDefinition(builder);
+			builder.add(LEVEL);
 		}
 
 		@Override
@@ -38,6 +38,12 @@ public abstract class VoidGas extends ForgeFlowingFluid {
 		@Override
 		public int getLevel(FluidState state) {
 			return state.get(LEVEL_1_8);
+		}
+
+		@Override
+		public int getAmount(FluidState p_207192_1_) {
+			// TODO Auto-generated method stub
+			return 0;
 		}
 	}
 	
@@ -56,6 +62,12 @@ public abstract class VoidGas extends ForgeFlowingFluid {
 		@Override
 		public int getLevel(FluidState state) {
 			return 8;
+		}
+
+		@Override
+		public int getAmount(FluidState p_207192_1_) {
+			// TODO Auto-generated method stub
+			return 0;
 		}
 		
 	}

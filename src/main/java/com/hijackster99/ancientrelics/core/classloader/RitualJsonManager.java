@@ -44,7 +44,7 @@ public class RitualJsonManager extends JsonReloadListener{
 	         if (resourcelocation.getPath().startsWith("_")) continue; //Forge: filter anything beginning with "_" as it's used for metadata.
 			 if(GameRegistry.findRegistry(Ritual.class).containsKey(resourcelocation)) {
 				 JsonElement tierElement = entry.getValue().getAsJsonObject().get("tier");
-				 if(TagCollectionManager.getManager().getBlockTags().get(new ResourceLocation("ancientrelics:ritual_tier_" + tierElement.getAsInt())) != null) GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).setTier((Tag<Block>) TagCollectionManager.getManager().getBlockTags().get(new ResourceLocation("ancientrelics:ritual_tier_" + tierElement.getAsInt())));
+				 if(TagCollectionManager.getInstance().getBlocks().getTag(new ResourceLocation("ancientrelics:ritual_tier_" + tierElement.getAsInt())) != null) GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).setTier((Tag<Block>) TagCollectionManager.getInstance().getBlocks().getTag(new ResourceLocation("ancientrelics:ritual_tier_" + tierElement.getAsInt())));
         		 Map<Option, List<BlockPos>> blocks = new HashMap<Option, List<BlockPos>>();
 	        	 JsonObject object = entry.getValue().getAsJsonObject().get("blocks").getAsJsonObject();
 	        	 Set<Map.Entry<String, JsonElement>> names = object.entrySet();
@@ -56,7 +56,7 @@ public class RitualJsonManager extends JsonReloadListener{
 		        			 Option opt = new Option();
 		        			 if(name.startsWith("#")) {
 		        				 name = name.substring(1);
-		        				 Tag<Block> tag = (Tag<Block>) TagCollectionManager.getManager().getBlockTags().get(new ResourceLocation(name));
+		        				 Tag<Block> tag = (Tag<Block>) TagCollectionManager.getInstance().getBlocks().getTag(new ResourceLocation(name));
 		        				 if(tag != null) opt.set(tag);
 		        			 }else {
 		        				 if(GameRegistry.findRegistry(Block.class).containsKey(new ResourceLocation(name))) opt.set(GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(name)));
@@ -148,7 +148,7 @@ public class RitualJsonManager extends JsonReloadListener{
 			if(getType().equals(Block.class)) {
 				blocks.add((Block) get());
 			}else {
-				blocks.addAll(((Tag<Block>) get()).getAllElements());
+				blocks.addAll(((Tag<Block>) get()).getValues());
 			}
 			return "Option: " + blocks.toString();
 		}

@@ -37,27 +37,27 @@ public class RitualMaker extends ARItem {
 	}
 	
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context) {
-		if(!context.getWorld().isRemote()) {
+	public ActionResultType useOn(ItemUseContext context) {
+		if(!context.getLevel().isClientSide()) {
 			if(clicked == 0) {
-				pos1 = context.getPos();
+				pos1 = context.getClickedPos();
 				clicked++;
 				return ActionResultType.SUCCESS;
 			}else if(clicked == 1) {
-				pos2 = context.getPos();
+				pos2 = context.getClickedPos();
 				clicked++;
 				return ActionResultType.SUCCESS;
 			}else if(clicked == 2) {
-				ignore = context.getWorld().getBlockState(context.getPos()).getBlock();
+				ignore = context.getLevel().getBlockState(context.getClickedPos()).getBlock();
 				clicked++;
 				return ActionResultType.SUCCESS;
 			}else if(clicked == 3) {
-				air = context.getWorld().getBlockState(context.getPos()).getBlock();
+				air = context.getLevel().getBlockState(context.getClickedPos()).getBlock();
 				clicked++;
 				return ActionResultType.SUCCESS;
 			}else if(clicked == 4){
-				pos3 = context.getPos();
-				createFile(context.getWorld());
+				pos3 = context.getClickedPos();
+				createFile(context.getLevel());
 				return ActionResultType.SUCCESS;
 			}
 		}
@@ -94,9 +94,9 @@ public class RitualMaker extends ARItem {
 		}
 		main.add("blocks", blocks);
 		try {
-			File file = Minecraft.getInstance().getIntegratedServer().func_240776_a_(new FolderName("Rituals")).toFile();
+			File file = Minecraft.getInstance().getCurrentServer().func_240776_a_(new FolderName("Rituals")).toFile();
 			file.mkdir();
-			File file2 = Minecraft.getInstance().getIntegratedServer().func_240776_a_(new FolderName("Rituals")).resolve(world.getBlockState(pos3).getBlock().getRegistryName().getPath() + ".json").toFile();
+			File file2 = Minecraft.getInstance().getCurrentServer().func_240776_a_(new FolderName("Rituals")).resolve(world.getBlockState(pos3).getBlock().getRegistryName().getPath() + ".json").toFile();
 			FileOutputStream str = new FileOutputStream(file2);
 			str.write(new GsonBuilder().create().toJson(main).getBytes());
 			str.close();

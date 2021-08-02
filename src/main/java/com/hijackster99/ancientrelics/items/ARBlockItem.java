@@ -8,7 +8,7 @@ import net.minecraft.item.ItemGroup;
 public class ARBlockItem extends BlockItem{
 
 	public ARBlockItem(Block block, int stackSize, ItemGroup tab) {
-		super(block, new Item.Properties().maxStackSize(stackSize).group(tab));
+		super(block, new Item.Properties().stacksTo(stackSize).tab(tab));
 		setRegistryName(block.getRegistryName());
 	}
 	

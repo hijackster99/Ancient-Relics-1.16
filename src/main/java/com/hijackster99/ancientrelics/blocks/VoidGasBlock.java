@@ -9,7 +9,7 @@ import net.minecraft.fluid.FlowingFluid;
 public class VoidGasBlock extends FlowingFluidBlock {
 
 	public VoidGasBlock(Supplier<? extends FlowingFluid> supplier, String registryName, Material materialIn, float hardnessIn, float resistanceIn) {
-		super(supplier, Properties.create(materialIn).hardnessAndResistance(hardnessIn, resistanceIn).doesNotBlockMovement().noDrops());
+		super(supplier, Properties.of(materialIn).strength(hardnessIn, resistanceIn).noCollission().noDrops());
 		setRegistryName(registryName);
 	}
 	

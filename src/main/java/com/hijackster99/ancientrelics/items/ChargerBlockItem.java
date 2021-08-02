@@ -15,7 +15,7 @@ public class ChargerBlockItem extends ARBlockItem{
 	
 	@Override
 	protected boolean canPlace(BlockItemUseContext context, BlockState state) {
-		return context.getWorld().getBlockState(context.getPos().down()).getBlock() == ARBlock.PEDESTAL;
+		return context.getLevel().getBlockState(context.getClickedPos().below()).getBlock() == ARBlock.PEDESTAL;
 	}
 
 }

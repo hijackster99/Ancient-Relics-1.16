@@ -30,8 +30,8 @@ public class RitualBlock extends ARBlock{
 	}
 	
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		TileEntity te = worldIn.getTileEntity(pos);
+	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+		TileEntity te = worldIn.getBlockEntity(pos);
 		if(te instanceof IInteractable) {
 			IInteractable interact = (IInteractable) te;
 			return interact.onBlockActivated(state, worldIn, pos, player, handIn, hit);
@@ -41,7 +41,7 @@ public class RitualBlock extends ARBlock{
 	
 	@Override
 	public boolean hasTileEntity(BlockState state) {
-		return BlockTags.getCollection().get(new ResourceLocation("ancientrelics:ritual_type_active")) != null ? BlockTags.getCollection().get(new ResourceLocation("ancientrelics:ritual_type_active")).contains(this) : false;
+		return BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_active")) != null ? BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_active")).contains(this) : false;
 	}
 	
 	@Override
@@ -49,21 +49,21 @@ public class RitualBlock extends ARBlock{
 		Tag<Block> tier = null;
 		Tag<Block> type = null;
 		for(ResourceLocation rl : this.getTags()) {
-			if(rl.getPath().startsWith("ritual_tier")) tier = (Tag<Block>) BlockTags.getCollection().get(rl);
+			if(rl.getPath().startsWith("ritual_tier")) tier = (Tag<Block>) BlockTags.getAllTags().getTag(rl);
 			else if(rl.getPath().endsWith("active"));
-			else if(rl.getPath().startsWith("ritual_type")) type = (Tag<Block>) BlockTags.getCollection().get(rl);
+			else if(rl.getPath().startsWith("ritual_type")) type = (Tag<Block>) BlockTags.getAllTags().getTag(rl);
 		}
 		return new RitualStone(tier, type);
 	}
 	
 	@Override
-	public boolean ticksRandomly(BlockState state) {
-		return BlockTags.getCollection().get(new ResourceLocation("ancientrelics:ritual_type_active")) != null ? BlockTags.getCollection().get(new ResourceLocation("ancientrelics:ritual_type_active")).contains(this) : false;
+	public boolean isRandomlyTicking(BlockState state) {
+		return BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_active")) != null ? BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_active")).contains(this) : false;
 	}
 	
 	@Override
 	public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-		TileEntity te = worldIn.getTileEntity(pos);
+		TileEntity te = worldIn.getBlockEntity(pos);
 		if(te instanceof IRandomUpdate) {
 			IRandomUpdate update = (IRandomUpdate) te;
 			update.randomTick(state, worldIn, pos, random);

@@ -25,32 +25,32 @@ public class SapphireStaff extends ARItem{
 	}
 	
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context) {
-		TileEntity te = context.getWorld().getTileEntity(context.getPos());
+	public ActionResultType useOn(ItemUseContext context) {
+		TileEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
 		if(te instanceof ICapabilityProvider) {
 			ICapabilityProvider prov = te;
 			LazyOptional<IFluidHandler> opt = prov.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.UP);
 			IFluidHandler tank = opt.orElse(null);
 			if(tank != null) {
 				if(tank instanceof VoidGasTank) {
-					context.getPlayer().sendStatusMessage(new StringTextComponent("Void Energy: " + Integer.toString(tank.getFluidInTank(0).getAmount())), true);
+					context.getPlayer().displayClientMessage(new StringTextComponent("Void Energy: " + Integer.toString(tank.getFluidInTank(0).getAmount())), true);
 					return ActionResultType.SUCCESS;
 				}
 			}
 		}
-		return super.onItemUse(context);
+		return super.useOn(context);
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-		if(playerIn.isSneaking()) {
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+		if(playerIn.isCrouching()) {
 			if(handIn == Hand.MAIN_HAND) {
-				playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, new ItemStack(ARItem.PERIDOT_STAFF, 1));
+				playerIn.inventory.setItem(playerIn.inventory.selected, new ItemStack(ARItem.PERIDOT_STAFF, 1));
 			}else {
-				playerIn.inventory.setInventorySlotContents(45, new ItemStack(ARItem.PERIDOT_STAFF, 1));
+				playerIn.inventory.setItem(45, new ItemStack(ARItem.PERIDOT_STAFF, 1));
 			}
 		}
-		return super.onItemRightClick(worldIn, playerIn, handIn);
+		return super.use(worldIn, playerIn, handIn);
 	}
 
 }

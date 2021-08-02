@@ -16,21 +16,21 @@ public class PeridotStaff extends ARItem{
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-		if(playerIn.isSneaking()) {
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+		if(playerIn.isCrouching()) {
 			if(handIn == Hand.MAIN_HAND) {
-				playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, new ItemStack(ARItem.RUBY_STAFF, 1));
+				playerIn.inventory.setItem(playerIn.inventory.selected, new ItemStack(ARItem.RUBY_STAFF, 1));
 			}else {
-				playerIn.inventory.setInventorySlotContents(45, new ItemStack(ARItem.RUBY_STAFF, 1));
+				playerIn.inventory.setItem(45, new ItemStack(ARItem.RUBY_STAFF, 1));
 			}
 		}
-		return super.onItemRightClick(worldIn, playerIn, handIn);
+		return super.use(worldIn, playerIn, handIn);
 	}
 	
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context) {
+	public ActionResultType useOn(ItemUseContext context) {
 		
-		return super.onItemUse(context);
+		return super.useOn(context);
 	}
 
 }

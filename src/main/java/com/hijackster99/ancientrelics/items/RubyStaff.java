@@ -20,24 +20,24 @@ public class RubyStaff extends ARItem{
 	}
 	
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context) {
-		if(BlockTags.getCollection().get(new ResourceLocation("ancientrelics:ritual_type_inactive")) != null && BlockTags.getCollection().get(new ResourceLocation("ancientrelics:ritual_type_inactive")).contains(context.getWorld().getBlockState(context.getPos()).getBlock())) {
-			RitualBuilder.ritualCheckers.add(new RitualBuilder.Checker(context.getPos(), context.getWorld().getDimensionKey().getLocation().toString()));
+	public ActionResultType useOn(ItemUseContext context) {
+		if(BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_inactive")) != null && BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_inactive")).contains(context.getLevel().getBlockState(context.getClickedPos()).getBlock())) {
+			RitualBuilder.ritualCheckers.add(new RitualBuilder.Checker(context.getClickedPos(), context.getLevel().dimension().getRegistryName().toString()));
 			return ActionResultType.SUCCESS;
 		}
-		return super.onItemUse(context);
+		return super.useOn(context);
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-		if(playerIn.isSneaking()) {
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+		if(playerIn.isCrouching()) {
 			if(handIn == Hand.MAIN_HAND) {
-				playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, new ItemStack(ARItem.SAPPHIRE_STAFF, 1));
+				playerIn.inventory.setItem(playerIn.inventory.selected, new ItemStack(ARItem.SAPPHIRE_STAFF, 1));
 			}else {
-				playerIn.inventory.setInventorySlotContents(45, new ItemStack(ARItem.SAPPHIRE_STAFF, 1));
+				playerIn.inventory.setItem(45, new ItemStack(ARItem.SAPPHIRE_STAFF, 1));
 			}
 		}
-		return super.onItemRightClick(worldIn, playerIn, handIn);
+		return super.use(worldIn, playerIn, handIn);
 	}
 
 }

@@ -10,12 +10,12 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ARBlock extends Block{
 
 	public ARBlock(String registryName, Material materialIn, float hardnessIn, float resistanceIn, ToolType harvestTool, int miningLevel, boolean requiresTool) {
-		super(Properties.create(materialIn).hardnessAndResistance(hardnessIn, resistanceIn).harvestTool(harvestTool).harvestLevel(miningLevel).setRequiresTool());
+		super(Properties.of(materialIn).strength(hardnessIn, resistanceIn).harvestTool(harvestTool).harvestLevel(miningLevel).requiresCorrectToolForDrops());
 		setRegistryName(References.MODID, registryName);
 	}
 	
 	public ARBlock(String registryName, Material materialIn, float hardnessIn, float resistanceIn, ToolType harvestTool, int miningLevel) {
-		super(Properties.create(materialIn).hardnessAndResistance(hardnessIn, resistanceIn).harvestTool(harvestTool).harvestLevel(miningLevel));
+		super(Properties.of(materialIn).strength(hardnessIn, resistanceIn).harvestTool(harvestTool).harvestLevel(miningLevel));
 		setRegistryName(References.MODID, registryName);
 	}
 	

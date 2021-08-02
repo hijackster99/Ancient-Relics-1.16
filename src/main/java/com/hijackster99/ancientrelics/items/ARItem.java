@@ -10,7 +10,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ARItem extends Item{
 
 	public ARItem(String registryName, int maxStack, ItemGroup tab) {
-		super(new Item.Properties().maxStackSize(maxStack).group(tab));
+		super(new Item.Properties().stacksTo(maxStack).tab(tab));
 		setRegistryName(registryName);
 	}
 	//Items
