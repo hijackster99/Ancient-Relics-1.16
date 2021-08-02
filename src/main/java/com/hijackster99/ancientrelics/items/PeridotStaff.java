@@ -1,5 +1,7 @@
 package com.hijackster99.ancientrelics.items;
 
+import com.hijackster99.ancientrelics.blocks.VoidGas;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -29,6 +31,7 @@ public class PeridotStaff extends ARItem{
 	
 	@Override
 	public ActionResultType useOn(ItemUseContext context) {
+		System.out.println(VoidGas.VOID_GAS_FLOWING);
 		
 		return super.useOn(context);
 	}

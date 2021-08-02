@@ -13,7 +13,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public abstract class VoidGas extends ForgeFlowingFluid {
 
 	public VoidGas() {
-		super(new Properties(VoidGasStill::new, VoidGasFlowing::new, FluidAttributes.builder(new ResourceLocation("ancientrelics:void_gas_still"), new ResourceLocation("ancientrelics:void_gas_flowing")).density(1).viscosity(300).temperature(40).gaseous()));
+		super(new Properties(VoidGasStill::new, VoidGasFlowing::new, FluidAttributes.builder(new ResourceLocation("ancientrelics:block/void_gas_still"), new ResourceLocation("ancientrelics:block/void_gas_flowing")).density(1).viscosity(300).temperature(40).gaseous()));
 	}
 	
 	public static class VoidGasFlowing extends VoidGas {
@@ -21,29 +21,23 @@ public abstract class VoidGas extends ForgeFlowingFluid {
 		public VoidGasFlowing() {
 			super();
 			setRegistryName("void_gas_flowing");
-			setDefaultState(getStateDefinition()..with(LEVEL_1_8, 7));
+			registerDefaultState(getStateDefinition().any().setValue(LEVEL, 7));
 		}
-		
+
 		@Override
 		protected void createFluidStateDefinition(Builder<Fluid, FluidState> builder) {
 			super.createFluidStateDefinition(builder);
 			builder.add(LEVEL);
 		}
-
+		
 		@Override
 		public boolean isSource(FluidState state) {
 			return false;
 		}
 
 		@Override
-		public int getLevel(FluidState state) {
-			return state.get(LEVEL_1_8);
-		}
-
-		@Override
-		public int getAmount(FluidState p_207192_1_) {
-			// TODO Auto-generated method stub
-			return 0;
+		public int getAmount(FluidState state) {
+			return state.getValue(LEVEL);
 		}
 	}
 	
@@ -60,14 +54,8 @@ public abstract class VoidGas extends ForgeFlowingFluid {
 		}
 
 		@Override
-		public int getLevel(FluidState state) {
+		public int getAmount(FluidState state) {
 			return 8;
-		}
-
-		@Override
-		public int getAmount(FluidState p_207192_1_) {
-			// TODO Auto-generated method stub
-			return 0;
 		}
 		
 	}

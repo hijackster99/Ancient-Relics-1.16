@@ -64,7 +64,6 @@ public class ARBase {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
 		
 		MinecraftForge.EVENT_BUS.register(this);
-		
 	}
 	
 	public static ItemGroup ARGroup = new ItemGroup("ancientrelics") {
@@ -81,7 +80,7 @@ public class ARBase {
 	}
 	
 	private void clientSetup(FMLClientSetupEvent event) {
-		
+
 	}
 	
 	@SubscribeEvent

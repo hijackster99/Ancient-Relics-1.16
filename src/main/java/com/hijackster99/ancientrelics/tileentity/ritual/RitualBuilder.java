@@ -13,7 +13,7 @@ import com.hijackster99.ancientrelics.core.References;
 import com.hijackster99.ancientrelics.core.classloader.RitualJsonManager.Option;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
@@ -38,16 +38,16 @@ public class RitualBuilder {
 		if(event.side == LogicalSide.SERVER) {
 			if(rituals == null) getRituals();
 			for(Iterator<Checker> c = ritualCheckers.iterator(); c.hasNext(); ) {
-				Minecraft.getInstance().getIntegratedServer().sendMessage(new StringTextComponent("Checking Rituals..."), null);
 				Checker check = c.next();
-				if(check.dimension.equals(event.world.getDimensionKey().getLocation().toString())) {
+				check.player.displayClientMessage(new StringTextComponent("Checking Rituals..."), false);
+				if(check.dimension.equals(event.world.dimension().location().toString())) {
 					if(check.iter == null) getNextIter(check, event);
 					if(check.valid) {
 						if(check.iter != null && !check.iter.hasNext()) {
-							Minecraft.getInstance().getIntegratedServer().sendMessage(new StringTextComponent("Found Valid Ritual!"), null);
-							if(BlockTags.getCollection().get(new ResourceLocation("ancientrelics:ritual_type_inactive")).contains(event.world.getBlockState(check.pos).getBlock())) {
+							check.player.displayClientMessage(new StringTextComponent("Found Valid Ritual!"), false);
+							if(BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_inactive")).contains(event.world.getBlockState(check.pos).getBlock())) {
 								activeRituals.put(check.pos, rituals.get(check.counter));
-								event.world.setBlockState(check.pos, getActiveBlock(event.world.getBlockState(check.pos).getBlock()).getDefaultState());
+								event.world.setBlockAndUpdate(check.pos, getActiveBlock(event.world.getBlockState(check.pos).getBlock()).defaultBlockState());
 							}
 							c.remove();
 						}else if(check.iter != null){
@@ -55,20 +55,20 @@ public class RitualBuilder {
 								if(check.iter.hasNext()) {
 									Entry<BlockPos, Option> entry = check.iter.next();
 									if(entry.getValue().getType().equals(Block.class)) {
-										if(event.world.getBlockState(check.pos.add(entry.getKey())).getBlock() != (Block) entry.getValue().get()) { 
+										if(event.world.getBlockState(check.pos.offset(entry.getKey())).getBlock() != (Block) entry.getValue().get()) { 
 											check.valid = false;
-											Minecraft.getInstance().getIntegratedServer().sendMessage(new StringTextComponent("Check Failed! Bad Block at " + check.pos.add(entry.getKey()) + "! " + event.world.getBlockState(check.pos.add(entry.getKey())).getBlock().getRegistryName().toString() + " instead of " + ((Block) entry.getValue().get()).getRegistryName().toString()), null);
+											check.player.displayClientMessage(new StringTextComponent("Check Failed! Bad Block at " + check.pos.offset(entry.getKey()) + "! " + event.world.getBlockState(check.pos.offset(entry.getKey())).getBlock().getRegistryName().toString() + " instead of " + ((Block) entry.getValue().get()).getRegistryName().toString()), false);
 										}
 									}else if(entry.getValue().getType().equals(Tag.class)) {
-										if(!((Tag<Block>) entry.getValue().get()).contains(event.world.getBlockState(check.pos.add(entry.getKey())).getBlock())) { 
+										if(!((Tag<Block>) entry.getValue().get()).contains(event.world.getBlockState(check.pos.offset(entry.getKey())).getBlock())) { 
 											check.valid = false;
-											Minecraft.getInstance().getIntegratedServer().sendMessage(new StringTextComponent("Check Failed! Bad Block at " + check.pos.add(entry.getKey()) + "! " + event.world.getBlockState(check.pos.add(entry.getKey())).getBlock().getRegistryName().toString() + " is not in specified tag collection!"), null);
+											check.player.displayClientMessage(new StringTextComponent("Check Failed! Bad Block at " + check.pos.offset(entry.getKey()) + "! " + event.world.getBlockState(check.pos.offset(entry.getKey())).getBlock().getRegistryName().toString() + " is not in specified tag collection!"), false);
 										}
 									}
 								}
 							}
 						}else {
-							Minecraft.getInstance().getIntegratedServer().sendMessage(new StringTextComponent("No Valid Ritual Found!"), null);
+							check.player.displayClientMessage(new StringTextComponent("No Valid Ritual Found!"), false);
 							c.remove();
 						}
 					}else {
@@ -85,24 +85,22 @@ public class RitualBuilder {
 		check.counter++;
 		for( ;check.counter < rituals.size(); check.counter++){
 			Ritual rit = rituals.get(check.counter);
-			Minecraft.getInstance().getIntegratedServer().sendMessage(new StringTextComponent("Checking Ritual Tier..."), null);
+			check.player.displayClientMessage(new StringTextComponent("Checking Ritual Tier..."), false);
 			if(rit.getTier().contains(event.world.getBlockState(check.pos).getBlock())) {
-				Minecraft.getInstance().getIntegratedServer().sendMessage(new StringTextComponent("Tiers Match! Checking: " + rituals.get(check.counter).getRegistryName().toString()), null);
+				check.player.displayClientMessage(new StringTextComponent("Tiers Match! Checking: " + rituals.get(check.counter).getRegistryName().toString()), false);
 				check.iter = rituals.get(check.counter).getRitualBlocksIter().entrySet().iterator();
 				break;
 			}
-			Minecraft.getInstance().getIntegratedServer().sendMessage(new StringTextComponent("Check Failed!"), null);
+			check.player.displayClientMessage(new StringTextComponent("Check Failed!"), false);
 		}
 	}
 	
 	public static void getRituals() {
-		Minecraft.getInstance().getIntegratedServer().sendMessage(new StringTextComponent("Loading Rituals..."), null);
 		List<Ritual> rituals = new ArrayList<Ritual>(GameRegistry.findRegistry(Ritual.class).getValues());
 		for(Iterator<Ritual> iter = rituals.iterator(); iter.hasNext(); ) {
 			Ritual r = iter.next();
 			if(!r.isValid()) iter.remove();
 		}
-		Minecraft.getInstance().getIntegratedServer().sendMessage(new StringTextComponent("Succesfully Loaded " + rituals.size() + " Rituals!"), null);
 		RitualBuilder.rituals = rituals;
 	}
 	
@@ -110,17 +108,17 @@ public class RitualBuilder {
 		Set<ResourceLocation> tags = block.getTags();
 		Tag<Block> tier = null;
 		Tag<Block> type = null;
-		Tag<Block> active = (Tag<Block>) BlockTags.getCollection().get(new ResourceLocation("ancientrelics:ritual_type_active"));
+		Tag<Block> active = (Tag<Block>) BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_active"));
 		for(ResourceLocation loc : tags) {
 			if(loc.getPath().endsWith("active"));
 			else if(loc.getPath().startsWith("ritual_type_")) {
-				type = (Tag<Block>) BlockTags.getCollection().get(loc);
+				type = (Tag<Block>) BlockTags.getAllTags().getTag(loc);
 			}else if(loc.getPath().startsWith("ritual_tier_")) {
-				tier = (Tag<Block>) BlockTags.getCollection().get(loc);
+				tier = (Tag<Block>) BlockTags.getAllTags().getTag(loc);
 			}
 		}
 		if(tier != null && type != null) {
-			for(Block b : active.getAllElements()) {
+			for(Block b : active.getValues()) {
 				if(tier.contains(b) && type.contains(b)) {
 					return b;
 				}
@@ -131,13 +129,15 @@ public class RitualBuilder {
 	
 	public static class Checker {
 		
-		public Checker(BlockPos pos, String dimension) {
+		public Checker(BlockPos pos, String dimension, PlayerEntity player) {
 			this.pos = pos;
 			this.dimension = dimension;
+			this.player = player;
 		}
 		
 		BlockPos pos;
 		String dimension;
+		PlayerEntity player;
 		int counter = -1;
 		boolean valid = true;
 		Iterator<Entry<BlockPos, Option>> iter;

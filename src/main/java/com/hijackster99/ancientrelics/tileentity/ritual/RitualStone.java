@@ -86,19 +86,19 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 	}
 	
 	@Override
-	public void read(BlockState state, CompoundNBT nbt) {
-		super.read(state, nbt);
+	public void load(BlockState state, CompoundNBT nbt) {
+		super.load(state, nbt);
 		String ritual = nbt.getString("ritual");
 		String tier = nbt.getString("tier");
 		String type = nbt.getString("type");
 		setRitual(!ritual.equals("null") ? GameRegistry.findRegistry(Ritual.class).getValue(new ResourceLocation(ritual)) : null);
-		this.type = (Tag<Block>) BlockTags.getCollection().get(new ResourceLocation(type));
-		this.tier = (Tag<Block>) BlockTags.getCollection().get(new ResourceLocation(tier));
+		this.type = (Tag<Block>) BlockTags.getAllTags().getTag(new ResourceLocation(type));
+		this.tier = (Tag<Block>) BlockTags.getAllTags().getTag(new ResourceLocation(tier));
 		wrapper.read(state, nbt);
 	}
 	
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
+	public CompoundNBT save(CompoundNBT compound) {
 		compound = wrapper.write(compound);
 		String tier = "";
 		String type = "";
@@ -111,22 +111,22 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 		compound.putString("ritual", ritual != null ? ritual.getRegistryName().toString() : "null");
 		compound.putString("tier", tier);
 		compound.putString("type", type);
-		return super.write(compound);
+		return super.save(compound);
 	}
 
 	@Override
 	public void tick() {
-		if(!world.isRemote()) {
+		if(level.isClientSide()) {
 			if(ritual == null) {
-				setRitual(RitualBuilder.activeRituals.get(pos));
-				RitualBuilder.activeRituals.remove(pos);
+				setRitual(RitualBuilder.activeRituals.get(worldPosition));
+				RitualBuilder.activeRituals.remove(worldPosition);
 			}
 			if(ritual == null || !checkRitual()) {
-				getWorld().removeBlock(pos, false);
-				getWorld().setBlockState(pos, getInactiveBlock().getDefaultState());
+				getLevel().removeBlock(worldPosition, false);
+				getLevel().setBlockAndUpdate(worldPosition, getInactiveBlock().defaultBlockState());
 			}
 		}
-		wrapper.tick(getWorld(), pos);
+		wrapper.tick(getLevel(), worldPosition);
 	}
 
 	@Override
@@ -146,11 +146,11 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 			if(iter.hasNext()) {
 				Entry<BlockPos, Option> e = iter.next();
 				if(e.getValue().getType().equals(Block.class)) {
-					if(getWorld().getBlockState(e.getKey().add(pos)).getBlock() != (Block) e.getValue().get()) {
+					if(getLevel().getBlockState(e.getKey().offset(worldPosition)).getBlock() != (Block) e.getValue().get()) {
 						return false;
 					}
 				}else if(e.getValue().getType().equals(Tag.class)) {
-					if(!((Tag<Block>) e.getValue().get()).contains(getWorld().getBlockState(e.getKey().add(pos)).getBlock())) {
+					if(!((Tag<Block>) e.getValue().get()).contains(getLevel().getBlockState(e.getKey().offset(worldPosition)).getBlock())) {
 						return false;
 					}
 				}
@@ -163,9 +163,9 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 	
 	private Block getInactiveBlock() {
 		if(tier != null && type != null) {
-			Tag<Block> inactive = (Tag<Block>) BlockTags.getCollection().get(new ResourceLocation("ancientrelics:ritual_type_inactive"));
-			for(Block b : inactive.getAllElements()) {
-				System.out.println(type.getAllElements());
+			Tag<Block> inactive = (Tag<Block>) BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_inactive"));
+			for(Block b : inactive.getValues()) {
+				System.out.println(type.getValues());
 				if(tier.contains(b) && type.contains(b)) {
 					return b;
 				}

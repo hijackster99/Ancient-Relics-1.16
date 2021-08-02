@@ -21,11 +21,11 @@ public class VoidRelay extends ARTileEntity {
 		return net;
 	}
 	
-	@Override
-	public void remove() {
-		super.remove();
-		net.removeRelay(this);
-	}
+//	@Override
+//	public void remove() {
+//		super.remove();
+//		net.removeRelay(this);
+//	}
 
 	public List<VoidRelay> getConnections() {
 		return connections;

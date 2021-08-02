@@ -20,7 +20,7 @@ import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 public class VoidGasBucket extends BucketItem {
 
 	public VoidGasBucket(Supplier<? extends Fluid> supplier) {
-		super(supplier, new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ARBase.ARGroup));
+		super(supplier, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ARBase.ARGroup));
 		setRegistryName("void_gas_bucket");
 	}
 

@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "particle": "ancientrelics:block/void_gas_still"
+    }
+}

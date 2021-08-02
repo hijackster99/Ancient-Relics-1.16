@@ -21,7 +21,6 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.FolderName;
 
 public class RitualMaker extends ARItem {
 	
@@ -94,9 +93,10 @@ public class RitualMaker extends ARItem {
 		}
 		main.add("blocks", blocks);
 		try {
-			File file = Minecraft.getInstance().getCurrentServer().func_240776_a_(new FolderName("Rituals")).toFile();
+			@SuppressWarnings("resource")
+			File file = new File(Minecraft.getInstance().gameDirectory, "Rituals");
 			file.mkdir();
-			File file2 = Minecraft.getInstance().getCurrentServer().func_240776_a_(new FolderName("Rituals")).resolve(world.getBlockState(pos3).getBlock().getRegistryName().getPath() + ".json").toFile();
+			File file2 = new File(file, world.getBlockState(pos3).getBlock().getRegistryName().getPath() + ".json");
 			FileOutputStream str = new FileOutputStream(file2);
 			str.write(new GsonBuilder().create().toJson(main).getBytes());
 			str.close();

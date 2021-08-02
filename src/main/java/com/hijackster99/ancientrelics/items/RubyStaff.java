@@ -22,7 +22,7 @@ public class RubyStaff extends ARItem{
 	@Override
 	public ActionResultType useOn(ItemUseContext context) {
 		if(BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_inactive")) != null && BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_inactive")).contains(context.getLevel().getBlockState(context.getClickedPos()).getBlock())) {
-			RitualBuilder.ritualCheckers.add(new RitualBuilder.Checker(context.getClickedPos(), context.getLevel().dimension().getRegistryName().toString()));
+			RitualBuilder.ritualCheckers.add(new RitualBuilder.Checker(context.getClickedPos(), context.getLevel().dimension().location().toString(), context.getPlayer()));
 			return ActionResultType.SUCCESS;
 		}
 		return super.useOn(context);

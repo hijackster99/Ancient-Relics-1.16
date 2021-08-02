@@ -20,7 +20,6 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -45,6 +44,7 @@ public class ExtractWrapper extends TileEntityWrapper {
 	@CapabilityInject(IFluidHandler.class)
 	private static Capability<IFluidHandler> FLUID_CAP = null;
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void tick(World worldObj, BlockPos pos) {
 		if(type == -1) {
@@ -60,19 +60,19 @@ public class ExtractWrapper extends TileEntityWrapper {
 			}
 		}
 		if(burnTime == 0) {
-			List<ItemEntity> entities = worldObj.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 2, pos.getZ() + 1));
+			List<ItemEntity> entities = worldObj.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 2, pos.getZ() + 1));
 			for(ItemEntity item : entities) {
 				ForgeHooks.getBurnTime(item.getItem());
 				if(ForgeHooks.getBurnTime(item.getItem()) > 0) {
 					burnTime = ForgeHooks.getBurnTime(item.getItem()) * burnTimeModifier;
-					if(ItemTags.getCollection().get(new ResourceLocation("ancientrelics:void_coals")).contains(item.getItem().getItem())) {
+					if(ItemTags.getAllTags().getTag(new ResourceLocation("ancientrelics:void_coals")).contains(item.getItem().getItem())) {
 						VPT = 20 * VPTModifier;
 					}else {
 						VPT = 1 * VPTModifier;
 					}
-					worldObj.getTileEntity(pos).markDirty();
+					worldObj.getBlockEntity(pos).setChanged();
 					item.getItem().setCount(item.getItem().getCount() - 1);
-					worldObj.playSound(null, pos.offset(Direction.UP), SoundEvents.ENTITY_BLAZE_SHOOT, SoundCategory.BLOCKS, 1.0f, 1.0f);
+					worldObj.playSound(null, pos.offset(Direction.UP.getNormal()), SoundEvents.BLAZE_SHOOT, SoundCategory.BLOCKS, 1.0f, 1.0f);
 					particle = 10;
 				}
 			}
@@ -80,9 +80,9 @@ public class ExtractWrapper extends TileEntityWrapper {
 			tank.fill(new FluidStack(VoidGas.VOID_GAS_STILL, VPT), IFluidHandler.FluidAction.EXECUTE);
 			burnTime -= VPT;
 			particle--;
-			worldObj.getTileEntity(pos).markDirty();
-			if(!worldObj.isRemote() && particle == 0) {
-				((ServerWorld) worldObj).spawnParticle(ParticleTypes.FLAME, pos.getX() + 0.5, pos.getY() + 1.1, pos.getZ() + 0.5, 2, 0.2f, 0.0f, 0.2f, 0.0f);
+			worldObj.getBlockEntity(pos).setChanged();
+			if(!worldObj.isClientSide() && particle == 0) {
+				worldObj.addParticle(ParticleTypes.FLAME, pos.getX() + 0.5, pos.getY() + 1.1, pos.getZ() + 0.5, .2d, 0d, .2d);
 				particle = 10;
 			}
 		}
@@ -110,7 +110,7 @@ public class ExtractWrapper extends TileEntityWrapper {
 	}
 	
 	private int getType(Block b) {
-		return BlockTags.getCollection().get(new ResourceLocation("ancientrelics:ritual_type_ruby")).contains(b) ? 0 : BlockTags.getCollection().get(new ResourceLocation("ancientrelics:ritual_type_peridot")).contains(b) ? 1 : 2;
+		return BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_ruby")).contains(b) ? 0 : BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_peridot")).contains(b) ? 1 : 2;
 	}
 	
 }
