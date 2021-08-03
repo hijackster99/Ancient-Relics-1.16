@@ -2,7 +2,7 @@ package com.hijackster99.ancientrelics.blocks;
 
 import com.hijackster99.ancientrelics.core.IInteractable;
 import com.hijackster99.ancientrelics.core.Util;
-import com.hijackster99.ancientrelics.tileentity.VoidRelay;
+import com.hijackster99.ancientrelics.tileentity.voidrelay.VoidRelay;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

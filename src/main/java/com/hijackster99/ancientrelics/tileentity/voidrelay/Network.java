@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.hijackster99.ancientrelics.blocks.VoidGas;
 import com.hijackster99.ancientrelics.core.Util;
-import com.hijackster99.ancientrelics.tileentity.VoidRelay;
 
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;

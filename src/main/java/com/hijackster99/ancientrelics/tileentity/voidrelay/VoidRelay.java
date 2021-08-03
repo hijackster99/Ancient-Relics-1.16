@@ -1,9 +1,9 @@
-package com.hijackster99.ancientrelics.tileentity;
+package com.hijackster99.ancientrelics.tileentity.voidrelay;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hijackster99.ancientrelics.tileentity.voidrelay.Network;
+import com.hijackster99.ancientrelics.tileentity.ARTileEntity;
 
 public class VoidRelay extends ARTileEntity {
 
@@ -32,10 +32,12 @@ public class VoidRelay extends ARTileEntity {
 	}
 	
 	public void addConnection(VoidRelay relay) {
+		net.addRelay(relay);
 		connections.add(relay);
 	}
 	
 	public void removeConnection(VoidRelay relay) {
+		net.removeRelay(relay);
 		connections.remove(relay);
 	}
 

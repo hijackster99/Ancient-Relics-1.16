@@ -71,7 +71,8 @@ public class ExtractWrapper extends TileEntityWrapper {
 						VPT = 1 * VPTModifier;
 					}
 					worldObj.getBlockEntity(pos).setChanged();
-					item.getItem().setCount(item.getItem().getCount() - 1);
+					if(item.getItem().getCount() == 1) item.remove();
+					else item.getItem().setCount(item.getItem().getCount() - 1);
 					worldObj.playSound(null, pos.offset(Direction.UP.getNormal()), SoundEvents.BLAZE_SHOOT, SoundCategory.BLOCKS, 1.0f, 1.0f);
 					particle = 10;
 				}

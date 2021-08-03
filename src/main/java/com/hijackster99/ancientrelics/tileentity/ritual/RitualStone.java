@@ -108,6 +108,7 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 			else if(name.startsWith(":ritual_type_", name.indexOf(':'))) type = name;
 			else if(name.startsWith(":ritual_tier_", name.indexOf(':'))) tier = name;
 		}
+		
 		compound.putString("ritual", ritual != null ? ritual.getRegistryName().toString() : "null");
 		compound.putString("tier", tier);
 		compound.putString("type", type);
@@ -116,7 +117,7 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 
 	@Override
 	public void tick() {
-		if(level.isClientSide()) {
+		if(!level.isClientSide()) {
 			if(ritual == null) {
 				setRitual(RitualBuilder.activeRituals.get(worldPosition));
 				RitualBuilder.activeRituals.remove(worldPosition);

@@ -24,7 +24,6 @@ import com.hijackster99.ancientrelics.items.RubyStaff;
 import com.hijackster99.ancientrelics.items.SapphireStaff;
 import com.hijackster99.ancientrelics.items.ShardBlockItem;
 import com.hijackster99.ancientrelics.items.VoidGasBucket;
-import com.hijackster99.ancientrelics.tileentity.VoidRelay;
 import com.hijackster99.ancientrelics.tileentity.ritual.Ritual;
 import com.hijackster99.ancientrelics.tileentity.ritual.RitualStone;
 import com.hijackster99.ancientrelics.tileentity.ritual.wrappers.AnvilWrapper;
@@ -32,6 +31,7 @@ import com.hijackster99.ancientrelics.tileentity.ritual.wrappers.DrillWrapper;
 import com.hijackster99.ancientrelics.tileentity.ritual.wrappers.ExtractWrapper;
 import com.hijackster99.ancientrelics.tileentity.ritual.wrappers.InfuseWrapper;
 import com.hijackster99.ancientrelics.tileentity.ritual.wrappers.StorageWrapper;
+import com.hijackster99.ancientrelics.tileentity.voidrelay.VoidRelay;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -98,9 +98,9 @@ public class ARBase {
 		event.getRegistry().register(peridotStaff);
 		Item sapphireStaff = new SapphireStaff("sapphire_staff", 1, ARGroup);
 		event.getRegistry().register(sapphireStaff);
-		Item voidCoal = new Burnable("void_coal", 1, ARGroup, 2600);
+		Item voidCoal = new Burnable("void_coal", 64, ARGroup, 2600);
 		event.getRegistry().register(voidCoal);
-		Item voidCharcoal = new Burnable("void_charcoal", 1, ARGroup, 2600);
+		Item voidCharcoal = new Burnable("void_charcoal", 64, ARGroup, 2600);
 		event.getRegistry().register(voidCharcoal);
 		Item filter = new Filter("filter", 1, ARGroup);
 		event.getRegistry().register(filter);
