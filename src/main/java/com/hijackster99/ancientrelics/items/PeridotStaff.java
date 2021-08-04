@@ -52,31 +52,35 @@ public class PeridotStaff extends ARItem{
 					tag.putInt("x", context.getClickedPos().getX());
 					tag.putInt("y", context.getClickedPos().getY());
 					tag.putInt("z", context.getClickedPos().getZ());
-					if(context.getItemInHand().hasTag()) 
-						context.getItemInHand().getTag().put("block", tag);
-					else 
-						context.getItemInHand().setTag((CompoundNBT) new CompoundNBT().put("block", tag));
+					context.getItemInHand().getOrCreateTag().put("block", tag);
 				}else {
 					if(context.getItemInHand().hasTag() && context.getItemInHand().getTag().contains("block")) {
 						CompoundNBT tag = context.getItemInHand().getTag().getCompound("block");
 						if(context.getLevel().dimension().location().toString().equals(tag.getString("dimension"))) {
 							if(tag.getString("type").equals("relay")) {
 								TileEntity te2 = context.getLevel().getBlockEntity(new BlockPos(tag.getInt("x"), tag.getInt("y"), tag.getInt("z")));
-								if(te2 instanceof VoidRelay) {
-									((VoidRelay) te).addToNet((VoidRelay) te2, context.getPlayer());
+								if(te2 instanceof VoidRelay && !context.getLevel().isClientSide()) {
+									if(((VoidRelay) te2).getConnections().contains(te.getBlockPos()))
+										((VoidRelay) te).breakConnection((VoidRelay) te2);
+									else
+										((VoidRelay) te).addToNet((VoidRelay) te2, context.getPlayer());
 								}
 							}else if(tag.getString("type").equals("void_energy")) {
 								TileEntity te2 = context.getLevel().getBlockEntity(new BlockPos(tag.getInt("x"), tag.getInt("y"), tag.getInt("z")));
 								if(te2 instanceof ICapabilityProvider) {
 									IFluidHandler tank = te2.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).orElse(null);
-									if(tank != null && tank instanceof VoidGasTank) {
-										((VoidRelay) te).setNetVoidIn(te2);
+									if(tank != null && tank instanceof VoidGasTank && !context.getLevel().isClientSide()) {
+										if(((VoidRelay) te).getVoidIn() == te2) 
+											((VoidRelay) te).removeVoidIn();
+										else
+											((VoidRelay) te).setNetVoidIn(te2);
 									}
 								}
 							}
 						}
 					}
 				}
+				return ActionResultType.SUCCESS;
 			}else if(te instanceof ICapabilityProvider) {
 				if(context.getPlayer().isCrouching()) {
 					IFluidHandler tank = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).orElse(null);
@@ -87,10 +91,11 @@ public class PeridotStaff extends ARItem{
 						tag.putInt("x", context.getClickedPos().getX());
 						tag.putInt("y", context.getClickedPos().getY());
 						tag.putInt("z", context.getClickedPos().getZ());
-						if(context.getItemInHand().hasTag()) 
-							context.getItemInHand().getTag().put("block", tag);
-						else 
-							context.getItemInHand().setTag((CompoundNBT) new CompoundNBT().put("block", tag));
+						context.getItemInHand().getOrCreateTag().put("block", tag);
+					}else {
+						if(context.getItemInHand().hasTag()) {
+							context.getItemInHand().getTag().remove("block");
+						}
 					}
 				}else {
 					IFluidHandler tank = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).orElse(null);
@@ -99,11 +104,22 @@ public class PeridotStaff extends ARItem{
 							CompoundNBT tag = context.getItemInHand().getTag().getCompound("block");
 							if(context.getLevel().dimension().location().toString().equals(tag.getString("dimension")) && tag.getString("type").equals("relay")) {
 								TileEntity te2 = context.getLevel().getBlockEntity(new BlockPos(tag.getInt("x"), tag.getInt("y"), tag.getInt("z")));
-								if(te2 instanceof VoidRelay) {
-									((VoidRelay) te2).setNetVoidOut(te);
+								if(te2 instanceof VoidRelay && !context.getLevel().isClientSide()) {
+									if(((VoidRelay) te2).getVoidOut() == te) 
+										((VoidRelay) te2).removeVoidOut();
+									else
+										((VoidRelay) te2).setNetVoidOut(te);
 								}
 							}
 						}
+					}
+				}
+				return ActionResultType.SUCCESS;
+			}else {
+				if(context.getPlayer().isCrouching()) {
+					if(context.getItemInHand().hasTag()) {
+						context.getItemInHand().getTag().remove("block");
+						return ActionResultType.SUCCESS;
 					}
 				}
 			}
@@ -111,6 +127,7 @@ public class PeridotStaff extends ARItem{
 			if(context.getPlayer().isCrouching()) {
 				if(context.getItemInHand().hasTag()) {
 					context.getItemInHand().getTag().remove("block");
+					return ActionResultType.SUCCESS;
 				}
 			}
 		}

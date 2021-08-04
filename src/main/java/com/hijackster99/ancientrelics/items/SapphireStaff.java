@@ -1,6 +1,7 @@
 package com.hijackster99.ancientrelics.items;
 
 import com.hijackster99.ancientrelics.core.VoidGasTank;
+import com.hijackster99.ancientrelics.tileentity.voidrelay.VoidRelay;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemGroup;
@@ -27,13 +28,21 @@ public class SapphireStaff extends ARItem{
 	@Override
 	public ActionResultType useOn(ItemUseContext context) {
 		TileEntity te = context.getLevel().getBlockEntity(context.getClickedPos());
-		if(te instanceof ICapabilityProvider) {
+		if(te instanceof VoidRelay) {
+			VoidRelay relay = (VoidRelay) te;
+			if(!context.getLevel().isClientSide()) {
+				context.getPlayer().sendMessage(new StringTextComponent("Connections: " + relay.getConnections().toString()), context.getPlayer().getUUID());
+				context.getPlayer().sendMessage(new StringTextComponent("Void In: " + (relay.getVoidIn() == null ? "null" : relay.getVoidIn().toString())), context.getPlayer().getUUID());
+				context.getPlayer().sendMessage(new StringTextComponent("Void Out: " + (relay.getVoidOut() == null ? "null" : relay.getVoidOut().toString())), context.getPlayer().getUUID());
+			}
+			return ActionResultType.SUCCESS;
+		}else if(te instanceof ICapabilityProvider) {
 			ICapabilityProvider prov = te;
 			LazyOptional<IFluidHandler> opt = prov.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.UP);
 			IFluidHandler tank = opt.orElse(null);
 			if(tank != null) {
 				if(tank instanceof VoidGasTank) {
-					context.getPlayer().displayClientMessage(new StringTextComponent("Void Energy: " + Integer.toString(tank.getFluidInTank(0).getAmount())), true);
+					context.getPlayer().displayClientMessage(new StringTextComponent("Void Energy: " + Integer.toString(tank.getFluidInTank(0).getAmount()) + "/" + Integer.toString(tank.getTankCapacity(0))), true);
 					return ActionResultType.SUCCESS;
 				}
 			}

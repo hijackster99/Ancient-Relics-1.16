@@ -34,7 +34,7 @@ public class NetworkManager {
 	@SubscribeEvent
 	public static void worldTick(WorldTickEvent event) {
 		for(Network net : INSTANCE.activeNetworks) {
-			net.tick();
+			if(net.isLoaded()) net.tick();
 		}
 	}
 	

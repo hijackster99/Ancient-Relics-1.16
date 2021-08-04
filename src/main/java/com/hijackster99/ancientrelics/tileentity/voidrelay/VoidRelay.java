@@ -10,22 +10,24 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.common.thread.EffectiveSide;
 
 public class VoidRelay extends ARTileEntity {
-
+	
 	private Network net;
 	
 	private List<BlockPos> connections;
 	
-	private ICapabilityProvider voidOut;
-	private ICapabilityProvider voidIn;
+	private BlockPos voidOut;
+	private BlockPos voidIn;
 	
 	public int maxTransfer = 200;
 	
 	public VoidRelay() {
 		super(VOID_RELAY);
-		net = new Network(this);
+		if(EffectiveSide.get() == LogicalSide.SERVER)
+			net = new Network(this);
 		connections = new ArrayList<BlockPos>();
 	}
 	
@@ -39,33 +41,45 @@ public class VoidRelay extends ARTileEntity {
 	
 	@Override
 	public CompoundNBT save(CompoundNBT nbt) {
+		CompoundNBT tag = new CompoundNBT();
 		int i;
 		for(i = 0; i < connections.size(); i++) {
-			nbt.putIntArray(Integer.toString(i), new int[] {connections.get(i).getX(), connections.get(i).getY(), connections.get(i).getZ()});
+			tag.putIntArray(Integer.toString(i), new int[] {connections.get(i).getX(), connections.get(i).getY(), connections.get(i).getZ()});
 		}
-		nbt.putInt("total", i);
+		tag.putInt("total", i);
+		if(voidIn != null)
+			tag.putIntArray("void_in", new int[] {voidIn.getX(), voidIn.getY(), voidIn.getZ()});
+		if(voidOut != null)
+			tag.putIntArray("void_out", new int[] {voidOut.getX(), voidOut.getY(), voidOut.getZ()});
+		nbt.put("relay", tag);
 		return super.save(nbt);
 	}
 	
 	@Override
 	public void load(BlockState state, CompoundNBT nbt) {
 		super.load(state, nbt);
-		if(net == null) net = new Network(this);
-		int total = nbt.getInt("total");
+		CompoundNBT tag = nbt.getCompound("relay");
+		int total = tag.getInt("total");
 		for(int i = 0; i < total; i++) {
-			int[] bp = nbt.getIntArray(Integer.toString(i));
+			int[] bp = tag.getIntArray(Integer.toString(i));
 			connections.add(new BlockPos(bp[0], bp[1], bp[2]));
-			TileEntity te = level.getBlockEntity(new BlockPos(bp[0], bp[1], bp[2]));
-			if(te != null && te instanceof VoidRelay) {
-				net.addRelay(this, (VoidRelay) te, null);
-			}
 		}
+		if(tag.contains("void_in")) {
+			int[] in = tag.getIntArray("void_in");
+			voidIn = new BlockPos(in[0], in[1], in[2]);
+		}
+		if(tag.contains("void_out")) {
+			int[] out = tag.getIntArray("void_out");
+			voidOut = new BlockPos(out[0], out[1], out[2]);
+		}
+		if(net != null) net.load = true;
 	}
 	
 	@Override
-	public void clearCache() {
-		super.clearCache();
-		net.removeRelay(this);
+	public void setRemoved() {
+		super.setRemoved();
+		if(!level.isClientSide())
+			net.removeRelay(this);
 	}
 
 	public List<BlockPos> getConnections() {
@@ -97,28 +111,46 @@ public class VoidRelay extends ARTileEntity {
 		net.removeRelay(relay);
 	}
 	
-	public void setVoidIn(ICapabilityProvider te) {
+	public void breakConnection(VoidRelay relay) {
+		net.breakConnection(this, relay);
+	}
+	
+	public void setVoidIn(BlockPos te) {
 		voidIn = te;
 	}
 	
-	public void setVoidOut(ICapabilityProvider te) {
+	public void setVoidOut(BlockPos te) {
 		voidOut = te;
 	}
 	
-	public void setNetVoidIn(ICapabilityProvider te) {
+	public void removeVoidIn() {
+		net.removeVoidIn(getVoidIn());
+		setVoidIn(null);
+	}
+	
+	public void removeVoidOut() {
+		net.removeVoidOut(getVoidOut());
+		setVoidOut(null);
+	}
+	
+	public void setNetVoidIn(TileEntity te) {
 		net.addVoidIn(this, te);
 	}
 	
-	public void setNetVoidOut(ICapabilityProvider te) {
+	public void setNetVoidOut(TileEntity te) {
 		net.addVoidOut(this, te);
 	}
 	
-	public ICapabilityProvider getVoidIn() {
-		return voidIn;
+	public TileEntity getVoidIn() {
+		if(level != null && voidIn != null)
+			return level.getBlockEntity(voidIn);
+		return null;
 	}
 	
-	public ICapabilityProvider getVoidOut() {
-		return voidOut;
+	public TileEntity getVoidOut() {
+		if(level != null && voidOut != null)
+			return level.getBlockEntity(voidOut);
+		return null;
 	}
 
 }

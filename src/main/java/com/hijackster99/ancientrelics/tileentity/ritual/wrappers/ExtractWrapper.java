@@ -39,7 +39,7 @@ public class ExtractWrapper extends TileEntityWrapper {
 	
 	private int type = -1;
 	
-	private VoidGasTank tank = new VoidGasTank(1000);
+	private VoidGasTank tank = new VoidGasTank(10000);
 	
 	@CapabilityInject(IFluidHandler.class)
 	private static Capability<IFluidHandler> FLUID_CAP = null;
