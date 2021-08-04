@@ -1,13 +1,16 @@
 package com.hijackster99.ancientrelics.tileentity.voidrelay;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.hijackster99.ancientrelics.blocks.VoidGas;
-import com.hijackster99.ancientrelics.core.Util;
+import com.hijackster99.ancientrelics.core.VoidGasTank;
 
-import net.minecraft.util.Direction;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -16,148 +19,140 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class Network {
 
-	private List<ICapabilityProvider> requesters;
-	private List<ICapabilityProvider> senders;
-	private List<ICapabilityProvider> storages;
 	private List<VoidRelay> relays;
 	
-	private Checker checker = null;
+	private BiMap<VoidRelay, ICapabilityProvider> voidIns;
+	private BiMap<VoidRelay, ICapabilityProvider> voidOuts;
 	
-	public int MAX_NETWORK = 20;
-	public int MAX_TRANSFER = 200;
+	private Iterator<ICapabilityProvider> voidInIter;
 	
 	public Network(VoidRelay source) {
-		requesters = new ArrayList<ICapabilityProvider>();
-		senders = new ArrayList<ICapabilityProvider>();
-		storages = new ArrayList<ICapabilityProvider>();
 		relays = new ArrayList<VoidRelay>();
+		voidIns = HashBiMap.<VoidRelay, ICapabilityProvider>create();
+		voidOuts = HashBiMap.<VoidRelay, ICapabilityProvider>create();
 		relays.add(source);
+		NetworkManager.INSTANCE.addNetwork(this);
 	}
 	
 	public void tick() {
-		if(checker != null) {
-			
-		}else {
-			List<Request> requests = new ArrayList<Request>();
-			List<Request> send = new ArrayList<Request>();
-			int transfered = 0;
-			if(!storages.isEmpty() || !senders.isEmpty()) {
-				for(ICapabilityProvider prov : requesters) {
-					IFluidHandler tank = prov.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.UP).orElse(null);
-					if(tank != null) {
-						int amount = tank.getTankCapacity(0) - tank.getFluidInTank(0).getAmount();
-						requests.add(new Request(tank, amount));
-					}
-				}
-			}
-			int transferPer = MAX_TRANSFER / requests.size();
-			for(int i = 0; i < requests.size(); i++) {
-				int t = 0;
-				checks: {
-					for(ICapabilityProvider prov : storages) {
-						IFluidHandler tank = prov.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.UP).orElse(null);
-						if(tank != null) {
-							int amount = tank.getTankCapacity(0);
-							if(amount >= transferPer) {
-								tank.drain(new FluidStack(VoidGas.VOID_GAS_STILL,  transferPer), FluidAction.EXECUTE);
-								requests.get(i).tank.fill(new FluidStack(VoidGas.VOID_GAS_STILL, transferPer), FluidAction.EXECUTE);
-								transfered += transferPer;
-								requests.remove(i);
-								i--;
-								break checks;
-							}else {
-								
-							}
+		if(voidInIter == null || !voidInIter.hasNext()) {
+			voidInIter = voidIns.values().iterator();
+		}
+		BiMap<ICapabilityProvider, VoidRelay> inverseIn = voidIns.inverse();
+		BiMap<ICapabilityProvider, VoidRelay> inverseOut = voidOuts.inverse();
+		if(voidInIter.hasNext()) {
+			ICapabilityProvider te = voidInIter.next();
+			IFluidHandler tank = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).orElse(null);
+			if(tank != null && tank instanceof VoidGasTank) {
+				if(tank.getFluidInTank(0).getAmount() > 0) {
+					for(ICapabilityProvider te2 : voidOuts.values()) {
+						IFluidHandler tank2 = te2.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).orElse(null);
+						if(tank2 != null && tank2 instanceof VoidGasTank) {
+							int maxTransfer = Math.min(inverseIn.get(te).maxTransfer, inverseOut.get(te2).maxTransfer);
+							int transfer = Math.min(Math.min(tank.getFluidInTank(0).getAmount(), tank2.getTankCapacity(0) - tank2.getFluidInTank(0).getAmount()), maxTransfer);
+							tank.drain(transfer, FluidAction.EXECUTE);
+							tank2.fill(new FluidStack(VoidGas.VOID_GAS_STILL, transfer), FluidAction.EXECUTE);
 						}
 					}
-					for(ICapabilityProvider prov : senders) {
-						
-					}
-				}
-			}
-			if(!storages.isEmpty()) {
-				for(ICapabilityProvider prov : senders) {
-					IFluidHandler tank = prov.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, Direction.UP).orElse(null);
-					if(tank != null) {
-						int amount = tank.getFluidInTank(0).getAmount();
-						send.add(new Request(tank, amount));
-					}
 				}
 			}
 		}
 	}
 	
-	public boolean addRelay(VoidRelay relay) {
-		return mergeNetworks(relay.getNetwork());
+	public void addVoidIn(VoidRelay relay, ICapabilityProvider te) {
+		if(!voidIns.containsValue(te)) {
+			voidIns.put(relay, te);
+			relay.setVoidIn(te);
+		}
 	}
 	
-	private boolean mergeNetworks(Network net) {
-		if(Util.containsAny(relays, net.relays)) return false;
-		else if(getSize() + net.getSize() <= MAX_NETWORK) {
-			relays.addAll(net.relays);
-			senders.addAll(net.senders);
-			requesters.addAll(net.requesters);
-			storages.addAll(net.storages);
+	public void addVoidOut(VoidRelay relay, ICapabilityProvider te) {
+		if(!voidOuts.containsValue(te)) {
+			voidOuts.put(relay, te);
+			relay.setVoidOut(te);
+		}
+	}
+	
+	public boolean addRelay(VoidRelay relay1, VoidRelay relay2, PlayerEntity playerIn) {
+		if(relay2.getNetwork() == this) {
+			if(playerIn != null) playerIn.displayClientMessage(new StringTextComponent("Connection Failed! Relay already in network!"), false);
+			return false;
+		}
+		else {
+			mergeNetwork(relay2.getNetwork());
+			relay1.addConnection(relay2);
+			relay2.addConnection(relay1);
 			return true;
 		}
-		return false;
 	}
 	
-	public boolean removeRelay(VoidRelay relay) {
-		List<VoidRelay> connections = relay.getConnections();
-		for(VoidRelay r : connections) {
-			r.removeConnection(relay);
+	public void removeRelay(VoidRelay relay) {
+		if(size() == 1) 
+			NetworkManager.INSTANCE.removeNetwork(this);
+		else {
+			for(int i = 1; i < relay.getConnections().size(); i++) {
+				VoidRelay r = relay.getRelayConnection(i);
+				r.removeConnection(relay);
+				Network net = new Network(r);
+				r.setNetwork(net);
+				net.addAllConnections(r);
+			}
+			VoidRelay source = relay.getRelayConnection(0);
+			source.setNetwork(this);
+			this.clear();
+			this.addAllConnections(source);
 		}
-		if(relays.contains(relay)) {
-			if(relays.size() == 1) {
-				NetworkManager.INSTANCE.removeNetwork(this);
-				return false;
-			}else {
-				relays.remove(relay);
-				if(checker == null) {
-					checker = new Checker();
-				}else {
-					checker.reset();
-				}
+	}
+	
+	public void mergeNetwork(Network other) {
+		if(size() >= other.size()) {
+			for(VoidRelay relay : other.relays) {
+				relay.setNetwork(this);
+				checkVoids(relay, this);
+				relays.add(relay);
+			}
+			NetworkManager.INSTANCE.removeNetwork(other);
+		}else {
+			for(VoidRelay relay : relays) {
+				relay.setNetwork(other);
+				checkVoids(relay, other);
+				other.relays.add(relay);
+			}
+			NetworkManager.INSTANCE.removeNetwork(this);
+		}
+	}
+	
+	public void checkVoids(VoidRelay relay, Network net) {
+		if(relay.getVoidIn() != null) {
+			if(net.voidIns.containsValue(relay.getVoidIn())) 
+				relay.setVoidIn(null);
+			else 
+				net.voidIns.put(relay, relay.getVoidIn());
+		}
+		if(relay.getVoidOut() != null) {
+			if(net.voidOuts.containsValue(relay.getVoidOut())) 
+				relay.setVoidOut(null);
+			else 
+				net.voidOuts.put(relay, relay.getVoidOut());
+		}
+	}
+	
+	public void addAllConnections(VoidRelay relay) {
+		for(int i = 0; i < relay.getConnections().size(); i++) {
+			if(addRelay(relay, relay.getRelayConnection(i), null)) {
+				addAllConnections(relay.getRelayConnection(i));
 			}
 		}
-		
-		return true;
 	}
 	
-	public int getSize() {
-		return requesters.size() + senders.size() + storages.size() + relays.size();
+	public void clear() {
+		relays.clear();
+		voidIns.clear();
+		voidOuts.clear();
 	}
 	
-//	public List<VoidRelay> getAllConnections(VoidRelay relay) {
-//		
-//	}
-	
-	private class Checker {
-		List<VoidRelay> relaysToCheck;
-		int counter;
-		
-		private Checker() {
-			relaysToCheck = new ArrayList<VoidRelay>();
-			Collections.copy(relaysToCheck, relays);
-			counter = 0;
-		}
-		
-		private void reset() {
-			relaysToCheck.clear();
-			Collections.copy(relaysToCheck, relays);
-			counter = 0;
-		}
-	}
-	
-	private static class Request {
-		IFluidHandler tank;
-		int amount;
-		
-		private Request(IFluidHandler tank, int amount) {
-			this.tank = tank;
-			this.amount = amount;
-		}
+	public int size() {
+		return relays.size();
 	}
 	
 }

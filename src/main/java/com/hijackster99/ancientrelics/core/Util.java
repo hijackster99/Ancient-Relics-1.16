@@ -19,20 +19,20 @@ public class Util {
 		Vector3d vec2 = new Vector3d(aabb.maxX - 0.5, aabb.maxY - 0.5, aabb.maxZ - 0.5);
 		
 		if((from == Direction.UP && to == Direction.NORTH) || (from == Direction.NORTH && to == Direction.DOWN) || (from == Direction.DOWN && to == Direction.SOUTH) || (from == Direction.SOUTH && to == Direction.UP)) {
-			vec1 = vec1.zRot((float) Math.toRadians(90));
-			vec2 = vec2.zRot((float) Math.toRadians(90));
-		}else if((from == Direction.UP && to == Direction.SOUTH) || (from == Direction.SOUTH && to == Direction.DOWN) || (from == Direction.DOWN && to == Direction.NORTH) || (from == Direction.NORTH && to == Direction.UP)) {
-			vec1 = vec1.zRot((float) Math.toRadians(270));
-			vec2 = vec2.zRot((float) Math.toRadians(270));
-		}else if((from == Direction.UP && to == Direction.EAST) || (from == Direction.EAST && to == Direction.DOWN) || (from == Direction.DOWN && to == Direction.WEST) || (from == Direction.WEST && to == Direction.UP)) {
 			vec1 = vec1.xRot((float) Math.toRadians(90));
 			vec2 = vec2.xRot((float) Math.toRadians(90));
-		}else if((from == Direction.UP && to == Direction.WEST) || (from == Direction.WEST && to == Direction.DOWN) || (from == Direction.DOWN && to == Direction.EAST) || (from == Direction.EAST && to == Direction.UP)) {
+		}else if((from == Direction.UP && to == Direction.SOUTH) || (from == Direction.SOUTH && to == Direction.DOWN) || (from == Direction.DOWN && to == Direction.NORTH) || (from == Direction.NORTH && to == Direction.UP)) {
 			vec1 = vec1.xRot((float) Math.toRadians(270));
 			vec2 = vec2.xRot((float) Math.toRadians(270));
+		}else if((from == Direction.UP && to == Direction.EAST) || (from == Direction.EAST && to == Direction.DOWN) || (from == Direction.DOWN && to == Direction.WEST) || (from == Direction.WEST && to == Direction.UP)) {
+			vec1 = vec1.zRot((float) Math.toRadians(90));
+			vec2 = vec2.zRot((float) Math.toRadians(90));
+		}else if((from == Direction.UP && to == Direction.WEST) || (from == Direction.WEST && to == Direction.DOWN) || (from == Direction.DOWN && to == Direction.EAST) || (from == Direction.EAST && to == Direction.UP)) {
+			vec1 = vec1.zRot((float) Math.toRadians(270));
+			vec2 = vec2.zRot((float) Math.toRadians(270));
 		}else if((from == Direction.UP && to == Direction.DOWN) || (from == Direction.DOWN && to == Direction.UP)) {
-			vec1 = vec1.zRot((float) Math.toRadians(180));
-			vec2 = vec2.zRot((float) Math.toRadians(180));
+			vec1 = vec1.xRot((float) Math.toRadians(180));
+			vec2 = vec2.xRot((float) Math.toRadians(180));
 		}else if((from == Direction.EAST && to == Direction.WEST) || (from == Direction.WEST && to == Direction.EAST) || (from == Direction.NORTH && to == Direction.SOUTH) || (from == Direction.SOUTH && to == Direction.NORTH)) {
 			vec1 = vec1.yRot((float) Math.toRadians(180));
 			vec2 = vec2.yRot((float) Math.toRadians(180));
