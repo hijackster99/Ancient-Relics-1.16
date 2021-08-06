@@ -49,6 +49,9 @@ public class ARItem extends Item{
 	
 	@ObjectHolder(References.MODID + ":void_gas_bucket")
 	public static BucketItem VOID_GAS_BUCKET;
+	
+	@ObjectHolder(References.MODID + ":void_liquid_bucket")
+	public static BucketItem VOID_LIQUID_BUCKET;
 
 	//BlockItems
 	@ObjectHolder(References.MODID + ":arcane_stone_1")

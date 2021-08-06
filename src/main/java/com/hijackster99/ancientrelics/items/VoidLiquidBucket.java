@@ -13,11 +13,11 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 
-public class VoidGasBucket extends BucketItem {
+public class VoidLiquidBucket extends BucketItem {
 
-	public VoidGasBucket(Supplier<? extends Fluid> supplier) {
+	public VoidLiquidBucket(Supplier<? extends Fluid> supplier) {
 		super(supplier, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ARBase.ARGroup));
-		setRegistryName("void_gas_bucket");
+		setRegistryName("void_liquid_bucket");
 	}
 
 	@Override

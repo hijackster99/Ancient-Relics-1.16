@@ -228,5 +228,8 @@ public class ARBlock extends Block{
 	
 	@ObjectHolder(References.MODID + ":void_gas_block")
 	public static VoidGasBlock VOID_GAS_BLOCK;
+	
+	@ObjectHolder(References.MODID + ":void_liquid_block")
+	public static VoidLiquidBlock VOID_LIQUID_BLOCK;
 
 }

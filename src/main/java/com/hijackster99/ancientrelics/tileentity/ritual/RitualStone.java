@@ -73,6 +73,7 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 			this.ritual = ritual;
 			try {
 				this.wrapper = this.ritual.wrapper.newInstance();
+				this.wrapper.ritual = ritual;
 			} catch (InstantiationException | IllegalAccessException e) {
 				e.printStackTrace();
 			}

@@ -1,7 +1,5 @@
 package com.hijackster99.ancientrelics.blocks;
 
-import java.awt.Color;
-
 import com.hijackster99.ancientrelics.core.References;
 import com.hijackster99.ancientrelics.items.ARItem;
 
@@ -13,17 +11,17 @@ import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.ObjectHolder;
 
-public abstract class VoidGas extends ForgeFlowingFluid {
+public abstract class VoidLiquid extends ForgeFlowingFluid {
 	
-	public VoidGas() {
-		super(new Properties(() -> VOID_GAS_STILL, () -> VOID_GAS_FLOWING, FluidAttributes.builder(new ResourceLocation(References.MODID, "block/void_gas_still"), new ResourceLocation(References.MODID, "block/void_gas_flow")).density(500).viscosity(20).temperature(0).gaseous().color(new Color(255, 255, 255, 191).getRGB())).bucket(() -> ARItem.VOID_GAS_BUCKET).block(() -> ARBlock.VOID_GAS_BLOCK));
+	public VoidLiquid() {
+		super(new Properties(() -> VOID_LIQUID_STILL, () -> VOID_LIQUID_FLOWING, FluidAttributes.builder(new ResourceLocation(References.MODID, "block/void_liquid_still"), new ResourceLocation(References.MODID, "block/void_liquid_flow")).density(2000).viscosity(80).temperature(0)).bucket(() -> ARItem.VOID_LIQUID_BUCKET).block(() -> ARBlock.VOID_LIQUID_BLOCK).levelDecreasePerBlock(2).tickRate(20).slopeFindDistance(2));
 	}
 	
-	public static class VoidGasFlowing extends VoidGas {
+	public static class VoidLiquidFlowing extends VoidLiquid {
 
-		public VoidGasFlowing() {
+		public VoidLiquidFlowing() {
 			super();
-			setRegistryName("void_gas_flowing");
+			setRegistryName("void_liquid_flowing");
 			registerDefaultState(getStateDefinition().any().setValue(LEVEL, 7));
 		}
 
@@ -44,11 +42,11 @@ public abstract class VoidGas extends ForgeFlowingFluid {
 		}
 	}
 	
-	public static class VoidGasStill extends VoidGas {
+	public static class VoidLiquidStill extends VoidLiquid {
 
-		public VoidGasStill() {
+		public VoidLiquidStill() {
 			super();
-			setRegistryName("void_gas_still");
+			setRegistryName("void_liquid_still");
 		}
 
 		@Override
@@ -63,10 +61,10 @@ public abstract class VoidGas extends ForgeFlowingFluid {
 		
 	}
 	
-	@ObjectHolder(References.MODID + ":void_gas_still")
-	public static VoidGas VOID_GAS_STILL;
+	@ObjectHolder(References.MODID + ":void_liquid_still")
+	public static VoidLiquid VOID_LIQUID_STILL;
 	
-	@ObjectHolder(References.MODID + ":void_gas_flowing")
-	public static VoidGas VOID_GAS_FLOWING;
+	@ObjectHolder(References.MODID + ":void_liquid_flowing")
+	public static VoidLiquid VOID_LIQUID_FLOWING;
 
 }

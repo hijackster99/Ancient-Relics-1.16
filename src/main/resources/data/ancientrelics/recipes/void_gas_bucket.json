@@ -1,0 +1,9 @@
+{
+  "type": "ancientrelics:infuse_recipe",
+  "tier": 1,
+  "ring_0": {
+    "item": "minecraft:bucket"
+  },
+  "result": "ancientrelics:void_gas_bucket",
+  "void_cost": 1000
+}

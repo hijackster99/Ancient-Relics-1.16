@@ -17,6 +17,8 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public class TileEntityWrapper {
 	
+	protected Ritual ritual;
+	
 	public void tick(World worldObj, BlockPos pos) {
 		
 	}

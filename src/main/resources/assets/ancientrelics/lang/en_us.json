@@ -80,6 +80,8 @@
 "item.ancientrelics.filter": "Filter",
 "item.ancientrelics.ritual_maker": "Ritual Maker",
 "item.ancientrelics.ritual_builder": "Ritual Builder",
+"item.ancientrelics.void_gas_bucket": "Gaseous Void Bucket",
+"item.ancientrelics.void_liquid_bucket": "Liquid Void Bucket",
 
 "itemGroup.ancientrelics": "Ancient Relics"
 }

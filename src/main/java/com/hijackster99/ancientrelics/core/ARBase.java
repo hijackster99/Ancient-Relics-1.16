@@ -9,8 +9,11 @@ import com.hijackster99.ancientrelics.blocks.RitualBlock;
 import com.hijackster99.ancientrelics.blocks.ShardBlock;
 import com.hijackster99.ancientrelics.blocks.VoidGas;
 import com.hijackster99.ancientrelics.blocks.VoidGasBlock;
+import com.hijackster99.ancientrelics.blocks.VoidLiquid;
+import com.hijackster99.ancientrelics.blocks.VoidLiquidBlock;
 import com.hijackster99.ancientrelics.blocks.VoidRelayBlock;
 import com.hijackster99.ancientrelics.core.classloader.RitualJsonManager;
+import com.hijackster99.ancientrelics.crafting.InfusionSerializer;
 import com.hijackster99.ancientrelics.items.ARBlockItem;
 import com.hijackster99.ancientrelics.items.ARItem;
 import com.hijackster99.ancientrelics.items.Burnable;
@@ -24,6 +27,7 @@ import com.hijackster99.ancientrelics.items.RubyStaff;
 import com.hijackster99.ancientrelics.items.SapphireStaff;
 import com.hijackster99.ancientrelics.items.ShardBlockItem;
 import com.hijackster99.ancientrelics.items.VoidGasBucket;
+import com.hijackster99.ancientrelics.items.VoidLiquidBucket;
 import com.hijackster99.ancientrelics.tileentity.ritual.Ritual;
 import com.hijackster99.ancientrelics.tileentity.ritual.RitualStone;
 import com.hijackster99.ancientrelics.tileentity.ritual.wrappers.AnvilWrapper;
@@ -35,11 +39,14 @@ import com.hijackster99.ancientrelics.tileentity.voidrelay.VoidRelay;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -80,7 +87,8 @@ public class ARBase {
 	}
 	
 	private void clientSetup(FMLClientSetupEvent event) {
-
+		RenderTypeLookup.setRenderLayer(VoidGas.VOID_GAS_STILL, RenderType.translucent());
+		RenderTypeLookup.setRenderLayer(VoidGas.VOID_GAS_FLOWING, RenderType.translucent());
 	}
 	
 	@SubscribeEvent
@@ -108,8 +116,10 @@ public class ARBase {
 		event.getRegistry().register(ritualMaker);
 		Item ritualBuilder = new RitualBuilder("ritual_builder", 1, ARGroup);
 		event.getRegistry().register(ritualBuilder);
-		Item voidGasBucket = new VoidGasBucket(VoidGas.VoidGasStill::new);
+		Item voidGasBucket = new VoidGasBucket(() -> VoidGas.VOID_GAS_STILL);
 		event.getRegistry().register(voidGasBucket);
+		Item voidLiquidBucket = new VoidLiquidBucket(() -> VoidLiquid.VOID_LIQUID_STILL);
+		event.getRegistry().register(voidLiquidBucket);
 		//BlockItems
 		BlockItem arcaneStone1 = new ARBlockItem(ARBlock.ARCANE_STONE_1, 64, ARGroup);
 		event.getRegistry().register(arcaneStone1);
@@ -392,8 +402,10 @@ public class ARBase {
 		event.getRegistry().register(voidStone);
 		Block soulHeart = new ARBlock("soul_heart", Material.STONE, 50f, 1200f, ToolType.PICKAXE, 4, true);
 		event.getRegistry().register(soulHeart);
-		Block voidGasBlock = new VoidGasBlock(VoidGas.VoidGasStill::new, "void_gas_block", Material.WATER, 100f, 100f);
+		Block voidGasBlock = new VoidGasBlock(() -> VoidGas.VOID_GAS_STILL, "void_gas_block", Material.WATER, 100f, 100f);
 		event.getRegistry().register(voidGasBlock);
+		Block voidLiquidBlock = new VoidLiquidBlock(() -> VoidLiquid.VOID_LIQUID_STILL, "void_liquid_block", Material.WATER, 100f, 100f);
+		event.getRegistry().register(voidLiquidBlock);
 	}
 	
 	@SubscribeEvent
@@ -404,6 +416,13 @@ public class ARBase {
 		TileEntityType<VoidRelay> voidRelay = TileEntityType.Builder.of(VoidRelay::new, ARBlock.VOID_RELAY).build(null);
 		voidRelay.setRegistryName(References.MODID, "void_relay");
 		event.getRegistry().register(voidRelay);
+	}
+	
+	@SubscribeEvent
+	public static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
+		InfusionSerializer infuseSer = new InfusionSerializer();
+		infuseSer.setRegistryName(References.MODID, "infuse_recipe");
+		event.getRegistry().register(infuseSer);
 	}
 	
 	@SubscribeEvent
@@ -448,6 +467,10 @@ public class ARBase {
 		event.getRegistry().register(voidGasFlowing);
 		Fluid voidGasStill = new VoidGas.VoidGasStill();
 		event.getRegistry().register(voidGasStill);
+		Fluid voidLiquidFlowing = new VoidLiquid.VoidLiquidFlowing();
+		event.getRegistry().register(voidLiquidFlowing);
+		Fluid voidLiquidStill = new VoidLiquid.VoidLiquidStill();
+		event.getRegistry().register(voidLiquidStill);
 	}
 	
 	@EventBusSubscriber(modid = References.MODID, bus = EventBusSubscriber.Bus.FORGE)

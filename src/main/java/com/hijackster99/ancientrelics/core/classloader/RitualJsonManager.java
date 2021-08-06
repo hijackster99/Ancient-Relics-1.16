@@ -79,7 +79,42 @@ public class RitualJsonManager extends JsonReloadListener{
 			        	 }
 	        		 }
 		         }
-    			 GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).setRitualBlocks(blocks);
+	        	 if(entry.getValue().getAsJsonObject().has("block_definition")) {
+		        	 JsonObject blockDef = entry.getValue().getAsJsonObject().get("block_definition").getAsJsonObject();
+		        	 Set<Map.Entry<String, JsonElement>> blockEntrySet = blockDef.entrySet();
+		        	 for(Map.Entry<String, JsonElement> e : blockEntrySet) {
+		        		 if(e.getValue().isJsonArray()) {
+		        			 JsonArray array = e.getValue().getAsJsonArray();
+		        			 if(array.size() > 1 && array.size() % 3 == 0) {
+		        				 for(int i = 0; i < array.size(); i += 3) {
+			        				 int x = array.get(i).getAsInt();
+			        				 int y = array.get(i + 1).getAsInt();
+			        				 int z = array.get(i + 2).getAsInt();
+			        				 if(!(x == 0 && y == 0 && z == 0))
+			        					 GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).putBlockDefs(new BlockPos(x, y, z), e.getKey());
+			        				 else
+			        					 LOGGER.error("Error: Block specified at ritual center! Skipping!");
+			        			 }
+		        			 }
+		        		 }
+		        	 }
+	        	 }
+	        	 if(entry.getValue().getAsJsonObject().has("type_definition")) {
+		        	 JsonObject typeDef = entry.getValue().getAsJsonObject().get("type_definition").getAsJsonObject();
+		        	 Set<Map.Entry<String, JsonElement>> typeEntrySet = typeDef.entrySet();
+		        	 for(Map.Entry<String, JsonElement> e : typeEntrySet) {
+		        		 if(e.getValue().isJsonArray()) {
+		        			 JsonArray array = e.getValue().getAsJsonArray();
+		        			 List<String> capList = new ArrayList<String>();
+		        			 for(JsonElement arrEl : array) {
+		        				 String str = arrEl.getAsString();
+		        				 capList.add(str);
+		        			 }
+				        	 GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).putTypeDefs(new ResourceLocation(e.getKey()), capList);
+		        		 }
+		        	 }
+	        	 }
+        		 GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).setRitualBlocks(blocks);
 			 }else {
 				 LOGGER.error("Error: Ritual: {} not registered! Skipping!", resourcelocation);
 			 }
