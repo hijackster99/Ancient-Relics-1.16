@@ -9,7 +9,6 @@ import com.hijackster99.ancientrelics.core.classloader.RitualJsonManager.Option;
 
 import net.minecraft.block.Block;
 import net.minecraft.tags.Tag;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -21,7 +20,7 @@ public class Ritual extends ForgeRegistryEntry<Ritual>{
 	private Tag<Block> tier;
 	private Map<Option, List<BlockPos>> ritualBlocks;
 	private Map<BlockPos, String> blockDefs;
-	private Map<ResourceLocation, List<String>> typeDefs;
+	private Map<Block, List<String>> typeDefs;
 	
 	public static int blocksChecked = 4;
 	
@@ -30,7 +29,7 @@ public class Ritual extends ForgeRegistryEntry<Ritual>{
 		this.ritualBlocks = ritualBlocks;
 		this.tier = tier;
 		this.blockDefs = new HashMap<BlockPos, String>();
-		this.typeDefs = new HashMap<ResourceLocation, List<String>>();
+		this.typeDefs = new HashMap<Block, List<String>>();
 		this.setRegistryName(name);
 	}
 	
@@ -77,11 +76,11 @@ public class Ritual extends ForgeRegistryEntry<Ritual>{
 		blockDefs.put(pos, str);
 	}
 	
-	public Map<ResourceLocation, List<String>> getTypeDefs() {
+	public Map<Block, List<String>> getTypeDefs() {
 		return typeDefs;
 	}
 	
-	public void putTypeDefs(ResourceLocation loc, List<String> cap) {
+	public void putTypeDefs(Block loc, List<String> cap) {
 		typeDefs.put(loc, cap);
 	}
 	

@@ -2,16 +2,15 @@ package com.hijackster99.ancientrelics.tileentity.ritual.wrappers;
 
 import java.util.List;
 
+import com.hijackster99.ancientrelics.blocks.ARBlock;
 import com.hijackster99.ancientrelics.blocks.VoidGas;
 import com.hijackster99.ancientrelics.core.VoidGasTank;
 import com.hijackster99.ancientrelics.tileentity.ritual.TileEntityWrapper;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -32,14 +31,12 @@ public class ExtractWrapper extends TileEntityWrapper {
 	private int burnTime = 0;
 	private int VPT = 1;
 	
-	private int VPTModifier = 1;
-	private int burnTimeModifier = 1;
+	private int VPTModifier = type.contains(ARBlock.RITUAL_STONE_1_PERIDOT) ? 2 : 1;
+	private int burnTimeModifier = type.contains(ARBlock.RITUAL_STONE_1_RUBY) ? 2 : 1;
 	
 	private int particle = 10;
 	
-	private int type = -1;
-	
-	private VoidGasTank tank = new VoidGasTank(10000);
+	private VoidGasTank tank = new VoidGasTank(type.contains(ARBlock.RITUAL_STONE_1_SAPPHIRE) ? 20000 : 10000);
 	
 	@CapabilityInject(IFluidHandler.class)
 	private static Capability<IFluidHandler> FLUID_CAP = null;
@@ -47,18 +44,6 @@ public class ExtractWrapper extends TileEntityWrapper {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void tick(World worldObj, BlockPos pos) {
-		if(type == -1) {
-			Block b = worldObj.getBlockState(pos).getBlock();
-			type = getType(b);
-			switch(type) {
-			case 0: burnTimeModifier = 2;
-					break;
-			case 1: VPTModifier = 2;
-					break;
-			case 2: tank.setCapacity(2000);
-					break;
-			}
-		}
 		if(burnTime == 0) {
 			List<ItemEntity> entities = worldObj.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 2, pos.getZ() + 1));
 			for(ItemEntity item : entities) {
@@ -108,10 +93,6 @@ public class ExtractWrapper extends TileEntityWrapper {
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		return FLUID_CAP.orEmpty(cap, LazyOptional.of(() -> tank));
-	}
-	
-	private int getType(Block b) {
-		return BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_ruby")).contains(b) ? 0 : BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_peridot")).contains(b) ? 1 : 2;
 	}
 	
 }

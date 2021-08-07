@@ -1,8 +1,8 @@
 package com.hijackster99.ancientrelics.crafting;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -11,7 +11,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class InfuseRecipe implements IRecipe<IInventory> {
+public class InfuseRecipe implements IRecipe<InfuseCraftInv> {
 	
 	public static final IRecipeType<InfuseRecipe> INFUSE_RECIPE = IRecipeType.register("infuse_recipe");
 	private ResourceLocation id;
@@ -31,16 +31,29 @@ public class InfuseRecipe implements IRecipe<IInventory> {
 	}
 	
 	public InfuseRecipe() {
-		
+		this.id = new ResourceLocation("ancientrelics:peridot_gem");
+		this.result = ItemStack.EMPTY;
+		ingredients = new HashMap<Ingredient, String>();
+		this.voidCost = 0;
+		this.tier = 0;
+		this.group = "";
 	}
 	
 	@Override
-	public boolean matches(IInventory inv, World worldIn) {
-		return false;
+	public boolean matches(InfuseCraftInv inv, World worldIn) {
+		for(Map.Entry<Ingredient, String> entry : ingredients.entrySet()) {
+			Ingredient ingr = entry.getKey();
+			String ring = entry.getValue();
+			ItemStack stack = ingr.getItems()[0];
+			
+			if(!inv.containsItem(stack, ring)) return false;
+		}
+		if(inv.getTier() < tier) return false;
+		return true;
 	}
 
 	@Override
-	public ItemStack assemble(IInventory inv) {
+	public ItemStack assemble(InfuseCraftInv inv) {
 		return result;
 	}
 

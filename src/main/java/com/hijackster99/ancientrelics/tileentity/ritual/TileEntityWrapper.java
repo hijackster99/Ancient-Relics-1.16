@@ -2,9 +2,11 @@ package com.hijackster99.ancientrelics.tileentity.ritual;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -18,6 +20,7 @@ import net.minecraftforge.common.util.LazyOptional;
 public class TileEntityWrapper {
 	
 	protected Ritual ritual;
+	protected Tag<Block> type;
 	
 	public void tick(World worldObj, BlockPos pos) {
 		

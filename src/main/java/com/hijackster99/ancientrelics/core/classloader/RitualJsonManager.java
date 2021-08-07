@@ -110,7 +110,7 @@ public class RitualJsonManager extends JsonReloadListener{
 		        				 String str = arrEl.getAsString();
 		        				 capList.add(str);
 		        			 }
-				        	 GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).putTypeDefs(new ResourceLocation(e.getKey()), capList);
+				        	 GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).putTypeDefs(GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(e.getKey())), capList);
 		        		 }
 		        	 }
 	        	 }

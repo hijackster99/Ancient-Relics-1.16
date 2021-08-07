@@ -3,96 +3,62 @@ package com.hijackster99.ancientrelics.crafting;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 
-public class InfuseCraftInv implements IInventory {
-
-	private List<RingStack> itemStacks;
-	private int size;
+public class InfuseCraftInv extends Inventory{
 	
-	public InfuseCraftInv(int size) {
-		itemStacks = new ArrayList<RingStack>(size);
-		this.size = size;
-	}
+	private List<String> rings;
+	private int tier;
 	
-	@Override
-	public void clearContent() {
-		itemStacks.clear();
-	}
-
-	@Override
-	public int getContainerSize() {
-		return size;
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return itemStacks.isEmpty();
-	}
-
-	@Override
-	public ItemStack getItem(int slot) {
-		return itemStacks.get(slot).getStack();
-	}
-
-	@Override
-	public ItemStack removeItem(int a, int b) {
-		NonNullList<ItemStack> stacks = NonNullList.create();
-		for(RingStack s : itemStacks) {
-			stacks.add(s.getStack());
-		}
-		return ItemStackHelper.removeItem(stacks, a, b);
-	}
-
-	@Override
-	public ItemStack removeItemNoUpdate(int slot) {
-		ItemStack stack = itemStacks.get(slot).getStack();
-		if(stack != null) {
-			itemStacks.set(slot, null);
-			return stack;
-		}
-		return ItemStack.EMPTY;
-	}
-
-	@Override
-	public void setItem(int slot, ItemStack stack) {
-		if(itemStacks.get(slot) != null) {
-			itemStacks.get(slot).stack = stack;
-		}
-	}
-
-	@Override
-	public void setChanged() {
-		
-	}
-
-	@Override
-	public boolean stillValid(PlayerEntity p_70300_1_) {
-		return true;
+	public InfuseCraftInv(int size, int tier) {
+		super(size);
+		rings = new ArrayList<String>(size);
+		this.tier = tier;
 	}
 	
-	private static class RingStack {
-		
-		private String ring;
-		private ItemStack stack;
-		
-		public RingStack(String ring, ItemStack stack) {
-			this.ring = ring;
-			this.stack = stack;
-		}
-		
-		public String getRing() {
-			return ring;
-		}
-		
-		public ItemStack getStack() {
-			return stack;
-		}
-		
+	public void putItem(int index, ItemStack stack, String ring) {
+		rings.set(index, ring);
+		setItem(index, stack);
 	}
-
+	
+	public void removeItem(int index) {
+		removeItem(index, 1);
+		rings.set(index, null);
+	}
+	
+	public String getRing(int index) {
+		return rings.get(index);
+	}
+	
+	public boolean containsItem(ItemStack stack, String ring) {
+		for(int i = 0; i < getContainerSize(); i++) {
+			ItemStack stack2 = getItem(i);
+			if(ItemStack.isSameIgnoreDurability(stack, stack2)) {
+				if(ring.equals(rings.get(i))) {
+					removeItem(i);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean containsItemNbt(ItemStack stack, String ring) {
+		for(int i = 0; i < getContainerSize(); i++) {
+			ItemStack stack2 = getItem(i);
+			if(ItemStack.isSameIgnoreDurability(stack, stack2) && ItemStack.tagMatches(stack, stack2)) {
+				if(ring.equals(rings.get(i))) {
+					removeItem(i);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public int getTier() {
+		return tier;
+	}
+	
 }
