@@ -28,18 +28,28 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class ExtractWrapper extends TileEntityWrapper {
 	
-	private int burnTime = 0;
-	private int VPT = 1;
+	private int burnTime;
+	private int VPT;
 	
-	private int VPTModifier = type.contains(ARBlock.RITUAL_STONE_1_PERIDOT) ? 2 : 1;
-	private int burnTimeModifier = type.contains(ARBlock.RITUAL_STONE_1_RUBY) ? 2 : 1;
+	private int VPTModifier;
+	private int burnTimeModifier;
 	
-	private int particle = 10;
+	private int particle;
 	
-	private VoidGasTank tank = new VoidGasTank(type.contains(ARBlock.RITUAL_STONE_1_SAPPHIRE) ? 20000 : 10000);
+	private VoidGasTank tank;
 	
 	@CapabilityInject(IFluidHandler.class)
 	private static Capability<IFluidHandler> FLUID_CAP = null;
+	
+	@Override
+	public void init(World worldIn, BlockPos pos) {
+		burnTime = 0;
+		VPT = 1;
+		VPTModifier = type.contains(ARBlock.RITUAL_STONE_1_PERIDOT) ? 2 : 1;
+		burnTimeModifier = type.contains(ARBlock.RITUAL_STONE_1_RUBY) ? 2 : 1;
+		particle = 10;
+		tank = new VoidGasTank(type.contains(ARBlock.RITUAL_STONE_1_SAPPHIRE) ? 20000 : 10000);
+	}
 	
 	@SuppressWarnings("deprecation")
 	@Override

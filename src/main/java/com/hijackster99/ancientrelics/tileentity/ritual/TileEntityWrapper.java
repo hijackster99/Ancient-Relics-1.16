@@ -22,6 +22,10 @@ public class TileEntityWrapper {
 	protected Ritual ritual;
 	protected Tag<Block> type;
 	
+	public void init(World worldIn, BlockPos pos) {
+		
+	}
+	
 	public void tick(World worldObj, BlockPos pos) {
 		
 	}

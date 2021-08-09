@@ -20,30 +20,39 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class InfuseWrapper extends TileEntityWrapper {
 	
-	double VCModifier = type.contains(ARBlock.RITUAL_STONE_1_RUBY) || type.contains(ARBlock.RITUAL_STONE_6) ? 0.5 : 1;
-	int VPTModifier = type.contains(ARBlock.RITUAL_STONE_1_PERIDOT) || type.contains(ARBlock.RITUAL_STONE_6) ? 40 : 20;
+	double VCModifier;
+	int VPTModifier;
 	
-	private VoidGasTank tank = new VoidGasTank(type.contains(ARBlock.RITUAL_STONE_1_SAPPHIRE) || type.contains(ARBlock.RITUAL_STONE_6) ? 20000 : 10000);
+	private VoidGasTank tank;
 	
-	InfuseRecipe recipe = null;
-	int voidEnergy = 0;
+	InfuseRecipe recipe;
+	int voidEnergy;
 	
 	@CapabilityInject(IFluidHandler.class)
 	private static Capability<IFluidHandler> FLUID_CAP = null;
 	
 	@Override
+	public void init(World worldIn, BlockPos pos) {
+		VCModifier = type.contains(ARBlock.RITUAL_STONE_1_RUBY) || type.contains(ARBlock.RITUAL_STONE_6) ? 0.5 : 1;
+		VPTModifier = type.contains(ARBlock.RITUAL_STONE_1_PERIDOT) || type.contains(ARBlock.RITUAL_STONE_6) ? 40 : 20;
+		tank = new VoidGasTank(type.contains(ARBlock.RITUAL_STONE_1_SAPPHIRE) || type.contains(ARBlock.RITUAL_STONE_6) ? 20000 : 10000);
+		recipe = null;
+		voidEnergy = 0;
+	}
+	
+	@Override
 	public void tick(World worldObj, BlockPos pos) {
 		
 		InfuseCraftInv inv = new InfuseCraftInv(1, Integer.valueOf(BlockTags.getAllTags().getId(ritual.getTier()).getPath().charAt(BlockTags.getAllTags().getId(ritual.getTier()).getPath().length() - 1)));
-		
-		Optional<InfuseRecipe> recipe = worldObj.getRecipeManager().getRecipeFor(InfuseRecipe.INFUSE_RECIPE, inv, worldObj);
-		if(recipe.isPresent()) {
-			this.recipe = recipe.get();
-			voidEnergy = this.recipe.getVoidCost();
-		}
-		if(recipe != null) {
+		if(recipe == null) {
+			Optional<InfuseRecipe> r = worldObj.getRecipeManager().getRecipeFor(InfuseRecipe.INFUSE_RECIPE, inv, worldObj);
+			if(r.isPresent()) {
+				recipe = r.get();
+				voidEnergy = recipe.getVoidCost();
+			}
+		}else {
 			if(voidEnergy <= 0) {
-				craft(recipe);
+				craft();
 				recipe = null;
 			}else {
 				if(tank.getFluidInTank(0).getAmount() < VPTModifier) {
@@ -65,6 +74,10 @@ public class InfuseWrapper extends TileEntityWrapper {
 				}
 			}
 		}
+	}
+	
+	private void craft() {
+		
 	}
 	
 	@Override
