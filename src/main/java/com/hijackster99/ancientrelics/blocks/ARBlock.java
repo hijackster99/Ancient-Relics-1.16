@@ -19,23 +19,23 @@ public class ARBlock extends Block{
 		setRegistryName(References.MODID, registryName);
 	}
 	
-	@ObjectHolder(References.MODID + ":arcane_stone_1")
-	public static ARBlock ARCANE_STONE_1;
+	//@ObjectHolder(References.MODID + ":arcane_stone_1")
+	//public static ARBlock ARCANE_STONE_1;
 	
-	@ObjectHolder(References.MODID + ":arcane_stone_2")
-	public static ARBlock ARCANE_STONE_2;
+	//@ObjectHolder(References.MODID + ":arcane_stone_2")
+	//public static ARBlock ARCANE_STONE_2;
 	
-	@ObjectHolder(References.MODID + ":arcane_stone_3")
-	public static ARBlock ARCANE_STONE_3;
+	//@ObjectHolder(References.MODID + ":arcane_stone_3")
+	//public static ARBlock ARCANE_STONE_3;
 	
-	@ObjectHolder(References.MODID + ":arcane_stone_4")
-	public static ARBlock ARCANE_STONE_4;
+	//@ObjectHolder(References.MODID + ":arcane_stone_4")
+	//public static ARBlock ARCANE_STONE_4;
 	
-	@ObjectHolder(References.MODID + ":arcane_stone_5")
-	public static ARBlock ARCANE_STONE_5;
+	//@ObjectHolder(References.MODID + ":arcane_stone_5")
+	//public static ARBlock ARCANE_STONE_5;
 	
-	@ObjectHolder(References.MODID + ":arcane_stone_6")
-	public static ARBlock ARCANE_STONE_6;
+	@ObjectHolder(References.MODID + ":arcane_stone")
+	public static ARBlock ARCANE_STONE;
 	
 	@ObjectHolder(References.MODID + ":peridot_ore")
 	public static ARBlock PERIDOT_ORE;

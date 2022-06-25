@@ -121,18 +121,18 @@ public class ARBase {
 		Item voidLiquidBucket = new VoidLiquidBucket(() -> VoidLiquid.VOID_LIQUID_STILL);
 		event.getRegistry().register(voidLiquidBucket);
 		//BlockItems
-		BlockItem arcaneStone1 = new ARBlockItem(ARBlock.ARCANE_STONE_1, 64, ARGroup);
-		event.getRegistry().register(arcaneStone1);
-		BlockItem arcaneStone2 = new ARBlockItem(ARBlock.ARCANE_STONE_2, 64, ARGroup);
-		event.getRegistry().register(arcaneStone2);
-		BlockItem arcaneStone3 = new ARBlockItem(ARBlock.ARCANE_STONE_3, 64, ARGroup);
-		event.getRegistry().register(arcaneStone3);
-		BlockItem arcaneStone4 = new ARBlockItem(ARBlock.ARCANE_STONE_4, 64, ARGroup);
-		event.getRegistry().register(arcaneStone4);
-		BlockItem arcaneStone5 = new ARBlockItem(ARBlock.ARCANE_STONE_5, 64, ARGroup);
-		event.getRegistry().register(arcaneStone5);
-		BlockItem arcaneStone6 = new ARBlockItem(ARBlock.ARCANE_STONE_6, 64, ARGroup);
-		event.getRegistry().register(arcaneStone6);
+		//BlockItem arcaneStone1 = new ARBlockItem(ARBlock.ARCANE_STONE_1, 64, ARGroup);
+		//event.getRegistry().register(arcaneStone1);
+		//BlockItem arcaneStone2 = new ARBlockItem(ARBlock.ARCANE_STONE_2, 64, ARGroup);
+		//event.getRegistry().register(arcaneStone2);
+		//BlockItem arcaneStone3 = new ARBlockItem(ARBlock.ARCANE_STONE_3, 64, ARGroup);
+		//event.getRegistry().register(arcaneStone3);
+		//BlockItem arcaneStone4 = new ARBlockItem(ARBlock.ARCANE_STONE_4, 64, ARGroup);
+		//event.getRegistry().register(arcaneStone4);
+		//BlockItem arcaneStone5 = new ARBlockItem(ARBlock.ARCANE_STONE_5, 64, ARGroup);
+		//event.getRegistry().register(arcaneStone5);
+		BlockItem arcaneStone = new ARBlockItem(ARBlock.ARCANE_STONE, 64, ARGroup);
+		event.getRegistry().register(arcaneStone);
 		BlockItem peridotOre = new ARBlockItem(ARBlock.PERIDOT_ORE, 64, ARGroup);
 		event.getRegistry().register(peridotOre);
 		BlockItem rubyOre = new ARBlockItem(ARBlock.RUBY_ORE, 64, ARGroup);
@@ -264,18 +264,18 @@ public class ARBase {
 	@SubscribeEvent
 	public static void registerBlocks(RegistryEvent.Register<Block> event) {
 		//Blocks
-		Block arcaneStone1 = new ARBlock("arcane_stone_1", Material.STONE, 2f, 7f, ToolType.PICKAXE, 0, true);
-		event.getRegistry().register(arcaneStone1);
-		Block arcaneStone2 = new ARBlock("arcane_stone_2", Material.STONE, 10f, 10f, ToolType.PICKAXE, 0, true);
-		event.getRegistry().register(arcaneStone2);
-		Block arcaneStone3 = new ARBlock("arcane_stone_3", Material.STONE, 20f, 13f, ToolType.PICKAXE, 1, true);
-		event.getRegistry().register(arcaneStone3);
-		Block arcaneStone4 = new ARBlock("arcane_stone_4", Material.STONE, 30f, 16f, ToolType.PICKAXE, 2, true);
-		event.getRegistry().register(arcaneStone4);
-		Block arcaneStone5 = new ARBlock("arcane_stone_5", Material.STONE, 40f, 20f, ToolType.PICKAXE, 3, true);
-		event.getRegistry().register(arcaneStone5);
-		Block arcaneStone6 = new ARBlock("arcane_stone_6", Material.STONE, 50f, 1200f, ToolType.PICKAXE, 4, true);
-		event.getRegistry().register(arcaneStone6);
+		//Block arcaneStone1 = new ARBlock("arcane_stone_1", Material.STONE, 2f, 7f, ToolType.PICKAXE, 0, true);
+		//event.getRegistry().register(arcaneStone1);
+		//Block arcaneStone2 = new ARBlock("arcane_stone_2", Material.STONE, 10f, 10f, ToolType.PICKAXE, 0, true);
+		//event.getRegistry().register(arcaneStone2);
+		//Block arcaneStone3 = new ARBlock("arcane_stone_3", Material.STONE, 20f, 13f, ToolType.PICKAXE, 1, true);
+		//event.getRegistry().register(arcaneStone3);
+		//Block arcaneStone4 = new ARBlock("arcane_stone_4", Material.STONE, 30f, 16f, ToolType.PICKAXE, 2, true);
+		//event.getRegistry().register(arcaneStone4);
+		//Block arcaneStone5 = new ARBlock("arcane_stone_5", Material.STONE, 40f, 20f, ToolType.PICKAXE, 3, true);
+		//event.getRegistry().register(arcaneStone5);
+		Block arcaneStone = new ARBlock("arcane_stone", Material.STONE, 50f, 1200f, ToolType.PICKAXE, 4, true);
+		event.getRegistry().register(arcaneStone);
 		Block ritualStone1Ruby = new RitualBlock("ritual_stone_1_ruby", Material.STONE, 2f, 7f, ToolType.PICKAXE, 0, true);
 		event.getRegistry().register(ritualStone1Ruby);
 		Block ritualStone2Ruby = new RitualBlock("ritual_stone_2_ruby", Material.STONE, 10f, 10f, ToolType.PICKAXE, 0, true);

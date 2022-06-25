@@ -1,19 +1,29 @@
 package com.hijackster99.ancientrelics.blocks;
 
 import com.hijackster99.ancientrelics.core.Util;
+import com.hijackster99.ancientrelics.tileentity.TEPedestal;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 
-public class PedestalBlock extends ARBlock{
+public class PedestalBlock extends ARContainer{
 
 	public PedestalBlock(String registryName, Material materialIn, float hardnessIn, float resistanceIn, ToolType harvestTool, int miningLevel, boolean requiresTool) {
 		super(registryName, materialIn, hardnessIn, resistanceIn, harvestTool, miningLevel, requiresTool);
@@ -54,5 +64,24 @@ public class PedestalBlock extends ARBlock{
 		shape = VoxelShapes.join(shape, shape16, IBooleanFunction.OR);
 		return shape;
 	}
+	
+	@Override
+	public ActionResultType use(BlockState stateIn, World worldIn, BlockPos posIn, PlayerEntity playerIn, Hand handIn, BlockRayTraceResult rayIn) {
+		return super.use(stateIn, worldIn, posIn, playerIn, handIn, rayIn);
+	}
 
+	@Override
+	public TileEntity newBlockEntity(IBlockReader worldIn) {
+		return new TEPedestal();
+	}
+	
+	@Override
+	public void setPlacedBy(World worldIn, BlockPos posIn, BlockState stateIn, LivingEntity entityIn, ItemStack stackIn) {
+		if(stackIn.hasCustomHoverName()) {
+			TileEntity te = worldIn.getBlockEntity(posIn);
+			if(te instanceof TEPedestal) {
+				((TEPedestal) te).setCustomName(stackIn.getHoverName());
+			}
+		}
+	}
 }

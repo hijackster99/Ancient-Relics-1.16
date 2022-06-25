@@ -1,7 +1,7 @@
 {
 	"tier": 1,
-	"blocks": {
-		"ancientrelics:arcane_stone_1": [ 1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1, -1, 2, 2, 2, 2, 2, -2, -2, 2, 2, -2, 2, -2 ],
-		"minecraft:air": [ 0, 1, 0 ]
+	"blocks":{
+		"ancientrelics:arcane_stone":[-2,2,-2,-2,2,2,-1,1,-1,-1,1,1,1,1,-1,1,1,1,2,2,-2,2,2,2],
+		"minecraft:air":[0,1,0]
 	}
 }

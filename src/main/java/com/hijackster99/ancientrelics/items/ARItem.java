@@ -54,23 +54,23 @@ public class ARItem extends Item{
 	public static BucketItem VOID_LIQUID_BUCKET;
 
 	//BlockItems
-	@ObjectHolder(References.MODID + ":arcane_stone_1")
-	public static ARBlockItem ARCANE_STONE_1;
+	//@ObjectHolder(References.MODID + ":arcane_stone_1")
+	//public static ARBlockItem ARCANE_STONE_1;
 	
-	@ObjectHolder(References.MODID + ":arcane_stone_2")
-	public static ARBlockItem ARCANE_STONE_2;
+	//@ObjectHolder(References.MODID + ":arcane_stone_2")
+	//public static ARBlockItem ARCANE_STONE_2;
 	
-	@ObjectHolder(References.MODID + ":arcane_stone_3")
-	public static ARBlockItem ARCANE_STONE_3;
+	//@ObjectHolder(References.MODID + ":arcane_stone_3")
+	//public static ARBlockItem ARCANE_STONE_3;
 	
-	@ObjectHolder(References.MODID + ":arcane_stone_4")
-	public static ARBlockItem ARCANE_STONE_4;
+	//@ObjectHolder(References.MODID + ":arcane_stone_4")
+	//public static ARBlockItem ARCANE_STONE_4;
 	
-	@ObjectHolder(References.MODID + ":arcane_stone_5")
-	public static ARBlockItem ARCANE_STONE_5;
+	//@ObjectHolder(References.MODID + ":arcane_stone_5")
+	//public static ARBlockItem ARCANE_STONE_5;
 	
-	@ObjectHolder(References.MODID + ":arcane_stone_6")
-	public static ARBlockItem ARCANE_STONE_6;
+	//@ObjectHolder(References.MODID + ":arcane_stone")
+	//public static ARBlockItem ARCANE_STONE;
 	
 	@ObjectHolder(References.MODID + ":peridot_ore")
 	public static ARBlockItem PERIDOT_ORE;

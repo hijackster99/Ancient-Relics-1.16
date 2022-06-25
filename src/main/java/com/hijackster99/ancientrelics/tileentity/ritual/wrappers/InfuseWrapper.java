@@ -48,7 +48,7 @@ public class InfuseWrapper extends TileEntityWrapper {
 			Optional<InfuseRecipe> r = worldObj.getRecipeManager().getRecipeFor(InfuseRecipe.INFUSE_RECIPE, inv, worldObj);
 			if(r.isPresent()) {
 				recipe = r.get();
-				voidEnergy = recipe.getVoidCost();
+				voidEnergy = (int) (VCModifier * recipe.getVoidCost());
 			}
 		}else {
 			if(voidEnergy <= 0) {
