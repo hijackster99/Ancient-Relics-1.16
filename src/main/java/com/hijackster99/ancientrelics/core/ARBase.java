@@ -453,10 +453,8 @@ public class ARBase {
 		event.getRegistry().register(infuse5);
 		Ritual infuse6 = new Ritual("ancientrelics:infuse_ritual_6", InfuseWrapper.class);
 		event.getRegistry().register(infuse6);
-		Ritual anvil1 = new Ritual("ancientrelics:anvil_ritual_1", AnvilWrapper.class);
-		event.getRegistry().register(anvil1);
-		Ritual anvil2 = new Ritual("ancientrelics:anvil_ritual_2", AnvilWrapper.class);
-		event.getRegistry().register(anvil2);
+		Ritual anvil = new Ritual("ancientrelics:anvil_ritual", AnvilWrapper.class);
+		event.getRegistry().register(anvil);
 		Ritual drill = new Ritual("ancientrelics:drill_ritual", DrillWrapper.class);
 		event.getRegistry().register(drill);
 	}

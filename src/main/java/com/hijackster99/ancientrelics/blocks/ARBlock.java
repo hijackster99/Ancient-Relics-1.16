@@ -152,7 +152,7 @@ public class ARBlock extends Block{
 	public static ARBlock RITUAL_STONE_6_ACTIVE;
 
 	@ObjectHolder(References.MODID + ":pedestal")
-	public static ARBlock PEDESTAL;
+	public static PedestalBlock PEDESTAL;
 
 	@ObjectHolder(References.MODID + ":charger")
 	public static ARBlock CHARGER;

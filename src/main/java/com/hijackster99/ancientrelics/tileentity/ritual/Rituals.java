@@ -30,11 +30,8 @@ public class Rituals {
 	@ObjectHolder(References.MODID + ":infuse_ritual_6")
 	public static Ritual INFUSE_RITUAL_6;
 
-	@ObjectHolder(References.MODID + ":anvil_ritual_1")
-	public static Ritual ANVIL_RITUAL_1;
-
-	@ObjectHolder(References.MODID + ":anvil_ritual_2")
-	public static Ritual ANVIL_RITUAL_2;
+	@ObjectHolder(References.MODID + ":anvil_ritual")
+	public static Ritual ANVIL_RITUAL;
 
 	@ObjectHolder(References.MODID + ":drill_ritual")
 	public static Ritual DRILL_RITUAL;

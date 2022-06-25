@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "ancientrelics:arcane_stone_6"
+          "name": "ancientrelics:arcane_stone"
         }
       ],
 	  "conditions": [
