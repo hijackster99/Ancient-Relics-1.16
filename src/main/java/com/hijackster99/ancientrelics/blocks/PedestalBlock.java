@@ -18,7 +18,6 @@ import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
@@ -65,6 +64,7 @@ public class PedestalBlock extends ARContainer{
 		return shape;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public ActionResultType use(BlockState stateIn, World worldIn, BlockPos posIn, PlayerEntity playerIn, Hand handIn, BlockRayTraceResult rayIn) {
 		return super.use(stateIn, worldIn, posIn, playerIn, handIn, rayIn);
