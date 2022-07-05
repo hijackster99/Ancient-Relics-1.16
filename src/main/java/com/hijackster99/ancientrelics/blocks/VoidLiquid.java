@@ -3,10 +3,10 @@ package com.hijackster99.ancientrelics.blocks;
 import com.hijackster99.ancientrelics.core.References;
 import com.hijackster99.ancientrelics.items.ARItem;
 
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.ObjectHolder;
@@ -24,7 +24,7 @@ public abstract class VoidLiquid extends ForgeFlowingFluid {
 			setRegistryName("void_liquid_flowing");
 			registerDefaultState(getStateDefinition().any().setValue(LEVEL, 7));
 		}
-
+		
 		@Override
 		protected void createFluidStateDefinition(Builder<Fluid, FluidState> builder) {
 			super.createFluidStateDefinition(builder);

@@ -2,31 +2,30 @@ package com.hijackster99.ancientrelics.blocks;
 
 import com.hijackster99.ancientrelics.core.Util;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ToolType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class ShardBlock extends ARBlock{
 
 	static DirectionProperty property = DirectionProperty.create("facing", Direction.values());
 	
-	public ShardBlock(String registryName, Material materialIn, float hardnessIn, float resistanceIn, ToolType harvestTool, int miningLevel) {
-		super(registryName, materialIn, hardnessIn, resistanceIn, harvestTool, miningLevel);
+	public ShardBlock(String registryName, Material materialIn, float hardnessIn, float resistanceIn, boolean requiresTool) {
+		super(registryName, materialIn, hardnessIn, resistanceIn, requiresTool);
 	}
-
+	
 	@Override
 	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
@@ -38,39 +37,39 @@ public class ShardBlock extends ARBlock{
 	}
 	
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		return defaultBlockState().setValue(property, context.getClickedFace());
 	}
 	
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		VoxelShape shape1 = VoxelShapes.box(0.375, 0, 0.4375, 0.625, 0.125, 0.5625);
-		VoxelShape shape2 = VoxelShapes.box(0.4375, 0, 0.375, 0.5625, 0.125, 0.4375);
-		VoxelShape shape3 = VoxelShapes.box(0.4375, 0, 0.5625, 0.5625, 0.125, 0.625);
-		VoxelShape shape4 = VoxelShapes.box(0.375, 0, 0.375, 0.625, 0.0625, 0.625);
-		VoxelShape shape5 = VoxelShapes.box(0.4375, 0, 0.3125, 0.5625, 0.0625, 0.375);
-		VoxelShape shape6 = VoxelShapes.box(0.4375, 0, 0.625, 0.5625, 0.0625, 0.6875);
-		VoxelShape shape7 = VoxelShapes.box(0.3125, 0, 0.4375, 0.375, 0.0625, 0.5625);
-		VoxelShape shape8 = VoxelShapes.box(0.625, 0, 0.4375, 0.6875, 0.0625, 0.5625);
-		shape1 = Util.rotateShape(Direction.UP, state.getValue(property), shape1);
-		shape2 = Util.rotateShape(Direction.UP, state.getValue(property), shape2);
-		shape3 = Util.rotateShape(Direction.UP, state.getValue(property), shape3);
-		shape4 = Util.rotateShape(Direction.UP, state.getValue(property), shape4);
-		shape5 = Util.rotateShape(Direction.UP, state.getValue(property), shape5);
-		shape6 = Util.rotateShape(Direction.UP, state.getValue(property), shape6);
-		shape7 = Util.rotateShape(Direction.UP, state.getValue(property), shape7);
-		shape8 = Util.rotateShape(Direction.UP, state.getValue(property), shape8);
-		VoxelShape shape = VoxelShapes.join(shape1, shape2, IBooleanFunction.OR);
-		shape = VoxelShapes.join(shape, shape3, IBooleanFunction.OR);
-		shape = VoxelShapes.join(shape, shape4, IBooleanFunction.OR);
-		shape = VoxelShapes.join(shape, shape5, IBooleanFunction.OR);
-		shape = VoxelShapes.join(shape, shape6, IBooleanFunction.OR);
-		shape = VoxelShapes.join(shape, shape7, IBooleanFunction.OR);
-		shape = VoxelShapes.join(shape, shape8, IBooleanFunction.OR);
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+		VoxelShape shape1 = Shapes.box(0.375, 0, 0.4375, 0.625, 0.125, 0.5625);
+		VoxelShape shape2 = Shapes.box(0.4375, 0, 0.375, 0.5625, 0.125, 0.4375);
+		VoxelShape shape3 = Shapes.box(0.4375, 0, 0.5625, 0.5625, 0.125, 0.625);
+		VoxelShape shape4 = Shapes.box(0.375, 0, 0.375, 0.625, 0.0625, 0.625);
+		VoxelShape shape5 = Shapes.box(0.4375, 0, 0.3125, 0.5625, 0.0625, 0.375);
+		VoxelShape shape6 = Shapes.box(0.4375, 0, 0.625, 0.5625, 0.0625, 0.6875);
+		VoxelShape shape7 = Shapes.box(0.3125, 0, 0.4375, 0.375, 0.0625, 0.5625);
+		VoxelShape shape8 = Shapes.box(0.625, 0, 0.4375, 0.6875, 0.0625, 0.5625);
+		shape1 = Util.rotateAABB(Direction.UP, state.getValue(property), shape1);
+		shape2 = Util.rotateAABB(Direction.UP, state.getValue(property), shape2);
+		shape3 = Util.rotateAABB(Direction.UP, state.getValue(property), shape3);
+		shape4 = Util.rotateAABB(Direction.UP, state.getValue(property), shape4);
+		shape5 = Util.rotateAABB(Direction.UP, state.getValue(property), shape5);
+		shape6 = Util.rotateAABB(Direction.UP, state.getValue(property), shape6);
+		shape7 = Util.rotateAABB(Direction.UP, state.getValue(property), shape7);
+		shape8 = Util.rotateAABB(Direction.UP, state.getValue(property), shape8);
+		VoxelShape shape = Shapes.join(shape1, shape2, BooleanOp.OR);
+		shape = Shapes.join(shape, shape3, BooleanOp.OR);
+		shape = Shapes.join(shape, shape4, BooleanOp.OR);
+		shape = Shapes.join(shape, shape5, BooleanOp.OR);
+		shape = Shapes.join(shape, shape6, BooleanOp.OR);
+		shape = Shapes.join(shape, shape7, BooleanOp.OR);
+		shape = Shapes.join(shape, shape8, BooleanOp.OR);
 		return shape;
 	}
 	@Override
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+	public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
 		if(!worldIn.getBlockState(pos.subtract(state.getValue(property).getNormal())).isFaceSturdy(worldIn.getChunkForCollisions(worldIn.getChunk(pos).getPos().x, worldIn.getChunk(pos).getPos().z), pos, state.getValue(property))) {
 			worldIn.destroyBlock(pos, true);
 		}

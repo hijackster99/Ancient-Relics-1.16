@@ -5,10 +5,10 @@ import java.awt.Color;
 import com.hijackster99.ancientrelics.core.References;
 import com.hijackster99.ancientrelics.items.ARItem;
 
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.ObjectHolder;
@@ -26,7 +26,7 @@ public abstract class VoidGas extends ForgeFlowingFluid {
 			setRegistryName("void_gas_flowing");
 			registerDefaultState(getStateDefinition().any().setValue(LEVEL, 7));
 		}
-
+		
 		@Override
 		protected void createFluidStateDefinition(Builder<Fluid, FluidState> builder) {
 			super.createFluidStateDefinition(builder);

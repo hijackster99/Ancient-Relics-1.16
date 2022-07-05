@@ -6,46 +6,40 @@ import com.hijackster99.ancientrelics.core.IInteractable;
 import com.hijackster99.ancientrelics.core.IRandomUpdate;
 import com.hijackster99.ancientrelics.tileentity.ritual.RitualStone;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.ToolType;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
 
-public class RitualBlock extends ARBlock{
+public class RitualBlock extends ARBlock implements EntityBlock {
 	
-	public RitualBlock(String registryName, Material materialIn, float hardnessIn, float resistanceIn, ToolType harvestTool, int miningLevel, boolean requiresTool) {
-		super(registryName, materialIn, hardnessIn, resistanceIn, harvestTool, miningLevel, requiresTool);
+	public RitualBlock(String registryName, Material materialIn, float hardnessIn, float resistanceIn, boolean requiresTool) {
+		super(registryName, materialIn, hardnessIn, resistanceIn, requiresTool);
 	}
 	
 	@Override
-	public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		TileEntity te = worldIn.getBlockEntity(pos);
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+		BlockEntity te = worldIn.getBlockEntity(pos);
 		if(te instanceof IInteractable) {
 			IInteractable interact = (IInteractable) te;
 			return interact.onBlockActivated(state, worldIn, pos, player, handIn, hit);
 		}
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 	
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_active")) != null ? BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_active")).contains(this) : false;
-	}
-	
-	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		Tag<Block> tier = null;
 		Tag<Block> type = null;
 		for(ResourceLocation rl : this.getTags()) {
@@ -62,8 +56,8 @@ public class RitualBlock extends ARBlock{
 	}
 	
 	@Override
-	public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-		TileEntity te = worldIn.getBlockEntity(pos);
+	public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
+		BlockEntity te = worldIn.getBlockEntity(pos);
 		if(te instanceof IRandomUpdate) {
 			IRandomUpdate update = (IRandomUpdate) te;
 			update.randomTick(state, worldIn, pos, random);

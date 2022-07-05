@@ -2,21 +2,19 @@ package com.hijackster99.ancientrelics.blocks;
 
 import com.hijackster99.ancientrelics.core.References;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraftforge.common.ToolType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.registries.ObjectHolder;
 
 public class ARBlock extends Block{
 
-	public ARBlock(String registryName, Material materialIn, float hardnessIn, float resistanceIn, ToolType harvestTool, int miningLevel, boolean requiresTool) {
-		super(Properties.of(materialIn).strength(hardnessIn, resistanceIn).harvestTool(harvestTool).harvestLevel(miningLevel).requiresCorrectToolForDrops());
+	public ARBlock(String registryName, Material materialIn, float hardnessIn, float resistanceIn, boolean requiresTool) {
+		super(requiresTool ? Properties.of(materialIn).strength(hardnessIn, resistanceIn).requiresCorrectToolForDrops() : Properties.of(materialIn).strength(hardnessIn, resistanceIn));
 		setRegistryName(References.MODID, registryName);
 	}
 	
-	public ARBlock(String registryName, Material materialIn, float hardnessIn, float resistanceIn, ToolType harvestTool, int miningLevel) {
-		super(Properties.of(materialIn).strength(hardnessIn, resistanceIn).harvestTool(harvestTool).harvestLevel(miningLevel));
-		setRegistryName(References.MODID, registryName);
+	protected ARBlock(Properties prop) {
+		super(prop);
 	}
 	
 	//@ObjectHolder(References.MODID + ":arcane_stone_1")
