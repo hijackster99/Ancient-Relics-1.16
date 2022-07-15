@@ -37,20 +37,19 @@ import com.hijackster99.ancientrelics.tileentity.ritual.wrappers.InfuseWrapper;
 import com.hijackster99.ancientrelics.tileentity.ritual.wrappers.StorageWrapper;
 import com.hijackster99.ancientrelics.tileentity.voidrelay.VoidRelay;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -73,7 +72,7 @@ public class ARBase {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
-	public static ItemGroup ARGroup = new ItemGroup("ancientrelics") {
+	public static CreativeModeTab ARGroup = new CreativeModeTab("ancientrelics") {
 
 		@Override
 		public ItemStack makeIcon() {
@@ -87,8 +86,9 @@ public class ARBase {
 	}
 	
 	private void clientSetup(FMLClientSetupEvent event) {
-		RenderTypeLookup.setRenderLayer(VoidGas.VOID_GAS_STILL, RenderType.translucent());
-		RenderTypeLookup.setRenderLayer(VoidGas.VOID_GAS_FLOWING, RenderType.translucent());
+		
+		ItemBlockRenderTypes.setRenderLayer(VoidGas.VOID_GAS_STILL, RenderType.translucent());
+		ItemBlockRenderTypes.setRenderLayer(VoidGas.VOID_GAS_FLOWING, RenderType.translucent());
 	}
 	
 	@SubscribeEvent
@@ -274,133 +274,133 @@ public class ARBase {
 		//event.getRegistry().register(arcaneStone4);
 		//Block arcaneStone5 = new ARBlock("arcane_stone_5", Material.STONE, 40f, 20f, ToolType.PICKAXE, 3, true);
 		//event.getRegistry().register(arcaneStone5);
-		Block arcaneStone = new ARBlock("arcane_stone", Material.STONE, 50f, 1200f, ToolType.PICKAXE, 4, true);
+		Block arcaneStone = new ARBlock("arcane_stone", Material.STONE, 50f, 1200f, true);
 		event.getRegistry().register(arcaneStone);
-		Block ritualStone1Ruby = new RitualBlock("ritual_stone_1_ruby", Material.STONE, 2f, 7f, ToolType.PICKAXE, 0, true);
+		Block ritualStone1Ruby = new RitualBlock("ritual_stone_1_ruby", Material.STONE, 2f, 7f, true);
 		event.getRegistry().register(ritualStone1Ruby);
-		Block ritualStone2Ruby = new RitualBlock("ritual_stone_2_ruby", Material.STONE, 10f, 10f, ToolType.PICKAXE, 0, true);
+		Block ritualStone2Ruby = new RitualBlock("ritual_stone_2_ruby", Material.STONE, 10f, 10f, true);
 		event.getRegistry().register(ritualStone2Ruby);
-		Block ritualStone3Ruby = new RitualBlock("ritual_stone_3_ruby", Material.STONE, 20f, 13f, ToolType.PICKAXE, 1, true);
+		Block ritualStone3Ruby = new RitualBlock("ritual_stone_3_ruby", Material.STONE, 20f, 13f, true);
 		event.getRegistry().register(ritualStone3Ruby);
-		Block ritualStone4Ruby = new RitualBlock("ritual_stone_4_ruby", Material.STONE, 30f, 16f, ToolType.PICKAXE, 2, true);
+		Block ritualStone4Ruby = new RitualBlock("ritual_stone_4_ruby", Material.STONE, 30f, 16f, true);
 		event.getRegistry().register(ritualStone4Ruby);
-		Block ritualStone5Ruby = new RitualBlock("ritual_stone_5_ruby", Material.STONE, 40f, 20f, ToolType.PICKAXE, 3, true);
+		Block ritualStone5Ruby = new RitualBlock("ritual_stone_5_ruby", Material.STONE, 40f, 20f, true);
 		event.getRegistry().register(ritualStone5Ruby);
-		Block ritualStone1Peridot = new RitualBlock("ritual_stone_1_peridot", Material.STONE, 2f, 7f, ToolType.PICKAXE, 0, true);
+		Block ritualStone1Peridot = new RitualBlock("ritual_stone_1_peridot", Material.STONE, 2f, 7f, true);
 		event.getRegistry().register(ritualStone1Peridot);
-		Block ritualStone2Peridot = new RitualBlock("ritual_stone_2_peridot", Material.STONE, 10f, 10f, ToolType.PICKAXE, 0, true);
+		Block ritualStone2Peridot = new RitualBlock("ritual_stone_2_peridot", Material.STONE, 10f, 10f, true);
 		event.getRegistry().register(ritualStone2Peridot);
-		Block ritualStone3Peridot = new RitualBlock("ritual_stone_3_peridot", Material.STONE, 20f, 13f, ToolType.PICKAXE, 1, true);
+		Block ritualStone3Peridot = new RitualBlock("ritual_stone_3_peridot", Material.STONE, 20f, 13f, true);
 		event.getRegistry().register(ritualStone3Peridot);
-		Block ritualStone4Peridot = new RitualBlock("ritual_stone_4_peridot", Material.STONE, 30f, 16f, ToolType.PICKAXE, 2, true);
+		Block ritualStone4Peridot = new RitualBlock("ritual_stone_4_peridot", Material.STONE, 30f, 16f, true);
 		event.getRegistry().register(ritualStone4Peridot);
-		Block ritualStone5Peridot = new RitualBlock("ritual_stone_5_peridot", Material.STONE, 40f, 20f, ToolType.PICKAXE, 3, true);
+		Block ritualStone5Peridot = new RitualBlock("ritual_stone_5_peridot", Material.STONE, 40f, 20f, true);
 		event.getRegistry().register(ritualStone5Peridot);
-		Block ritualStone1Sapphire = new RitualBlock("ritual_stone_1_sapphire", Material.STONE, 2f, 7f, ToolType.PICKAXE, 0, true);
+		Block ritualStone1Sapphire = new RitualBlock("ritual_stone_1_sapphire", Material.STONE, 2f, 7f, true);
 		event.getRegistry().register(ritualStone1Sapphire);
-		Block ritualStone2Sapphire = new RitualBlock("ritual_stone_2_sapphire", Material.STONE, 10f, 10f, ToolType.PICKAXE, 0, true);
+		Block ritualStone2Sapphire = new RitualBlock("ritual_stone_2_sapphire", Material.STONE, 10f, 10f, true);
 		event.getRegistry().register(ritualStone2Sapphire);
-		Block ritualStone3Sapphire = new RitualBlock("ritual_stone_3_sapphire", Material.STONE, 20f, 13f, ToolType.PICKAXE, 1, true);
+		Block ritualStone3Sapphire = new RitualBlock("ritual_stone_3_sapphire", Material.STONE, 20f, 13f, true);
 		event.getRegistry().register(ritualStone3Sapphire);
-		Block ritualStone4Sapphire = new RitualBlock("ritual_stone_4_sapphire", Material.STONE, 30f, 16f, ToolType.PICKAXE, 2, true);
+		Block ritualStone4Sapphire = new RitualBlock("ritual_stone_4_sapphire", Material.STONE, 30f, 16f, true);
 		event.getRegistry().register(ritualStone4Sapphire);
-		Block ritualStone5Sapphire = new RitualBlock("ritual_stone_5_sapphire", Material.STONE, 40f, 20f, ToolType.PICKAXE, 3, true);
+		Block ritualStone5Sapphire = new RitualBlock("ritual_stone_5_sapphire", Material.STONE, 40f, 20f, true);
 		event.getRegistry().register(ritualStone5Sapphire);
-		Block ritualStone6 = new RitualBlock("ritual_stone_6", Material.STONE, 50f, 1200f, ToolType.PICKAXE, 4, true);
+		Block ritualStone6 = new RitualBlock("ritual_stone_6", Material.STONE, 50f, 1200f, true);
 		event.getRegistry().register(ritualStone6);
-		Block ritualStone1RubyActive = new RitualBlock("ritual_stone_1_ruby_active", Material.STONE, 2f, 7f, ToolType.PICKAXE, 0, true);
+		Block ritualStone1RubyActive = new RitualBlock("ritual_stone_1_ruby_active", Material.STONE, 2f, 7f, true);
 		event.getRegistry().register(ritualStone1RubyActive);
-		Block ritualStone2RubyActive = new RitualBlock("ritual_stone_2_ruby_active", Material.STONE, 10f, 10f, ToolType.PICKAXE, 0, true);
+		Block ritualStone2RubyActive = new RitualBlock("ritual_stone_2_ruby_active", Material.STONE, 10f, 10f, true);
 		event.getRegistry().register(ritualStone2RubyActive);
-		Block ritualStone3RubyActive = new RitualBlock("ritual_stone_3_ruby_active", Material.STONE, 20f, 13f, ToolType.PICKAXE, 1, true);
+		Block ritualStone3RubyActive = new RitualBlock("ritual_stone_3_ruby_active", Material.STONE, 20f, 13f, true);
 		event.getRegistry().register(ritualStone3RubyActive);
-		Block ritualStone4RubyActive = new RitualBlock("ritual_stone_4_ruby_active", Material.STONE, 30f, 16f, ToolType.PICKAXE, 2, true);
+		Block ritualStone4RubyActive = new RitualBlock("ritual_stone_4_ruby_active", Material.STONE, 30f, 16f, true);
 		event.getRegistry().register(ritualStone4RubyActive);
-		Block ritualStone5RubyActive = new RitualBlock("ritual_stone_5_ruby_active", Material.STONE, 40f, 20f, ToolType.PICKAXE, 3, true);
+		Block ritualStone5RubyActive = new RitualBlock("ritual_stone_5_ruby_active", Material.STONE, 40f, 20f, true);
 		event.getRegistry().register(ritualStone5RubyActive);
-		Block ritualStone1PeridotActive = new RitualBlock("ritual_stone_1_peridot_active", Material.STONE, 2f, 7f, ToolType.PICKAXE, 0, true);
+		Block ritualStone1PeridotActive = new RitualBlock("ritual_stone_1_peridot_active", Material.STONE, 2f, 7f, true);
 		event.getRegistry().register(ritualStone1PeridotActive);
-		Block ritualStone2PeridotActive = new RitualBlock("ritual_stone_2_peridot_active", Material.STONE, 10f, 10f, ToolType.PICKAXE, 0, true);
+		Block ritualStone2PeridotActive = new RitualBlock("ritual_stone_2_peridot_active", Material.STONE, 10f, 10f, true);
 		event.getRegistry().register(ritualStone2PeridotActive);
-		Block ritualStone3PeridotActive = new RitualBlock("ritual_stone_3_peridot_active", Material.STONE, 20f, 13f, ToolType.PICKAXE, 1, true);
+		Block ritualStone3PeridotActive = new RitualBlock("ritual_stone_3_peridot_active", Material.STONE, 20f, 13f, true);
 		event.getRegistry().register(ritualStone3PeridotActive);
-		Block ritualStone4PeridotActive = new RitualBlock("ritual_stone_4_peridot_active", Material.STONE, 30f, 16f, ToolType.PICKAXE, 2, true);
+		Block ritualStone4PeridotActive = new RitualBlock("ritual_stone_4_peridot_active", Material.STONE, 30f, 16f, true);
 		event.getRegistry().register(ritualStone4PeridotActive);
-		Block ritualStone5PeridotActive = new RitualBlock("ritual_stone_5_peridot_active", Material.STONE, 40f, 20f, ToolType.PICKAXE, 3, true);
+		Block ritualStone5PeridotActive = new RitualBlock("ritual_stone_5_peridot_active", Material.STONE, 40f, 20f, true);
 		event.getRegistry().register(ritualStone5PeridotActive);
-		Block ritualStone1SapphireActive = new RitualBlock("ritual_stone_1_sapphire_active", Material.STONE, 2f, 7f, ToolType.PICKAXE, 0, true);
+		Block ritualStone1SapphireActive = new RitualBlock("ritual_stone_1_sapphire_active", Material.STONE, 2f, 7f, true);
 		event.getRegistry().register(ritualStone1SapphireActive);
-		Block ritualStone2SapphireActive = new RitualBlock("ritual_stone_2_sapphire_active", Material.STONE, 10f, 10f, ToolType.PICKAXE, 0, true);
+		Block ritualStone2SapphireActive = new RitualBlock("ritual_stone_2_sapphire_active", Material.STONE, 10f, 10f, true);
 		event.getRegistry().register(ritualStone2SapphireActive);
-		Block ritualStone3SapphireActive = new RitualBlock("ritual_stone_3_sapphire_active", Material.STONE, 20f, 13f, ToolType.PICKAXE, 1, true);
+		Block ritualStone3SapphireActive = new RitualBlock("ritual_stone_3_sapphire_active", Material.STONE, 20f, 13f, true);
 		event.getRegistry().register(ritualStone3SapphireActive);
-		Block ritualStone4SapphireActive = new RitualBlock("ritual_stone_4_sapphire_active", Material.STONE, 30f, 16f, ToolType.PICKAXE, 2, true);
+		Block ritualStone4SapphireActive = new RitualBlock("ritual_stone_4_sapphire_active", Material.STONE, 30f, 16f, true);
 		event.getRegistry().register(ritualStone4SapphireActive);
-		Block ritualStone5SapphireActive = new RitualBlock("ritual_stone_5_sapphire_active", Material.STONE, 40f, 20f, ToolType.PICKAXE, 3, true);
+		Block ritualStone5SapphireActive = new RitualBlock("ritual_stone_5_sapphire_active", Material.STONE, 40f, 20f, true);
 		event.getRegistry().register(ritualStone5SapphireActive);
-		Block ritualStone6Active = new RitualBlock("ritual_stone_6_active", Material.STONE, 50f, 1200f, ToolType.PICKAXE, 4, true);
+		Block ritualStone6Active = new RitualBlock("ritual_stone_6_active", Material.STONE, 50f, 1200f, true);
 		event.getRegistry().register(ritualStone6Active);
-		Block peridotOre = new ARBlock("peridot_ore", Material.STONE, 3f, 3f, ToolType.PICKAXE, 2, true);
+		Block peridotOre = new ARBlock("peridot_ore", Material.STONE, 3f, 3f, true);
 		event.getRegistry().register(peridotOre);
-		Block rubyOre = new ARBlock("ruby_ore", Material.STONE, 3f, 3f, ToolType.PICKAXE, 2, true);
+		Block rubyOre = new ARBlock("ruby_ore", Material.STONE, 3f, 3f, true);
 		event.getRegistry().register(rubyOre);
-		Block sapphireOre = new ARBlock("sapphire_ore", Material.STONE, 3f, 3f, ToolType.PICKAXE, 2, true);
+		Block sapphireOre = new ARBlock("sapphire_ore", Material.STONE, 3f, 3f, true);
 		event.getRegistry().register(sapphireOre);
-		Block rubyShard = new ShardBlock("ruby_shard", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block rubyShard = new ShardBlock("ruby_shard", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(rubyShard);
-		Block peridotShard = new ShardBlock("peridot_shard", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block peridotShard = new ShardBlock("peridot_shard", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(peridotShard);
-		Block sapphireShard = new ShardBlock("sapphire_shard", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block sapphireShard = new ShardBlock("sapphire_shard", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(sapphireShard);
-		Block pedestal = new PedestalBlock("pedestal", Material.STONE, 2f, 7f, ToolType.PICKAXE, 0, true);
+		Block pedestal = new PedestalBlock("pedestal", Material.STONE, 2f, 7f, true);
 		event.getRegistry().register(pedestal);
-		Block charger = new ChargerBlock("charger", Material.STONE, 2f, 7f, ToolType.PICKAXE, 0, true);
+		Block charger = new ChargerBlock("charger", Material.STONE, 2f, 7f, true);
 		event.getRegistry().register(charger);
-		Block relicAnvil = new RelicAnvilBlock("relic_anvil", Material.STONE, 2f, 7f, ToolType.PICKAXE, 0, true);
+		Block relicAnvil = new RelicAnvilBlock("relic_anvil", Material.STONE, 2f, 7f, true);
 		event.getRegistry().register(relicAnvil);
-		Block voidRelay = new VoidRelayBlock("void_relay", Material.STONE, 2f, 7f, ToolType.PICKAXE, 0, true);
+		Block voidRelay = new VoidRelayBlock("void_relay", Material.STONE, 2f, 7f, true);
 		event.getRegistry().register(voidRelay);
-		Block peridotRelic1 = new RelicBlock("peridot_relic_1", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block peridotRelic1 = new RelicBlock("peridot_relic_1", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(peridotRelic1);
-		Block peridotRelic2 = new RelicBlock("peridot_relic_2", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block peridotRelic2 = new RelicBlock("peridot_relic_2", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(peridotRelic2);
-		Block peridotRelic3 = new RelicBlock("peridot_relic_3", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block peridotRelic3 = new RelicBlock("peridot_relic_3", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(peridotRelic3);
-		Block peridotRelic4 = new RelicBlock("peridot_relic_4", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block peridotRelic4 = new RelicBlock("peridot_relic_4", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(peridotRelic4);
-		Block peridotRelic5 = new RelicBlock("peridot_relic_5", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block peridotRelic5 = new RelicBlock("peridot_relic_5", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(peridotRelic5);
-		Block rubyRelic1 = new RelicBlock("ruby_relic_1", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block rubyRelic1 = new RelicBlock("ruby_relic_1", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(rubyRelic1);
-		Block rubyRelic2 = new RelicBlock("ruby_relic_2", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block rubyRelic2 = new RelicBlock("ruby_relic_2", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(rubyRelic2);
-		Block rubyRelic3 = new RelicBlock("ruby_relic_3", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block rubyRelic3 = new RelicBlock("ruby_relic_3", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(rubyRelic3);
-		Block rubyRelic4 = new RelicBlock("ruby_relic_4", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block rubyRelic4 = new RelicBlock("ruby_relic_4", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(rubyRelic4);
-		Block rubyRelic5 = new RelicBlock("ruby_relic_5", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block rubyRelic5 = new RelicBlock("ruby_relic_5", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(rubyRelic5);
-		Block sapphireRelic1 = new RelicBlock("sapphire_relic_1", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block sapphireRelic1 = new RelicBlock("sapphire_relic_1", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(sapphireRelic1);
-		Block sapphireRelic2 = new RelicBlock("sapphire_relic_2", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block sapphireRelic2 = new RelicBlock("sapphire_relic_2", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(sapphireRelic2);
-		Block sapphireRelic3 = new RelicBlock("sapphire_relic_3", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block sapphireRelic3 = new RelicBlock("sapphire_relic_3", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(sapphireRelic3);
-		Block sapphireRelic4 = new RelicBlock("sapphire_relic_4", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block sapphireRelic4 = new RelicBlock("sapphire_relic_4", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(sapphireRelic4);
-		Block sapphireRelic5 = new RelicBlock("sapphire_relic_5", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block sapphireRelic5 = new RelicBlock("sapphire_relic_5", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(sapphireRelic5);
-		Block masterRelic = new RelicBlock("master_relic", Material.GLASS, 0.5f, 1f, ToolType.PICKAXE, 0);
+		Block masterRelic = new RelicBlock("master_relic", Material.GLASS, 0.5f, 1f, false);
 		event.getRegistry().register(masterRelic);
-		Block blockCharcoal = new ARBlock("block_charcoal", Material.STONE, 3f, 7f, ToolType.PICKAXE, 0, true);
+		Block blockCharcoal = new ARBlock("block_charcoal", Material.STONE, 3f, 7f, true);
 		event.getRegistry().register(blockCharcoal);
-		Block blockVoidCoal = new ARBlock("block_void_coal", Material.STONE, 3f, 7f, ToolType.PICKAXE, 0, true);
+		Block blockVoidCoal = new ARBlock("block_void_coal", Material.STONE, 3f, 7f, true);
 		event.getRegistry().register(blockVoidCoal);
-		Block blockVoidCharcoal = new ARBlock("block_void_charcoal", Material.STONE, 3f, 7f, ToolType.PICKAXE, 0, true);
+		Block blockVoidCharcoal = new ARBlock("block_void_charcoal", Material.STONE, 3f, 7f, true);
 		event.getRegistry().register(blockVoidCharcoal);
-		Block voidStone = new ARBlock("void_stone", Material.STONE, 30f, 1200f, ToolType.PICKAXE, 3, true);
+		Block voidStone = new ARBlock("void_stone", Material.STONE, 30f, 1200f, true);
 		event.getRegistry().register(voidStone);
-		Block soulHeart = new ARBlock("soul_heart", Material.STONE, 50f, 1200f, ToolType.PICKAXE, 4, true);
+		Block soulHeart = new ARBlock("soul_heart", Material.STONE, 50f, 1200f, true);
 		event.getRegistry().register(soulHeart);
 		Block voidGasBlock = new VoidGasBlock(() -> VoidGas.VOID_GAS_STILL, "void_gas_block", Material.WATER, 100f, 100f);
 		event.getRegistry().register(voidGasBlock);
@@ -409,17 +409,17 @@ public class ARBase {
 	}
 	
 	@SubscribeEvent
-	public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-		TileEntityType<RitualStone> ritualStone = TileEntityType.Builder.of(RitualStone::new, ARBlock.RITUAL_STONE_1_PERIDOT_ACTIVE, ARBlock.RITUAL_STONE_1_RUBY_ACTIVE, ARBlock.RITUAL_STONE_1_SAPPHIRE_ACTIVE, ARBlock.RITUAL_STONE_2_PERIDOT_ACTIVE, ARBlock.RITUAL_STONE_2_RUBY_ACTIVE, ARBlock.RITUAL_STONE_2_SAPPHIRE_ACTIVE, ARBlock.RITUAL_STONE_3_PERIDOT_ACTIVE, ARBlock.RITUAL_STONE_3_RUBY_ACTIVE, ARBlock.RITUAL_STONE_3_SAPPHIRE_ACTIVE, ARBlock.RITUAL_STONE_4_PERIDOT_ACTIVE, ARBlock.RITUAL_STONE_4_RUBY_ACTIVE, ARBlock.RITUAL_STONE_4_SAPPHIRE_ACTIVE, ARBlock.RITUAL_STONE_5_PERIDOT_ACTIVE, ARBlock.RITUAL_STONE_5_RUBY_ACTIVE, ARBlock.RITUAL_STONE_5_SAPPHIRE_ACTIVE, ARBlock.RITUAL_STONE_6_ACTIVE).build(null);
+	public static void registerTileEntities(RegistryEvent.Register<BlockEntityType<?>> event) {
+		BlockEntityType<RitualStone> ritualStone = BlockEntityType.Builder.of(RitualStone::new, ARBlock.RITUAL_STONE_1_PERIDOT_ACTIVE, ARBlock.RITUAL_STONE_1_RUBY_ACTIVE, ARBlock.RITUAL_STONE_1_SAPPHIRE_ACTIVE, ARBlock.RITUAL_STONE_2_PERIDOT_ACTIVE, ARBlock.RITUAL_STONE_2_RUBY_ACTIVE, ARBlock.RITUAL_STONE_2_SAPPHIRE_ACTIVE, ARBlock.RITUAL_STONE_3_PERIDOT_ACTIVE, ARBlock.RITUAL_STONE_3_RUBY_ACTIVE, ARBlock.RITUAL_STONE_3_SAPPHIRE_ACTIVE, ARBlock.RITUAL_STONE_4_PERIDOT_ACTIVE, ARBlock.RITUAL_STONE_4_RUBY_ACTIVE, ARBlock.RITUAL_STONE_4_SAPPHIRE_ACTIVE, ARBlock.RITUAL_STONE_5_PERIDOT_ACTIVE, ARBlock.RITUAL_STONE_5_RUBY_ACTIVE, ARBlock.RITUAL_STONE_5_SAPPHIRE_ACTIVE, ARBlock.RITUAL_STONE_6_ACTIVE).build(null);
 		ritualStone.setRegistryName(References.MODID, "ritual_stone");
 		event.getRegistry().register(ritualStone);
-		TileEntityType<VoidRelay> voidRelay = TileEntityType.Builder.of(VoidRelay::new, ARBlock.VOID_RELAY).build(null);
+		BlockEntityType<VoidRelay> voidRelay = BlockEntityType.Builder.of(VoidRelay::new, ARBlock.VOID_RELAY).build(null);
 		voidRelay.setRegistryName(References.MODID, "void_relay");
 		event.getRegistry().register(voidRelay);
 	}
 	
 	@SubscribeEvent
-	public static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
+	public static void registerRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> event) {
 		InfusionSerializer infuseSer = new InfusionSerializer();
 		infuseSer.setRegistryName(References.MODID, "infuse_recipe");
 		event.getRegistry().register(infuseSer);

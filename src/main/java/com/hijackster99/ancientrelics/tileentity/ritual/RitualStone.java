@@ -10,27 +10,28 @@ import com.hijackster99.ancientrelics.core.IRandomUpdate;
 import com.hijackster99.ancientrelics.core.classloader.RitualJsonManager.Option;
 import com.hijackster99.ancientrelics.tileentity.ARTileEntity;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.RegistryManager;
 
-public class RitualStone extends ARTileEntity implements ITickableTileEntity, IInteractable, IRandomUpdate, ICapabilityProvider {
+public class RitualStone extends ARTileEntity implements IInteractable, IRandomUpdate, ICapabilityProvider, BlockEntityTicker<RitualStone> {
 
 	private Tag<Block> tier;
 	private Tag<Block> type;
@@ -38,12 +39,13 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 	private Iterator<Entry<BlockPos, Option>> iter;
 	private TileEntityWrapper wrapper = new TileEntityWrapper();
 	
-	public RitualStone() {
-		this(null, null);
+	public RitualStone(BlockPos pos, BlockState state)
+	{
+		this(null, null, pos, state);
 	}
 	
-	public RitualStone(Tag<Block> tier, Tag<Block> type) {
-		super(ARTileEntity.RITUAL_STONE);
+	public RitualStone(Tag<Block> tier, Tag<Block> type, BlockPos pos, BlockState state) {
+		super(ARTileEntity.RITUAL_STONE, pos, state);
 		this.tier = tier;
 		this.type = type;
 	}
@@ -68,6 +70,7 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 		return ritual;
 	}
 
+	@SuppressWarnings("deprecation")
 	public void setRitual(Ritual ritual) {
 		if(ritual != null) {
 			this.ritual = ritual;
@@ -89,19 +92,19 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 	}
 	
 	@Override
-	public void load(BlockState state, CompoundNBT nbt) {
-		super.load(state, nbt);
+	public void load(CompoundTag nbt) {
+		super.load(nbt);
 		String ritual = nbt.getString("ritual");
 		String tier = nbt.getString("tier");
 		String type = nbt.getString("type");
-		setRitual(!ritual.equals("null") ? GameRegistry.findRegistry(Ritual.class).getValue(new ResourceLocation(ritual)) : null);
+		setRitual(!ritual.equals("null") ? RegistryManager.ACTIVE.getRegistry(Ritual.class).getValue(new ResourceLocation(ritual)) : null);
 		this.type = (Tag<Block>) BlockTags.getAllTags().getTag(new ResourceLocation(type));
 		this.tier = (Tag<Block>) BlockTags.getAllTags().getTag(new ResourceLocation(tier));
-		wrapper.read(state, nbt);
+		wrapper.read(nbt);
 	}
 	
 	@Override
-	public CompoundNBT save(CompoundNBT compound) {
+	public CompoundTag save(CompoundTag compound) {
 		compound = wrapper.write(compound);
 		String tier = "";
 		String type = "";
@@ -119,27 +122,27 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 	}
 
 	@Override
-	public void tick() {
-		if(!level.isClientSide()) {
+	public void tick(Level worldIn, BlockPos pos, BlockState stateIn, RitualStone te) {
+		if(!worldIn.isClientSide()) {
 			if(ritual == null) {
-				setRitual(RitualBuilder.activeRituals.get(worldPosition));
-				RitualBuilder.activeRituals.remove(worldPosition);
+				setRitual(RitualBuilder.activeRituals.get(pos));
+				RitualBuilder.activeRituals.remove(pos);
 			}
 			if(ritual == null || !checkRitual()) {
-				getLevel().removeBlock(worldPosition, false);
-				getLevel().setBlockAndUpdate(worldPosition, getInactiveBlock().defaultBlockState());
+				worldIn.removeBlock(pos, false);
+				worldIn.setBlockAndUpdate(pos, getInactiveBlock().defaultBlockState());
 			}
 		}
-		wrapper.tick(getLevel(), worldPosition);
+		wrapper.tick(worldIn, pos);
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+	public InteractionResult onBlockActivated(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 		return wrapper.onBlockActivated(state, worldIn, pos, player, handIn, hit);
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
+	public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
 		wrapper.randomTick(state, worldIn, pos, random);
 	}
 	
@@ -176,6 +179,11 @@ public class RitualStone extends ARTileEntity implements ITickableTileEntity, II
 			}
 		}
 		return ARBlock.RITUAL_STONE_1_RUBY;
+	}
+
+	@Override
+	public BlockEntityType<?> getType() {
+		return ARTileEntity.RITUAL_STONE;
 	}
 
 }

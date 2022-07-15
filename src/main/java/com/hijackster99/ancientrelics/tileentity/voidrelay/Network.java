@@ -9,9 +9,9 @@ import java.util.Map;
 import com.hijackster99.ancientrelics.blocks.VoidGas;
 import com.hijackster99.ancientrelics.core.VoidGasTank;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -23,15 +23,15 @@ public class Network {
 	
 	private List<VoidRelay> relays;
 	
-	private Map<TileEntity, VoidRelay> voidIns;
-	private Map<TileEntity, VoidRelay> voidOuts;
+	private Map<BlockEntity, VoidRelay> voidIns;
+	private Map<BlockEntity, VoidRelay> voidOuts;
 	
-	private Iterator<TileEntity> voidInIter;
+	private Iterator<BlockEntity> voidInIter;
 	
 	public Network(VoidRelay source) {
 		relays = new ArrayList<VoidRelay>();
-		voidIns = new HashMap<TileEntity, VoidRelay>();
-		voidOuts = new HashMap<TileEntity, VoidRelay>();
+		voidIns = new HashMap<BlockEntity, VoidRelay>();
+		voidOuts = new HashMap<BlockEntity, VoidRelay>();
 		relays.add(source);
 		NetworkManager.INSTANCE.addNetwork(this);
 	}
@@ -51,15 +51,15 @@ public class Network {
 			voidInIter = voidIns.keySet().iterator();
 		}
 		if(voidInIter.hasNext()) {
-			TileEntity te = voidInIter.next();
+			BlockEntity te = voidInIter.next();
 			if(te.isRemoved()) voidInIter.remove();
 			else {
 				IFluidHandler tank = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).orElse(null);
 				if(tank != null && tank instanceof VoidGasTank) {
 					if(tank.getFluidInTank(0).getAmount() > 0) {
-						Iterator<TileEntity> iter = voidOuts.keySet().iterator();
+						Iterator<BlockEntity> iter = voidOuts.keySet().iterator();
 						while(iter.hasNext()) {
-							TileEntity te2 = iter.next();
+							BlockEntity te2 = iter.next();
 							if(te2.isRemoved()) iter.remove();
 							else {
 								IFluidHandler tank2 = te2.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).orElse(null);
@@ -77,23 +77,23 @@ public class Network {
 		}
 	}
 	
-	public void addVoidIn(VoidRelay relay, TileEntity te) {
+	public void addVoidIn(VoidRelay relay, BlockEntity te) {
 		if(!voidIns.containsKey(te)) {
 			voidIns.put(te, relay);
 			relay.setVoidIn(te.getBlockPos());
 		}
 	}
 	
-	public void addVoidOut(VoidRelay relay, TileEntity te) {
+	public void addVoidOut(VoidRelay relay, BlockEntity te) {
 		if(!voidOuts.containsKey(te)) {
 			voidOuts.put(te, relay);
 			relay.setVoidOut(te.getBlockPos());
 		}
 	}
 	
-	public boolean addRelay(VoidRelay relay1, VoidRelay relay2, PlayerEntity playerIn) {
+	public boolean addRelay(VoidRelay relay1, VoidRelay relay2, Player playerIn) {
 		if(relay2.getNetwork() == this) {
-			if(playerIn != null) playerIn.displayClientMessage(new StringTextComponent("Connection Failed! Relay already in network!"), false);
+			if(playerIn != null) playerIn.displayClientMessage(new TextComponent("Connection Failed! Relay already in network!"), false);
 			return false;
 		}
 		else {
@@ -153,11 +153,11 @@ public class Network {
 		net.addAllConnections(relay2);
 	}
 	
-	public void removeVoidIn(TileEntity te) {
+	public void removeVoidIn(BlockEntity te) {
 		voidIns.remove(te);
 	}
 	
-	public void removeVoidOut(TileEntity te) {
+	public void removeVoidOut(BlockEntity te) {
 		voidOuts.remove(te);
 	}
 	
@@ -213,10 +213,10 @@ public class Network {
 	}
 	
 	public boolean isLoaded() {
-		for(TileEntity te : voidIns.keySet()) {
+		for(BlockEntity te : voidIns.keySet()) {
 			if(!te.getLevel().isLoaded(te.getBlockPos())) return false;
 		}
-		for(TileEntity te : voidOuts.keySet()) {
+		for(BlockEntity te : voidOuts.keySet()) {
 			if(!te.getLevel().isLoaded(te.getBlockPos())) return false;
 		}
 		return true;

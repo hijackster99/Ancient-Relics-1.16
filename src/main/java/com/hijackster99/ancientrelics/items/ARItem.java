@@ -2,14 +2,14 @@ package com.hijackster99.ancientrelics.items;
 
 import com.hijackster99.ancientrelics.core.References;
 
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.ObjectHolder;
 
 public class ARItem extends Item{
 
-	public ARItem(String registryName, int maxStack, ItemGroup tab) {
+	public ARItem(String registryName, int maxStack, CreativeModeTab tab) {
 		super(new Item.Properties().stacksTo(maxStack).tab(tab));
 		setRegistryName(registryName);
 	}

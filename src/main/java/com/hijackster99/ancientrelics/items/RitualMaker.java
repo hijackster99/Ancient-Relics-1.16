@@ -13,14 +13,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 public class RitualMaker extends ARItem {
 	
@@ -31,39 +31,39 @@ public class RitualMaker extends ARItem {
 	Block air;
 	BlockPos pos3;
 
-	public RitualMaker(String registryName, int maxStack, ItemGroup tab) {
+	public RitualMaker(String registryName, int maxStack, CreativeModeTab tab) {
 		super(registryName, maxStack, tab);
 	}
 	
 	@Override
-	public ActionResultType useOn(ItemUseContext context) {
+	public InteractionResult useOn(UseOnContext context) {
 		if(!context.getLevel().isClientSide()) {
 			if(clicked == 0) {
 				pos1 = context.getClickedPos();
 				clicked++;
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}else if(clicked == 1) {
 				pos2 = context.getClickedPos();
 				clicked++;
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}else if(clicked == 2) {
 				ignore = context.getLevel().getBlockState(context.getClickedPos()).getBlock();
 				clicked++;
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}else if(clicked == 3) {
 				air = context.getLevel().getBlockState(context.getClickedPos()).getBlock();
 				clicked++;
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}else if(clicked == 4){
 				pos3 = context.getClickedPos();
 				createFile(context.getLevel());
-				return ActionResultType.SUCCESS;
+				return InteractionResult.SUCCESS;
 			}
 		}
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 	
-	private void createFile(World world) {
+	private void createFile(Level world) {
 		clicked = 0;
 		JsonObject main = new JsonObject();
 		JsonObject blocks = new JsonObject();

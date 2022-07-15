@@ -2,18 +2,18 @@ package com.hijackster99.ancientrelics.tileentity.ritual;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.Tag;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -23,20 +23,20 @@ public class TileEntityWrapper implements ICapabilityProvider {
 	protected Ritual ritual;
 	protected Tag<Block> type;
 	
-	public void init(World worldIn, BlockPos pos) {
+	public void init(Level worldIn, BlockPos pos) {
 		
 	}
 	
-	public void tick(World worldObj, BlockPos pos) {
+	public void tick(Level worldObj, BlockPos pos) {
 		
 	}
 	
-	public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
+	public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, Random random) {
 		
 	}
 	
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		return ActionResultType.PASS;
+	public InteractionResult onBlockActivated(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+		return InteractionResult.PASS;
 	}
 	
 	@Override
@@ -44,11 +44,11 @@ public class TileEntityWrapper implements ICapabilityProvider {
 		return LazyOptional.empty();
 	}
 	
-	public void read(BlockState state, CompoundNBT nbt) {
+	public void read(CompoundTag nbt) {
 		
 	}
 	
-	public CompoundNBT write(CompoundNBT compound) {
+	public CompoundTag write(CompoundTag compound) {
 		return compound;
 	}
 	

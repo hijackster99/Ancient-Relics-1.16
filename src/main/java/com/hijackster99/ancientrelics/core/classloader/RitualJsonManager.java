@@ -18,17 +18,17 @@ import com.google.gson.JsonObject;
 import com.hijackster99.ancientrelics.tileentity.ritual.Ritual;
 import com.hijackster99.ancientrelics.tileentity.ritual.RitualBuilder;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.resources.JsonReloadListener;
-import net.minecraft.profiler.IProfiler;
-import net.minecraft.resources.IResourceManager;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.tags.StaticTags;
 import net.minecraft.tags.Tag;
-import net.minecraft.tags.TagCollectionManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.registries.RegistryManager;
 
-public class RitualJsonManager extends JsonReloadListener{
+public class RitualJsonManager extends SimpleJsonResourceReloadListener{
 	
 	private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
 	private static final Logger LOGGER = LogManager.getLogger();
@@ -37,14 +37,17 @@ public class RitualJsonManager extends JsonReloadListener{
 		super(GSON, "ritual");
 	}
 
+	
+	
+	@SuppressWarnings("unchecked")
 	@Override
-	protected void apply(Map<ResourceLocation, JsonElement> objectIn, IResourceManager resourceManagerIn, IProfiler profilerIn) {
+	protected void apply(Map<ResourceLocation, JsonElement> objectIn, ResourceManager resourceManagerIn, ProfilerFiller profilerIn) {
 		for(Entry<ResourceLocation, JsonElement> entry : objectIn.entrySet()) {
 	         ResourceLocation resourcelocation = entry.getKey();
 	         if (resourcelocation.getPath().startsWith("_")) continue; //Forge: filter anything beginning with "_" as it's used for metadata.
-			 if(GameRegistry.findRegistry(Ritual.class).containsKey(resourcelocation)) {
+			 if(RegistryManager.ACTIVE.getRegistry(Ritual.class).containsKey(resourcelocation)) {
 				 JsonElement tierElement = entry.getValue().getAsJsonObject().get("tier");
-				 if(TagCollectionManager.getInstance().getBlocks().getTag(new ResourceLocation("ancientrelics:ritual_tier_" + tierElement.getAsInt())) != null) GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).setTier((Tag<Block>) TagCollectionManager.getInstance().getBlocks().getTag(new ResourceLocation("ancientrelics:ritual_tier_" + tierElement.getAsInt())));
+				 if(StaticTags.get(new ResourceLocation("ancientrelics:ritual_tier_" + tierElement.getAsInt())) != null) RegistryManager.ACTIVE.getRegistry(Ritual.class).getValue(resourcelocation).setTier((Tag<Block>) StaticTags.get(new ResourceLocation("ancientrelics:ritual_tier_" + tierElement.getAsInt())));
         		 Map<Option, List<BlockPos>> blocks = new HashMap<Option, List<BlockPos>>();
 	        	 JsonObject object = entry.getValue().getAsJsonObject().get("blocks").getAsJsonObject();
 	        	 Set<Map.Entry<String, JsonElement>> names = object.entrySet();
@@ -56,10 +59,10 @@ public class RitualJsonManager extends JsonReloadListener{
 		        			 Option opt = new Option();
 		        			 if(name.startsWith("#")) {
 		        				 name = name.substring(1);
-		        				 Tag<Block> tag = (Tag<Block>) TagCollectionManager.getInstance().getBlocks().getTag(new ResourceLocation(name));
+								 Tag<Block> tag = (Tag<Block>) StaticTags.get(new ResourceLocation(name));
 		        				 if(tag != null) opt.set(tag);
 		        			 }else {
-		        				 if(GameRegistry.findRegistry(Block.class).containsKey(new ResourceLocation(name))) opt.set(GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(name)));
+		        				 if(RegistryManager.ACTIVE.getRegistry(Block.class).containsKey(new ResourceLocation(name))) opt.set(RegistryManager.ACTIVE.getRegistry(Block.class).getValue(new ResourceLocation(name)));
 		        			 }
 		    				 if(opt.getType() != null) {
 		    					 List<BlockPos> posList = new ArrayList<BlockPos>();
@@ -91,7 +94,7 @@ public class RitualJsonManager extends JsonReloadListener{
 			        				 int y = array.get(i + 1).getAsInt();
 			        				 int z = array.get(i + 2).getAsInt();
 			        				 if(!(x == 0 && y == 0 && z == 0))
-			        					 GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).putBlockDefs(new BlockPos(x, y, z), e.getKey());
+			        					 RegistryManager.ACTIVE.getRegistry(Ritual.class).getValue(resourcelocation).putBlockDefs(new BlockPos(x, y, z), e.getKey());
 			        				 else
 			        					 LOGGER.error("Error: Block specified at ritual center! Skipping!");
 			        			 }
@@ -110,11 +113,11 @@ public class RitualJsonManager extends JsonReloadListener{
 		        				 String str = arrEl.getAsString();
 		        				 capList.add(str);
 		        			 }
-				        	 GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).putTypeDefs(GameRegistry.findRegistry(Block.class).getValue(new ResourceLocation(e.getKey())), capList);
+		        			 RegistryManager.ACTIVE.getRegistry(Ritual.class).getValue(resourcelocation).putTypeDefs(RegistryManager.ACTIVE.getRegistry(Block.class).getValue(new ResourceLocation(e.getKey())), capList);
 		        		 }
 		        	 }
 	        	 }
-        		 GameRegistry.findRegistry(Ritual.class).getValue(resourcelocation).setRitualBlocks(blocks);
+	        	 RegistryManager.ACTIVE.getRegistry(Ritual.class).getValue(resourcelocation).setRitualBlocks(blocks);
 			 }else {
 				 LOGGER.error("Error: Ritual: {} not registered! Skipping!", resourcelocation);
 			 }
@@ -124,7 +127,7 @@ public class RitualJsonManager extends JsonReloadListener{
 	}
 	
 	private void printInvalidRituals() {
-		for(Ritual r : GameRegistry.findRegistry(Ritual.class).getValues()) {
+		for(Ritual r : RegistryManager.ACTIVE.getRegistry(Ritual.class).getValues()) {
 			if(!r.isValid()) LOGGER.error("Warning! Ritual: {} Had a problem loading and will be ignored! Be sure to check the json format!", r.getRegistryName());
 		}
 	}

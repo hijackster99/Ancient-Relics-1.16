@@ -12,18 +12,18 @@ import com.hijackster99.ancientrelics.blocks.ARBlock;
 import com.hijackster99.ancientrelics.core.References;
 import com.hijackster99.ancientrelics.core.classloader.RitualJsonManager.Option;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.event.TickEvent.WorldTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.RegistryManager;
 
 @EventBusSubscriber(modid = References.MODID)
 public class RitualBuilder {
@@ -39,12 +39,12 @@ public class RitualBuilder {
 			if(rituals == null) getRituals();
 			for(Iterator<Checker> c = ritualCheckers.iterator(); c.hasNext(); ) {
 				Checker check = c.next();
-				check.player.displayClientMessage(new StringTextComponent("Checking Rituals..."), false);
+				check.player.displayClientMessage(new TextComponent("Checking Rituals..."), false);
 				if(check.dimension.equals(event.world.dimension().location().toString())) {
 					if(check.iter == null) getNextIter(check, event);
 					if(check.valid) {
 						if(check.iter != null && !check.iter.hasNext()) {
-							check.player.displayClientMessage(new StringTextComponent("Found Valid Ritual!"), false);
+							check.player.displayClientMessage(new TextComponent("Found Valid Ritual!"), false);
 							if(BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_inactive")).contains(event.world.getBlockState(check.pos).getBlock())) {
 								activeRituals.put(check.pos, rituals.get(check.counter));
 								event.world.setBlockAndUpdate(check.pos, getActiveBlock(event.world.getBlockState(check.pos).getBlock()).defaultBlockState());
@@ -57,18 +57,18 @@ public class RitualBuilder {
 									if(entry.getValue().getType().equals(Block.class)) {
 										if(event.world.getBlockState(check.pos.offset(entry.getKey())).getBlock() != (Block) entry.getValue().get()) { 
 											check.valid = false;
-											check.player.displayClientMessage(new StringTextComponent("Check Failed! Bad Block at " + check.pos.offset(entry.getKey()) + "! " + event.world.getBlockState(check.pos.offset(entry.getKey())).getBlock().getRegistryName().toString() + " instead of " + ((Block) entry.getValue().get()).getRegistryName().toString()), false);
+											check.player.displayClientMessage(new TextComponent("Check Failed! Bad Block at " + check.pos.offset(entry.getKey()) + "! " + event.world.getBlockState(check.pos.offset(entry.getKey())).getBlock().getRegistryName().toString() + " instead of " + ((Block) entry.getValue().get()).getRegistryName().toString()), false);
 										}
 									}else if(entry.getValue().getType().equals(Tag.class)) {
 										if(!((Tag<Block>) entry.getValue().get()).contains(event.world.getBlockState(check.pos.offset(entry.getKey())).getBlock())) { 
 											check.valid = false;
-											check.player.displayClientMessage(new StringTextComponent("Check Failed! Bad Block at " + check.pos.offset(entry.getKey()) + "! " + event.world.getBlockState(check.pos.offset(entry.getKey())).getBlock().getRegistryName().toString() + " is not in specified tag collection!"), false);
+											check.player.displayClientMessage(new TextComponent("Check Failed! Bad Block at " + check.pos.offset(entry.getKey()) + "! " + event.world.getBlockState(check.pos.offset(entry.getKey())).getBlock().getRegistryName().toString() + " is not in specified tag collection!"), false);
 										}
 									}
 								}
 							}
 						}else {
-							check.player.displayClientMessage(new StringTextComponent("No Valid Ritual Found!"), false);
+							check.player.displayClientMessage(new TextComponent("No Valid Ritual Found!"), false);
 							c.remove();
 						}
 					}else {
@@ -85,18 +85,18 @@ public class RitualBuilder {
 		check.counter++;
 		for( ;check.counter < rituals.size(); check.counter++){
 			Ritual rit = rituals.get(check.counter);
-			check.player.displayClientMessage(new StringTextComponent("Checking Ritual Tier..."), false);
+			check.player.displayClientMessage(new TextComponent("Checking Ritual Tier..."), false);
 			if(rit.getTier().contains(event.world.getBlockState(check.pos).getBlock())) {
-				check.player.displayClientMessage(new StringTextComponent("Tiers Match! Checking: " + rituals.get(check.counter).getRegistryName().toString()), false);
+				check.player.displayClientMessage(new TextComponent("Tiers Match! Checking: " + rituals.get(check.counter).getRegistryName().toString()), false);
 				check.iter = rituals.get(check.counter).getRitualBlocksIter().entrySet().iterator();
 				break;
 			}
-			check.player.displayClientMessage(new StringTextComponent("Check Failed!"), false);
+			check.player.displayClientMessage(new TextComponent("Check Failed!"), false);
 		}
 	}
 	
 	public static void getRituals() {
-		List<Ritual> rituals = new ArrayList<Ritual>(GameRegistry.findRegistry(Ritual.class).getValues());
+		List<Ritual> rituals = new ArrayList<Ritual>(RegistryManager.ACTIVE.getRegistry(Ritual.class).getValues());
 		for(Iterator<Ritual> iter = rituals.iterator(); iter.hasNext(); ) {
 			Ritual r = iter.next();
 			if(!r.isValid()) iter.remove();
@@ -129,7 +129,7 @@ public class RitualBuilder {
 	
 	public static class Checker {
 		
-		public Checker(BlockPos pos, String dimension, PlayerEntity player) {
+		public Checker(BlockPos pos, String dimension, Player player) {
 			this.pos = pos;
 			this.dimension = dimension;
 			this.player = player;
@@ -137,7 +137,7 @@ public class RitualBuilder {
 		
 		BlockPos pos;
 		String dimension;
-		PlayerEntity player;
+		Player player;
 		int counter = -1;
 		boolean valid = true;
 		Iterator<Entry<BlockPos, Option>> iter;

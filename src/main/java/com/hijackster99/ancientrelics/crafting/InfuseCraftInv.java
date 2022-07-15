@@ -3,10 +3,10 @@ package com.hijackster99.ancientrelics.crafting;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.ItemStackHandler;
 
-public class InfuseCraftInv extends Inventory{
+public class InfuseCraftInv extends ItemStackHandler {
 	
 	private List<String> rings;
 	private int tier;
@@ -19,11 +19,11 @@ public class InfuseCraftInv extends Inventory{
 	
 	public void putItem(int index, ItemStack stack, String ring) {
 		rings.set(index, ring);
-		setItem(index, stack);
+		setStackInSlot(index, stack);
 	}
 	
 	public void removeItem(int index) {
-		removeItem(index, 1);
+		extractItem(index, 1, false);
 		rings.set(index, null);
 	}
 	
@@ -32,8 +32,8 @@ public class InfuseCraftInv extends Inventory{
 	}
 	
 	public boolean containsItem(ItemStack stack, String ring) {
-		for(int i = 0; i < getContainerSize(); i++) {
-			ItemStack stack2 = getItem(i);
+		for(int i = 0; i < stacks.size(); i++) {
+			ItemStack stack2 = getStackInSlot(i);
 			if(ItemStack.isSameIgnoreDurability(stack, stack2)) {
 				if(ring.equals(rings.get(i))) {
 					removeItem(i);
@@ -45,8 +45,8 @@ public class InfuseCraftInv extends Inventory{
 	}
 	
 	public boolean containsItemNbt(ItemStack stack, String ring) {
-		for(int i = 0; i < getContainerSize(); i++) {
-			ItemStack stack2 = getItem(i);
+		for(int i = 0; i < stacks.size(); i++) {
+			ItemStack stack2 = getStackInSlot(i);
 			if(ItemStack.isSameIgnoreDurability(stack, stack2) && ItemStack.tagMatches(stack, stack2)) {
 				if(ring.equals(rings.get(i))) {
 					removeItem(i);

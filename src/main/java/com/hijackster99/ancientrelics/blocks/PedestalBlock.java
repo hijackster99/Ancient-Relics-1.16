@@ -34,15 +34,15 @@ public class PedestalBlock extends ARContainer{
 		VoxelShape shape5 = Shapes.box(0.125, 0.6875, 0.125, 0.1875, 0.8125, 0.1875);
 		VoxelShape shape6 = Shapes.box(0.1875, 0.6875, 0.125, 0.25, 0.75, 0.1875);
 		VoxelShape shape7 = Shapes.box(0.125, 0.6875, 0.1875, 0.1875, 0.75, 0.25);
-		VoxelShape shape8 = Shapes.box(0.875, 0.6875, 0.125, 0.8125, 0.8125, 0.1875);
-		VoxelShape shape9 = Shapes.box(0.8125, 0.6875, 0.125, 0.75, 0.75, 0.1875);
-		VoxelShape shape10 = Shapes.box(0.875, 0.6875, 0.1875, 0.8125, 0.75, 0.25);
-		VoxelShape shape11 = Shapes.box(0.875, 0.6875, 0.875, 0.8125, 0.8125, 0.8125);
-		VoxelShape shape12 = Shapes.box(0.8125, 0.6875, 0.875, 0.75, 0.75, 0.8125);
-		VoxelShape shape13 = Shapes.box(0.875, 0.6875, 0.8125, 0.8125, 0.75, 0.75);
-		VoxelShape shape14 = Shapes.box(0.125, 0.6875, 0.875, 0.1875, 0.8125, 0.8125);
-		VoxelShape shape15 = Shapes.box(0.1875, 0.6875, 0.875, 0.25, 0.75, 0.8125);
-		VoxelShape shape16 = Shapes.box(0.125, 0.6875, 0.8125, 0.1875, 0.75, 0.75);
+		VoxelShape shape8 = Shapes.box(0.8125, 0.6875, 0.125, 0.875, 0.8125, 0.1875);
+		VoxelShape shape9 = Shapes.box(0.75, 0.6875, 0.125, 0.8125, 0.75, 0.1875);
+		VoxelShape shape10 = Shapes.box(0.8125, 0.6875, 0.1875, 0.875, 0.75, 0.25);
+		VoxelShape shape11 = Shapes.box(0.8125, 0.6875, 0.8125, 0.875, 0.8125, 0.875);
+		VoxelShape shape12 = Shapes.box(0.755, 0.6875, 0.8125, 0.8125, 0.75, 0.875);
+		VoxelShape shape13 = Shapes.box(0.8125, 0.6875, 0.75, 0.875, 0.75, 0.8125);
+		VoxelShape shape14 = Shapes.box(0.125, 0.6875, 0.8125, 0.1875, 0.8125, 0.875);
+		VoxelShape shape15 = Shapes.box(0.1875, 0.6875, 0.8125, 0.25, 0.75, 0.875);
+		VoxelShape shape16 = Shapes.box(0.125, 0.6875, 0.75, 0.1875, 0.75, 0.8125);
 		VoxelShape shape = Shapes.join(shape1, shape2, BooleanOp.OR);
 		shape = Shapes.join(shape, shape3, BooleanOp.OR);
 		shape = Shapes.join(shape, shape4, BooleanOp.OR);
@@ -69,7 +69,7 @@ public class PedestalBlock extends ARContainer{
 	
 	@Override
 	public BlockEntity newBlockEntity(BlockPos posIn, BlockState stateIn) {
-		return new TEPedestal();
+		return new TEPedestal(posIn, stateIn);
 	}
 	
 	@Override

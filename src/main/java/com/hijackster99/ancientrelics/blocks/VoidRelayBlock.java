@@ -35,7 +35,7 @@ public class VoidRelayBlock extends ARBlock implements EntityBlock{
 	
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new VoidRelay();
+		return new VoidRelay(pos, state);
 	}
 	
 	@Override

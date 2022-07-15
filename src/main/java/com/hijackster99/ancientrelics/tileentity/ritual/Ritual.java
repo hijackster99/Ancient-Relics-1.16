@@ -7,9 +7,9 @@ import java.util.Map.Entry;
 
 import com.hijackster99.ancientrelics.core.classloader.RitualJsonManager.Option;
 
-import net.minecraft.block.Block;
+import net.minecraft.core.BlockPos;
 import net.minecraft.tags.Tag;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 public class Ritual extends ForgeRegistryEntry<Ritual>{

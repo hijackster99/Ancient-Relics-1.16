@@ -6,14 +6,16 @@ import com.hijackster99.ancientrelics.blocks.ARBlock;
 import com.hijackster99.ancientrelics.core.VoidGasTank;
 import com.hijackster99.ancientrelics.crafting.InfuseCraftInv;
 import com.hijackster99.ancientrelics.crafting.InfuseRecipe;
+import com.hijackster99.ancientrelics.crafting.InfuseRecipeWrapper;
 import com.hijackster99.ancientrelics.tileentity.ritual.TileEntityWrapper;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
@@ -28,11 +30,10 @@ public class InfuseWrapper extends TileEntityWrapper {
 	InfuseRecipe recipe;
 	int voidEnergy;
 	
-	@CapabilityInject(IFluidHandler.class)
-	private static Capability<IFluidHandler> FLUID_CAP = null;
+	private static Capability<IFluidHandler> FLUID_CAP = CapabilityManager.get(new CapabilityToken<>() {});
 	
 	@Override
-	public void init(World worldIn, BlockPos pos) {
+	public void init(Level worldIn, BlockPos pos) {
 		VCModifier = type.contains(ARBlock.RITUAL_STONE_1_RUBY) || type.contains(ARBlock.RITUAL_STONE_6) ? 0.5 : 1;
 		VPTModifier = type.contains(ARBlock.RITUAL_STONE_1_PERIDOT) || type.contains(ARBlock.RITUAL_STONE_6) ? 40 : 20;
 		tank = new VoidGasTank(type.contains(ARBlock.RITUAL_STONE_1_SAPPHIRE) || type.contains(ARBlock.RITUAL_STONE_6) ? 20000 : 10000);
@@ -41,9 +42,9 @@ public class InfuseWrapper extends TileEntityWrapper {
 	}
 	
 	@Override
-	public void tick(World worldObj, BlockPos pos) {
+	public void tick(Level worldObj, BlockPos pos) {
 		
-		InfuseCraftInv inv = new InfuseCraftInv(1, Integer.valueOf(BlockTags.getAllTags().getId(ritual.getTier()).getPath().charAt(BlockTags.getAllTags().getId(ritual.getTier()).getPath().length() - 1)));
+		InfuseRecipeWrapper inv = new InfuseRecipeWrapper(new InfuseCraftInv(1, Integer.valueOf(BlockTags.getAllTags().getId(ritual.getTier()).getPath().charAt(BlockTags.getAllTags().getId(ritual.getTier()).getPath().length() - 1))));
 		if(recipe == null) {
 			Optional<InfuseRecipe> r = worldObj.getRecipeManager().getRecipeFor(InfuseRecipe.INFUSE_RECIPE, inv, worldObj);
 			if(r.isPresent()) {

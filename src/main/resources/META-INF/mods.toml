@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[35,)"
+loaderVersion="[38,)"
 license="All rights reserved"
 [[mods]]
 modId="ancientrelics"
@@ -17,6 +17,6 @@ A magic style mods that add powerful relics for you to uncover!
 [[dependencies.ancientrelics]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.4,1.17)"
+    versionRange="[1.18,1.19)"
     ordering="NONE"
     side="BOTH"

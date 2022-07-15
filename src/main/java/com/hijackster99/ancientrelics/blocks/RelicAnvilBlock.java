@@ -48,9 +48,9 @@ public class RelicAnvilBlock extends ARBlock{
 			shape4 = Shapes.box(0.1875, 0.625, 0, 0.8125, 1, 1);
 		}else
 		{
-			shape2 = Shapes.box(0.75, 0.25, 0.1875, 0.25, 0.3125, 0.8125);
-			shape3 = Shapes.box(0.625, 0.3125, 0.25, 0.375, 0.625, 0.75);
-			shape4 = Shapes.box(0.8125, 0.625, 0, 0.1875, 1, 1);
+			shape2 = Shapes.box(0.25, 0.25, 0.1875, 0.75, 0.3125, 0.8125);
+			shape3 = Shapes.box(0.375, 0.3125, 0.25, 0.625, 0.625, 0.75);
+			shape4 = Shapes.box(0.1875, 0.625, 0, 0.8125, 1, 1);
 		}
 		VoxelShape shape = Shapes.join(shape1, shape2, BooleanOp.OR);
 		shape = Shapes.join(shape, shape3, BooleanOp.OR);
