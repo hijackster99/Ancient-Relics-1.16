@@ -54,12 +54,12 @@ public class RitualBuilder {
 							for(int i = 0; i < Ritual.blocksChecked; i++) {
 								if(check.iter.hasNext()) {
 									Entry<BlockPos, Option> entry = check.iter.next();
-									if(entry.getValue().getType().equals(Block.class)) {
+									if(entry.getValue().isBlock()) {
 										if(event.world.getBlockState(check.pos.offset(entry.getKey())).getBlock() != (Block) entry.getValue().get()) { 
 											check.valid = false;
 											check.player.displayClientMessage(new TextComponent("Check Failed! Bad Block at " + check.pos.offset(entry.getKey()) + "! " + event.world.getBlockState(check.pos.offset(entry.getKey())).getBlock().getRegistryName().toString() + " instead of " + ((Block) entry.getValue().get()).getRegistryName().toString()), false);
 										}
-									}else if(entry.getValue().getType().equals(Tag.class)) {
+									}else if(!entry.getValue().isBlock()) {
 										if(!((Tag<Block>) entry.getValue().get()).contains(event.world.getBlockState(check.pos.offset(entry.getKey())).getBlock())) { 
 											check.valid = false;
 											check.player.displayClientMessage(new TextComponent("Check Failed! Bad Block at " + check.pos.offset(entry.getKey()) + "! " + event.world.getBlockState(check.pos.offset(entry.getKey())).getBlock().getRegistryName().toString() + " is not in specified tag collection!"), false);
@@ -86,7 +86,7 @@ public class RitualBuilder {
 		for( ;check.counter < rituals.size(); check.counter++){
 			Ritual rit = rituals.get(check.counter);
 			check.player.displayClientMessage(new TextComponent("Checking Ritual Tier..."), false);
-			if(rit.getTier().contains(event.world.getBlockState(check.pos).getBlock())) {
+			if(BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_tier_" + rit.getTier())).contains(event.world.getBlockState(check.pos).getBlock())) {
 				check.player.displayClientMessage(new TextComponent("Tiers Match! Checking: " + rituals.get(check.counter).getRegistryName().toString()), false);
 				check.iter = rituals.get(check.counter).getRitualBlocksIter().entrySet().iterator();
 				break;

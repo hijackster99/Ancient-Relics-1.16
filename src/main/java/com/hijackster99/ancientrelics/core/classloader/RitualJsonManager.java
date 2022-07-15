@@ -22,8 +22,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.tags.StaticTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.RegistryManager;
@@ -39,7 +37,6 @@ public class RitualJsonManager extends SimpleJsonResourceReloadListener{
 
 	
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void apply(Map<ResourceLocation, JsonElement> objectIn, ResourceManager resourceManagerIn, ProfilerFiller profilerIn) {
 		for(Entry<ResourceLocation, JsonElement> entry : objectIn.entrySet()) {
@@ -47,7 +44,7 @@ public class RitualJsonManager extends SimpleJsonResourceReloadListener{
 	         if (resourcelocation.getPath().startsWith("_")) continue; //Forge: filter anything beginning with "_" as it's used for metadata.
 			 if(RegistryManager.ACTIVE.getRegistry(Ritual.class).containsKey(resourcelocation)) {
 				 JsonElement tierElement = entry.getValue().getAsJsonObject().get("tier");
-				 if(StaticTags.get(new ResourceLocation("ancientrelics:ritual_tier_" + tierElement.getAsInt())) != null) RegistryManager.ACTIVE.getRegistry(Ritual.class).getValue(resourcelocation).setTier((Tag<Block>) StaticTags.get(new ResourceLocation("ancientrelics:ritual_tier_" + tierElement.getAsInt())));
+				 RegistryManager.ACTIVE.getRegistry(Ritual.class).getValue(resourcelocation).setTier(tierElement.getAsInt());
         		 Map<Option, List<BlockPos>> blocks = new HashMap<Option, List<BlockPos>>();
 	        	 JsonObject object = entry.getValue().getAsJsonObject().get("blocks").getAsJsonObject();
 	        	 Set<Map.Entry<String, JsonElement>> names = object.entrySet();
@@ -59,7 +56,7 @@ public class RitualJsonManager extends SimpleJsonResourceReloadListener{
 		        			 Option opt = new Option();
 		        			 if(name.startsWith("#")) {
 		        				 name = name.substring(1);
-								 Tag<Block> tag = (Tag<Block>) StaticTags.get(new ResourceLocation(name));
+								 ResourceLocation tag = new ResourceLocation(name);
 		        				 if(tag != null) opt.set(tag);
 		        			 }else {
 		        				 if(RegistryManager.ACTIVE.getRegistry(Block.class).containsKey(new ResourceLocation(name))) opt.set(RegistryManager.ACTIVE.getRegistry(Block.class).getValue(new ResourceLocation(name)));
@@ -135,7 +132,7 @@ public class RitualJsonManager extends SimpleJsonResourceReloadListener{
 	public static class Option {
 		
 		private Block block;
-		private Tag<Block> tag;
+		private ResourceLocation tag;
 		
 		public Option() {
 			block = null;
@@ -146,7 +143,7 @@ public class RitualJsonManager extends SimpleJsonResourceReloadListener{
 			this.block = block;
 		}
 		
-		public Option(Tag<Block> tag) {
+		public Option(ResourceLocation tag) {
 			this.tag = tag;
 		}
 		
@@ -158,7 +155,7 @@ public class RitualJsonManager extends SimpleJsonResourceReloadListener{
 			return false;
 		}
 		
-		public boolean set(Tag<Block> tag) {
+		public boolean set(ResourceLocation tag) {
 			if(block == null) {
 				this.tag = tag;
 				return true;
@@ -166,11 +163,11 @@ public class RitualJsonManager extends SimpleJsonResourceReloadListener{
 			return false;
 		}
 		
-		public Class<?> getType(){
+		public String getType(){
 			if(block != null) {
-				return Block.class;
+				return "block";
 			}else if(tag != null) {
-				return Tag.class;
+				return "tag";
 			}
 			return null;
 		}
@@ -179,16 +176,16 @@ public class RitualJsonManager extends SimpleJsonResourceReloadListener{
 			return block != null ? block : tag != null ? tag : null;
 		}
 		
-		@SuppressWarnings("unchecked")
+		public boolean isBlock()
+		{
+			return getType().equals("block");
+		}
+		
 		@Override
 		public String toString() {
-			List<Block> blocks = new ArrayList<Block>();
-			if(getType().equals(Block.class)) {
-				blocks.add((Block) get());
-			}else {
-				blocks.addAll(((Tag<Block>) get()).getValues());
-			}
-			return "Option: " + blocks.toString();
+			if(getType().equals("block"))
+				return "Option: " + block.toString();
+			else return "Option: #" + tag.toString();
 		}
 		
 	}

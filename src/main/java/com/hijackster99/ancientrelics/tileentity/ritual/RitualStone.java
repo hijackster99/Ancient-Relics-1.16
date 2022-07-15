@@ -33,7 +33,7 @@ import net.minecraftforge.registries.RegistryManager;
 
 public class RitualStone extends ARTileEntity implements IInteractable, IRandomUpdate, ICapabilityProvider, BlockEntityTicker<RitualStone> {
 
-	private Tag<Block> tier;
+	private int tier;
 	private Tag<Block> type;
 	private Ritual ritual = null;
 	private Iterator<Entry<BlockPos, Option>> iter;
@@ -41,10 +41,10 @@ public class RitualStone extends ARTileEntity implements IInteractable, IRandomU
 	
 	public RitualStone(BlockPos pos, BlockState state)
 	{
-		this(null, null, pos, state);
+		this(-1, null, pos, state);
 	}
 	
-	public RitualStone(Tag<Block> tier, Tag<Block> type, BlockPos pos, BlockState state) {
+	public RitualStone(int tier, Tag<Block> type, BlockPos pos, BlockState state) {
 		super(ARTileEntity.RITUAL_STONE, pos, state);
 		this.tier = tier;
 		this.type = type;
@@ -58,11 +58,11 @@ public class RitualStone extends ARTileEntity implements IInteractable, IRandomU
 		this.type = type;
 	}
 
-	public Tag<Block> getTier() {
+	public int getTier() {
 		return tier;
 	}
 
-	public void setTier(Tag<Block> tier) {
+	public void setTier(int tier) {
 		this.tier = tier;
 	}
 
@@ -95,28 +95,27 @@ public class RitualStone extends ARTileEntity implements IInteractable, IRandomU
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
 		String ritual = nbt.getString("ritual");
-		String tier = nbt.getString("tier");
+		this.tier = nbt.getInt("tier");
 		String type = nbt.getString("type");
 		setRitual(!ritual.equals("null") ? RegistryManager.ACTIVE.getRegistry(Ritual.class).getValue(new ResourceLocation(ritual)) : null);
 		this.type = (Tag<Block>) BlockTags.getAllTags().getTag(new ResourceLocation(type));
-		this.tier = (Tag<Block>) BlockTags.getAllTags().getTag(new ResourceLocation(tier));
 		wrapper.read(nbt);
 	}
 	
 	@Override
 	public CompoundTag save(CompoundTag compound) {
 		compound = wrapper.write(compound);
-		String tier = "";
+		int tier = -1;
 		String type = "";
 		for(ResourceLocation loc : this.getBlockState().getBlock().getTags()) {
 			String name = loc.toString();
 			if(name.endsWith("active"));
 			else if(name.startsWith(":ritual_type_", name.indexOf(':'))) type = name;
-			else if(name.startsWith(":ritual_tier_", name.indexOf(':'))) tier = name;
+			else if(name.startsWith(":ritual_tier_", name.indexOf(':'))) tier = Integer.valueOf(name.substring(name.length() - 1));
 		}
 		
 		compound.putString("ritual", ritual != null ? ritual.getRegistryName().toString() : "null");
-		compound.putString("tier", tier);
+		compound.putInt("tier", tier);
 		compound.putString("type", type);
 		return super.save(compound);
 	}
@@ -152,11 +151,11 @@ public class RitualStone extends ARTileEntity implements IInteractable, IRandomU
 		for(int i = 0; i < Ritual.blocksChecked; i++) {
 			if(iter.hasNext()) {
 				Entry<BlockPos, Option> e = iter.next();
-				if(e.getValue().getType().equals(Block.class)) {
+				if(e.getValue().isBlock()) {
 					if(getLevel().getBlockState(e.getKey().offset(worldPosition)).getBlock() != (Block) e.getValue().get()) {
 						return false;
 					}
-				}else if(e.getValue().getType().equals(Tag.class)) {
+				}else if(!e.getValue().isBlock()) {
 					if(!((Tag<Block>) e.getValue().get()).contains(getLevel().getBlockState(e.getKey().offset(worldPosition)).getBlock())) {
 						return false;
 					}
@@ -169,11 +168,11 @@ public class RitualStone extends ARTileEntity implements IInteractable, IRandomU
 	}
 	
 	private Block getInactiveBlock() {
-		if(tier != null && type != null) {
+		if(tier != -1 && type != null) {
 			Tag<Block> inactive = (Tag<Block>) BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_inactive"));
 			for(Block b : inactive.getValues()) {
 				System.out.println(type.getValues());
-				if(tier.contains(b) && type.contains(b)) {
+				if(BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_tier_" + tier)).contains(b) && type.contains(b)) {
 					return b;
 				}
 			}

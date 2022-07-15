@@ -79,7 +79,7 @@ public class RitualBuilder extends ARItem{
 							System.out.println(2);
 							if(context.getPlayer().isCreative()) {
 								System.out.println(3);
-								if(entry.getValue().getType().equals(Block.class)) {
+								if(entry.getValue().isBlock()) {
 									System.out.println(4);
 									context.getLevel().setBlockAndUpdate(context.getClickedPos().offset(entry.getKey()), ((Block) entry.getValue().get()).defaultBlockState());
 								}else {
@@ -87,7 +87,7 @@ public class RitualBuilder extends ARItem{
 									context.getLevel().setBlockAndUpdate(context.getClickedPos().offset(entry.getKey()), ((Tag<Block>) entry.getValue().get()).getValues().get(0).defaultBlockState());
 								}
 							}else {
-								if(entry.getValue().getType().equals(Block.class)) {
+								if(entry.getValue().isBlock()) {
 									Block block = (Block) entry.getValue().get();
 									HashSet<Item> items = new HashSet<Item>();
 									items.add(block.asItem());
@@ -116,7 +116,7 @@ public class RitualBuilder extends ARItem{
 				return InteractionResult.SUCCESS;
 			}else {
 				if(BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_inactive")).contains(context.getLevel().getBlockState(context.getClickedPos()).getBlock())) {
-					if(com.hijackster99.ancientrelics.tileentity.ritual.RitualBuilder.rituals.get(ritual).getTier().contains(context.getLevel().getBlockState(context.getClickedPos()).getBlock())){
+					if(BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_tier_" + com.hijackster99.ancientrelics.tileentity.ritual.RitualBuilder.rituals.get(ritual).getTier())).contains(context.getLevel().getBlockState(context.getClickedPos()).getBlock())){
 						map.put(context.getClickedPos(), com.hijackster99.ancientrelics.tileentity.ritual.RitualBuilder.rituals.get(ritual).getRitualBlocksIter().entrySet().iterator());
 					}
 					return InteractionResult.SUCCESS;

@@ -40,10 +40,10 @@ public class RitualBlock extends ARBlock implements EntityBlock {
 	
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		Tag<Block> tier = null;
+		int tier = -1;
 		Tag<Block> type = null;
 		for(ResourceLocation rl : this.getTags()) {
-			if(rl.getPath().startsWith("ritual_tier")) tier = (Tag<Block>) BlockTags.getAllTags().getTag(rl);
+			if(rl.getPath().startsWith("ritual_tier")) tier = Integer.valueOf(rl.getPath().substring(rl.getPath().length() - 1));
 			else if(rl.getPath().endsWith("active"));
 			else if(rl.getPath().startsWith("ritual_type")) type = (Tag<Block>) BlockTags.getAllTags().getTag(rl);
 		}

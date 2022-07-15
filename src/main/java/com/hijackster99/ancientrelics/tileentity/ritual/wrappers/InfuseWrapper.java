@@ -11,7 +11,6 @@ import com.hijackster99.ancientrelics.tileentity.ritual.TileEntityWrapper;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -44,7 +43,7 @@ public class InfuseWrapper extends TileEntityWrapper {
 	@Override
 	public void tick(Level worldObj, BlockPos pos) {
 		
-		InfuseRecipeWrapper inv = new InfuseRecipeWrapper(new InfuseCraftInv(1, Integer.valueOf(BlockTags.getAllTags().getId(ritual.getTier()).getPath().charAt(BlockTags.getAllTags().getId(ritual.getTier()).getPath().length() - 1))));
+		InfuseRecipeWrapper inv = new InfuseRecipeWrapper(new InfuseCraftInv(1, ritual.getTier()));
 		if(recipe == null) {
 			Optional<InfuseRecipe> r = worldObj.getRecipeManager().getRecipeFor(InfuseRecipe.INFUSE_RECIPE, inv, worldObj);
 			if(r.isPresent()) {
