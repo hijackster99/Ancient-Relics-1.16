@@ -22,6 +22,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -108,7 +109,7 @@ public class RitualStone extends ARTileEntity implements IInteractable, IRandomU
 	}
 
 	public static <T extends BlockEntity> void tick(Level worldIn, BlockPos pos, BlockState stateIn, T te) {
-		if(te instanceof RitualStone)
+		if(te instanceof RitualStone && worldIn.getBlockState(pos).getBlock() != Blocks.AIR)
 		{
 			RitualStone rs = (RitualStone) te;
 			if(!worldIn.isClientSide()) {
@@ -168,13 +169,19 @@ public class RitualStone extends ARTileEntity implements IInteractable, IRandomU
 	}
 	
 	private Block getInactiveBlock() {
-		if(tier != -1 && type != null) {
-			Tag<Block> inactive = (Tag<Block>) BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_inactive"));
-			for(Block b : inactive.getValues()) {
-				System.out.println(type.getValues());
-				if(BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_tier_" + tier)).contains(b) && type.contains(b)) {
-					return b;
-				}
+		System.out.println(worldPosition);
+		System.out.println(this.level.getBlockState(worldPosition).getBlock());
+		Tag<Block> tier = BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_tier_1"));
+		Tag<Block> type = BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_ruby"));
+		for(ResourceLocation rl : this.getLevel().getBlockState(this.worldPosition).getBlock().getTags()) {
+			if(rl.getPath().startsWith("ritual_tier")) tier = (Tag<Block>) BlockTags.getAllTags().getTag(rl);
+			else if(rl.getPath().endsWith("active"));
+			else if(rl.getPath().startsWith("ritual_type")) type = (Tag<Block>) BlockTags.getAllTags().getTag(rl);
+		}
+		Tag<Block> inactive = (Tag<Block>) BlockTags.getAllTags().getTag(new ResourceLocation("ancientrelics:ritual_type_inactive"));
+		for(Block b : inactive.getValues()) {
+			if(tier.contains(b) && type.contains(b)) {
+				return b;
 			}
 		}
 		return ARBlock.RITUAL_STONE_1_RUBY;
