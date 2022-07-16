@@ -22,7 +22,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -31,7 +31,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.RegistryManager;
 
-public class RitualStone extends ARTileEntity implements IInteractable, IRandomUpdate, ICapabilityProvider, BlockEntityTicker<RitualStone> {
+public class RitualStone extends ARTileEntity implements IInteractable, IRandomUpdate, ICapabilityProvider {
 
 	private int tier;
 	private Tag<Block> type;
@@ -84,6 +84,7 @@ public class RitualStone extends ARTileEntity implements IInteractable, IRandomU
 			}
 			iter = ritual.getRitualBlocksIter().entrySet().iterator();
 		}
+		this.setChanged();
 	}
 	
 	@Override
@@ -95,44 +96,33 @@ public class RitualStone extends ARTileEntity implements IInteractable, IRandomU
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
 		String ritual = nbt.getString("ritual");
-		this.tier = nbt.getInt("tier");
-		String type = nbt.getString("type");
 		setRitual(!ritual.equals("null") ? RegistryManager.ACTIVE.getRegistry(Ritual.class).getValue(new ResourceLocation(ritual)) : null);
-		this.type = (Tag<Block>) BlockTags.getAllTags().getTag(new ResourceLocation(type));
 		wrapper.read(nbt);
 	}
 	
 	@Override
 	public CompoundTag save(CompoundTag compound) {
 		compound = wrapper.write(compound);
-		int tier = -1;
-		String type = "";
-		for(ResourceLocation loc : this.getBlockState().getBlock().getTags()) {
-			String name = loc.toString();
-			if(name.endsWith("active"));
-			else if(name.startsWith(":ritual_type_", name.indexOf(':'))) type = name;
-			else if(name.startsWith(":ritual_tier_", name.indexOf(':'))) tier = Integer.valueOf(name.substring(name.length() - 1));
-		}
-		
 		compound.putString("ritual", ritual != null ? ritual.getRegistryName().toString() : "null");
-		compound.putInt("tier", tier);
-		compound.putString("type", type);
 		return super.save(compound);
 	}
 
-	@Override
-	public void tick(Level worldIn, BlockPos pos, BlockState stateIn, RitualStone te) {
-		if(!worldIn.isClientSide()) {
-			if(ritual == null) {
-				setRitual(RitualBuilder.activeRituals.get(pos));
-				RitualBuilder.activeRituals.remove(pos);
+	public static <T extends BlockEntity> void tick(Level worldIn, BlockPos pos, BlockState stateIn, T te) {
+		if(te instanceof RitualStone)
+		{
+			RitualStone rs = (RitualStone) te;
+			if(!worldIn.isClientSide()) {
+				if(rs.ritual == null) {
+					rs.setRitual(RitualBuilder.activeRituals.get(pos));
+					RitualBuilder.activeRituals.remove(pos);
+				}
+				if(rs.ritual == null || !rs.checkRitual()) {
+					worldIn.removeBlock(pos, false);
+					worldIn.setBlockAndUpdate(pos, rs.getInactiveBlock().defaultBlockState());
+				}
 			}
-			if(ritual == null || !checkRitual()) {
-				worldIn.removeBlock(pos, false);
-				worldIn.setBlockAndUpdate(pos, getInactiveBlock().defaultBlockState());
-			}
+			rs.wrapper.tick(worldIn, pos);
 		}
-		wrapper.tick(worldIn, pos);
 	}
 
 	@Override
@@ -147,6 +137,7 @@ public class RitualStone extends ARTileEntity implements IInteractable, IRandomU
 	
 	@SuppressWarnings("unchecked")
 	private boolean checkRitual() {
+		if(tier == 0 || type == null) getRitualStats();
 		if(ritual.getTier() != tier) return false;
 		for(int i = 0; i < Ritual.blocksChecked; i++) {
 			if(iter.hasNext()) {
@@ -165,6 +156,15 @@ public class RitualStone extends ARTileEntity implements IInteractable, IRandomU
 			}
 		}
 		return true;
+	}
+	
+	private void getRitualStats()
+	{
+		for(ResourceLocation rl : this.getLevel().getBlockState(this.worldPosition).getBlock().getTags()) {
+			if(rl.getPath().startsWith("ritual_tier")) tier = Integer.valueOf(rl.getPath().substring(rl.getPath().length() - 1));
+			else if(rl.getPath().endsWith("active"));
+			else if(rl.getPath().startsWith("ritual_type")) type = (Tag<Block>) BlockTags.getAllTags().getTag(rl);
+		}
 	}
 	
 	private Block getInactiveBlock() {
