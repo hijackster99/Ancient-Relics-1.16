@@ -98,6 +98,7 @@ public class ExtractWrapper extends TileEntityWrapper {
 		tank.readFromNBT(nbt);
 		burnTime = nbt.getInt("burnTime");
 		VPT = nbt.getInt("VPT");
+		System.out.println(tank.getCapacity() + " " + burnTime + " " + VPT);
 	}
 	
 	@Override

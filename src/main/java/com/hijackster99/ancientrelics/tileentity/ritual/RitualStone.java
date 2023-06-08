@@ -38,6 +38,7 @@ public class RitualStone extends ARTileEntity implements IInteractable, IRandomU
 	private Ritual ritual = null;
 	private Iterator<Entry<BlockPos, Option>> iter;
 	private TileEntityWrapper wrapper = new TileEntityWrapper();
+	private boolean changed = true;
 	
 	public RitualStone(BlockPos pos, BlockState state)
 	{
@@ -71,9 +72,8 @@ public class RitualStone extends ARTileEntity implements IInteractable, IRandomU
 	}
 
 	@SuppressWarnings("deprecation")
-	public void setRitual(Ritual ritual) {
+	public void setRitual() {
 		if(ritual != null) {
-			this.ritual = ritual;
 			try {
 				this.wrapper = this.ritual.wrapper.newInstance();
 				this.wrapper.ritual = ritual;
@@ -84,7 +84,15 @@ public class RitualStone extends ARTileEntity implements IInteractable, IRandomU
 			}
 			iter = ritual.getRitualBlocksIter().entrySet().iterator();
 		}
-		this.setChanged();
+		setChanged();
+	}
+	
+	@Override
+	public void setChanged() {
+		super.setChanged();
+		if(this.level != null) {
+			System.out.println("changed");
+		}
 	}
 	
 	@Override
@@ -96,24 +104,35 @@ public class RitualStone extends ARTileEntity implements IInteractable, IRandomU
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
 		String ritual = nbt.getString("ritual");
-		setRitual(!ritual.equals("null") ? RegistryManager.ACTIVE.getRegistry(Ritual.class).getValue(new ResourceLocation(ritual)) : null);
+		this.ritual = !ritual.equals("null") ? RegistryManager.ACTIVE.getRegistry(Ritual.class).getValue(new ResourceLocation(ritual)) : null;
 		wrapper.read(nbt);
 	}
 	
 	@Override
-	public CompoundTag save(CompoundTag compound) {
+	protected void saveAdditional(CompoundTag compound) {
+		super.saveAdditional(compound);
+
 		compound = wrapper.write(compound);
 		compound.putString("ritual", ritual != null ? ritual.getRegistryName().toString() : "null");
-		return super.save(compound);
 	}
 
 	public static <T extends BlockEntity> void tick(Level worldIn, BlockPos pos, BlockState stateIn, T te) {
 		if(te instanceof RitualStone)
 		{
 			RitualStone rs = (RitualStone) te;
+			if(rs.changed && rs.level != null) {
+				for(ResourceLocation rl : stateIn.getBlock().getTags()) {
+					if(rl.getPath().startsWith("ritual_tier")) rs.tier = Integer.valueOf(rl.getPath().substring(rl.getPath().length() - 1));
+					else if(rl.getPath().startsWith("ritual_type")) rs.type = (Tag<Block>) BlockTags.getAllTags().getTag(rl);
+				}
+				rs.setRitual();
+				rs.setChanged();
+				rs.changed = false;
+			}
 			if(!worldIn.isClientSide()) {
 				if(rs.ritual == null) {
-					rs.setRitual(RitualBuilder.activeRituals.get(pos));
+					rs.ritual = RitualBuilder.activeRituals.get(pos);
+					rs.setRitual();
 					RitualBuilder.activeRituals.remove(pos);
 				}
 				if(rs.ritual == null || !rs.checkRitual()) {
