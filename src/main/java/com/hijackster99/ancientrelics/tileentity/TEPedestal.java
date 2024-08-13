@@ -9,6 +9,7 @@ import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -18,7 +19,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TEPedestal extends ARTileEntity implements Nameable, ICapabilityProvider, MenuProvider {
+public class TEPedestal extends ARContainerEntity implements ICapabilityProvider {
 
 	private Component name;
 	
@@ -27,7 +28,7 @@ public class TEPedestal extends ARTileEntity implements Nameable, ICapabilityPro
 	private static Capability<IItemHandler> INV_CAP = CapabilityManager.get(new CapabilityToken<>() {});
 	
 	public TEPedestal(BlockPos pos, BlockState state) {
-		super(PEDESTAL, pos, state);
+		super(ARTileEntity.PEDESTAL, pos, state);
 		name = new TextComponent("container.pedestal");
 		inventory = new ItemStackHandler() {
 			
@@ -59,13 +60,65 @@ public class TEPedestal extends ARTileEntity implements Nameable, ICapabilityPro
 	}
 
 	@Override
-	public AbstractContainerMenu createMenu(int p_39954_, Inventory playerInv, Player player) {
+	public Component getDisplayName() {
+		return name;
+	}
+
+	@Override
+	public int getContainerSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public ItemStack getItem(int p_18941_) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Component getDisplayName() {
-		return name;
+	public ItemStack removeItem(int p_18942_, int p_18943_) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ItemStack removeItemNoUpdate(int p_18951_) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setItem(int p_18944_, ItemStack p_18945_) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean stillValid(Player p_18946_) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void clearContent() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected Component getDefaultName() {
+		return new TextComponent("container.pedestal");
+	}
+
+	@Override
+	protected AbstractContainerMenu createMenu(int p_58627_, Inventory p_58628_) {
+		return null;
 	}
 }

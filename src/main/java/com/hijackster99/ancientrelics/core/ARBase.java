@@ -14,6 +14,7 @@ import com.hijackster99.ancientrelics.blocks.VoidLiquidBlock;
 import com.hijackster99.ancientrelics.blocks.VoidRelayBlock;
 import com.hijackster99.ancientrelics.core.classloader.RitualJsonManager;
 import com.hijackster99.ancientrelics.crafting.InfusionSerializer;
+import com.hijackster99.ancientrelics.gui.PedestalMenu;
 import com.hijackster99.ancientrelics.items.ARBlockItem;
 import com.hijackster99.ancientrelics.items.ARItem;
 import com.hijackster99.ancientrelics.items.Burnable;
@@ -28,6 +29,7 @@ import com.hijackster99.ancientrelics.items.SapphireStaff;
 import com.hijackster99.ancientrelics.items.ShardBlockItem;
 import com.hijackster99.ancientrelics.items.VoidGasBucket;
 import com.hijackster99.ancientrelics.items.VoidLiquidBucket;
+import com.hijackster99.ancientrelics.tileentity.TEPedestal;
 import com.hijackster99.ancientrelics.tileentity.ritual.Ritual;
 import com.hijackster99.ancientrelics.tileentity.ritual.RitualStone;
 import com.hijackster99.ancientrelics.tileentity.ritual.wrappers.AnvilWrapper;
@@ -40,6 +42,7 @@ import com.hijackster99.ancientrelics.tileentity.voidrelay.VoidRelay;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -416,6 +419,16 @@ public class ARBase {
 		BlockEntityType<VoidRelay> voidRelay = BlockEntityType.Builder.of(VoidRelay::new, ARBlock.VOID_RELAY).build(null);
 		voidRelay.setRegistryName(References.MODID, "void_relay");
 		event.getRegistry().register(voidRelay);
+		BlockEntityType<TEPedestal> pedestal = BlockEntityType.Builder.of(TEPedestal::new, ARBlock.PEDESTAL).build(null);
+		pedestal.setRegistryName(References.MODID, "pedestal");
+		event.getRegistry().register(pedestal);
+	}
+	
+	@SubscribeEvent
+	public static void registerMenu(RegistryEvent.Register<MenuType<?>> event) {
+		MenuType<PedestalMenu> pedestal = new MenuType<PedestalMenu>(PedestalMenu::new);
+		pedestal.setRegistryName(References.MODID, "pedestal");
+		event.getRegistry().register(pedestal);
 	}
 	
 	@SubscribeEvent

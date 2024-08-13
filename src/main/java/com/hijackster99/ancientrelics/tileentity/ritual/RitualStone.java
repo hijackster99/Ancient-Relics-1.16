@@ -89,14 +89,6 @@ public class RitualStone extends ARTileEntity implements IInteractable, IRandomU
 	}
 	
 	@Override
-	public void setChanged() {
-		super.setChanged();
-		if(this.level != null) {
-			System.out.println("changed");
-		}
-	}
-	
-	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		return wrapper.getCapability(cap, side);
 	}
